@@ -1,0 +1,7 @@
+/build/
+/dist/
+*.class
+*.jar
+*.war
+/nbproject/private/
+db_config.properties
