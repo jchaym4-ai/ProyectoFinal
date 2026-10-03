@@ -1,7 +1,7 @@
 package dao;
 
 import coneccion.CreateConnection;
-import modelo.Artista;
+import modelo.Localidad;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,20 +12,18 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArtistaDAO {
+public class LocalidadDAO {
 
     private final CreateConnection connFactory;
 
-    public ArtistaDAO() {
+    public LocalidadDAO() {
         this.connFactory = new CreateConnection();
     }
 
     // INSERTAR
-    public boolean insertar(Artista artista) {
+    public boolean insertar(Localidad localidad) {
 
-        String sql = "INSERT INTO artistas "
-                + "(nombre_artistico, genero_musical, pais_origen) "
-                + "VALUES (?, ?, ?)";
+        String sql = "INSERT INTO localidades (nombre) VALUES (?)";
 
         try (
             Connection conn = connFactory.getConection();
@@ -35,9 +33,7 @@ public class ArtistaDAO {
             )
         ) {
 
-            ps.setString(1, artista.getNombreArtistico());
-            ps.setString(2, artista.getGeneroMusical());
-            ps.setString(3, artista.getPaisOrigen());
+            ps.setString(1, localidad.getNombre());
 
             int filas = ps.executeUpdate();
 
@@ -46,7 +42,7 @@ public class ArtistaDAO {
                 try (ResultSet rs = ps.getGeneratedKeys()) {
 
                     if (rs.next()) {
-                        artista.setIdArtista(rs.getInt(1));
+                        localidad.setIdLocalidad(rs.getInt(1));
                     }
                 }
 
@@ -55,7 +51,7 @@ public class ArtistaDAO {
 
         } catch (SQLException e) {
             System.err.println(
-                    "Error al insertar artista: "
+                    "Error al insertar localidad: "
                     + e.getMessage()
             );
         }
@@ -63,18 +59,14 @@ public class ArtistaDAO {
         return false;
     }
 
-
     // LISTAR
-    public List<Artista> listarTodos() {
+    public List<Localidad> listarTodos() {
 
-        List<Artista> lista = new ArrayList<>();
+        List<Localidad> lista = new ArrayList<>();
 
-        String sql = "SELECT id_artista, "
-                + "nombre_artistico, "
-                + "genero_musical, "
-                + "pais_origen "
-                + "FROM artistas "
-                + "ORDER BY id_artista";
+        String sql = "SELECT id_localidad, nombre "
+                + "FROM localidades "
+                + "ORDER BY id_localidad";
 
         try (
             Connection conn = connFactory.getConection();
@@ -84,30 +76,22 @@ public class ArtistaDAO {
 
             while (rs.next()) {
 
-                Artista artista = new Artista();
+                Localidad localidad = new Localidad();
 
-                artista.setIdArtista(
-                        rs.getInt("id_artista")
+                localidad.setIdLocalidad(
+                        rs.getInt("id_localidad")
                 );
 
-                artista.setNombreArtistico(
-                        rs.getString("nombre_artistico")
+                localidad.setNombre(
+                        rs.getString("nombre")
                 );
 
-                artista.setGeneroMusical(
-                        rs.getString("genero_musical")
-                );
-
-                artista.setPaisOrigen(
-                        rs.getString("pais_origen")
-                );
-
-                lista.add(artista);
+                lista.add(localidad);
             }
 
         } catch (SQLException e) {
             System.err.println(
-                    "Error al listar artistas: "
+                    "Error al listar localidades: "
                     + e.getMessage()
             );
         }
@@ -115,63 +99,55 @@ public class ArtistaDAO {
         return lista;
     }
 
-
     // ACTUALIZAR
-    public boolean actualizar(Artista artista) {
+    public boolean actualizar(Localidad localidad) {
 
-        String sql = "UPDATE artistas "
-                + "SET nombre_artistico = ?, "
-                + "genero_musical = ?, "
-                + "pais_origen = ? "
-                + "WHERE id_artista = ?";
+        String sql = "UPDATE localidades "
+                + "SET nombre = ? "
+                + "WHERE id_localidad = ?";
 
         try (
             Connection conn = connFactory.getConection();
             PreparedStatement ps = conn.prepareStatement(sql)
         ) {
 
-            ps.setString(1, artista.getNombreArtistico());
-            ps.setString(2, artista.getGeneroMusical());
-            ps.setString(3, artista.getPaisOrigen());
-            ps.setInt(4, artista.getIdArtista());
+            ps.setString(1, localidad.getNombre());
+            ps.setInt(2, localidad.getIdLocalidad());
 
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
             System.err.println(
-                    "Error al actualizar artista: "
+                    "Error al actualizar localidad: "
                     + e.getMessage()
             );
         }
 
         return false;
     }
-
 
     // ELIMINAR
-    public boolean eliminar(int idArtista) {
+    public boolean eliminar(int idLocalidad) {
 
-        String sql = "DELETE FROM artistas "
-                + "WHERE id_artista = ?";
+        String sql = "DELETE FROM localidades "
+                + "WHERE id_localidad = ?";
 
         try (
             Connection conn = connFactory.getConection();
             PreparedStatement ps = conn.prepareStatement(sql)
         ) {
 
-            ps.setInt(1, idArtista);
+            ps.setInt(1, idLocalidad);
 
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
             System.err.println(
-                    "Error al eliminar artista: "
+                    "Error al eliminar localidad: "
                     + e.getMessage()
             );
         }
 
         return false;
     }
-        
-    
 }

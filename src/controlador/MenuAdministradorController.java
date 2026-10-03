@@ -1,7 +1,9 @@
 package controlador;
 
 import vista.ArtistasView;
+import vista.LocalidadesView;
 import vista.MenuAdministradorView;
+import vista.ConciertosView;
 
 public class MenuAdministradorController {
 
@@ -11,6 +13,10 @@ public class MenuAdministradorController {
         this.vista = vista;
 
         this.vista.getBtnArtistas().addActionListener(e -> abrirArtistas());
+        vista.getBtnLocalidades()
+        .addActionListener(e -> abrirLocalidades());
+        vista.getBtnConciertos()
+        .addActionListener(e -> abrirConciertos());
     }
 
     private void abrirArtistas() {
@@ -22,4 +28,26 @@ public class MenuAdministradorController {
         artistasView.setLocationRelativeTo(null);
         artistasView.setVisible(true);
     }
+    private void abrirLocalidades() {
+
+        LocalidadesView localidadesView =
+                new LocalidadesView();
+
+        new LocalidadController(localidadesView);
+
+        localidadesView.setLocationRelativeTo(null);
+        localidadesView.setVisible(true);
+    }
+    private void abrirConciertos() {
+
+        ConciertosView conciertosView =
+                new ConciertosView();
+
+        new ConciertoController(
+                conciertosView
+        );
+
+        conciertosView.setLocationRelativeTo(null);
+        conciertosView.setVisible(true);
+    }    
 }

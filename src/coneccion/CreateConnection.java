@@ -19,7 +19,7 @@ public class CreateConnection {
     
     
     public CreateConnection (){
-        String path = "C:\\Users\\Abdias\\Documents\\NetBeansProjects\\ProyectoFInalUMG\\src\\coneccion\\db_config.properties";
+        String path = "C:\\Users\\Abdias M\\Documents\\NetBeansProjects\\ProyectoFInalUMG\\src\\coneccion\\db_config.properties";
         InputStream in = null;
         
             try {
