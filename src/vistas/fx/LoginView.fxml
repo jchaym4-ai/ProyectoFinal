@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1000.0" styleClass="root-login" stylesheets="@login.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladorFx.LoginFXController">
+   <children>
+      <HBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="480.0" prefWidth="820.0" styleClass="login-card">
+         <children>
+            <VBox alignment="CENTER" maxWidth="-Infinity" prefHeight="200.0" prefWidth="330.0" spacing="12.0" styleClass="brand-panel">
+               <children>
+                  <Label styleClass="brand-title" text="SVB-GUA" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="32.0" />
+                     </font>
+                  </Label>
+                  <Label styleClass="brand-subtitle" text="Sistema de Venta de Boletos" textFill="#d1d5db">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" maxWidth="-Infinity" prefHeight="200.0" prefWidth="490.0" spacing="12.0" styleClass="form-panel">
+               <padding>
+                  <Insets bottom="55.0" left="60.0" right="60.0" top="55.0" />
+               </padding>
+               <children>
+                  <Label styleClass="form-title" text="Iniciar sesión" textFill="#111827">
+                     <font>
+                        <Font name="System Bold" size="28.0" />
+                     </font>
+                  </Label>
+                  <Label prefHeight="20.0" prefWidth="287.0" styleClass="form-subtitle" text="Ingresa tus credenciales para continuar" textFill="#6b7280" />
+                  <Label styleClass="field-label" text="Usuario" textFill="#374151">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtUsuario" prefHeight="27.0" prefWidth="42.0" promptText="Ingresa tu usuario" styleClass="input-field" />
+                  <Label styleClass="field-label" text="Contraseña" textFill="#374151">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <PasswordField fx:id="txtPassword" prefHeight="25.0" prefWidth="42.0" promptText="Ingresa tu contraseña" styleClass="input-field" />
+                  <Label fx:id="lblMensaje" styleClass="error-label" />
+                  <Button fx:id="btnIniciarSesion" mnemonicParsing="false" onAction="#iniciarSesion" prefHeight="44.0" prefWidth="370.0" styleClass="login-button" text="Iniciar sesión" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</StackPane>

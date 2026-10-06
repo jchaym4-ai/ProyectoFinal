@@ -1,0 +1,88 @@
+.root-login {
+    -fx-background-color: #F3F4F6;
+}
+
+.login-card {
+    -fx-background-color: white;
+    -fx-background-radius: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 25, 0.15, 0, 8);
+}
+
+.brand-panel {
+    -fx-background-color: #1F2937;
+    -fx-background-radius: 14px 0 0 14px;
+}
+
+.brand-title {
+    -fx-text-fill: white;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+}
+
+.brand-subtitle {
+    -fx-text-fill: #D1D5DB;
+    -fx-font-size: 16px;
+}
+
+.form-panel {
+    -fx-background-color: white;
+    -fx-background-radius: 0 14px 14px 0;
+}
+
+.form-title {
+    -fx-text-fill: #111827;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.form-subtitle {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 14px;
+}
+
+.field-label {
+    -fx-text-fill: #374151;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.input-field {
+    -fx-background-color: #F9FAFB;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 0 12px;
+    -fx-font-size: 14px;
+}
+
+.input-field:focused {
+    -fx-border-color: #2563EB;
+    -fx-border-width: 2px;
+}
+
+.login-button {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+}
+
+.login-button:hover {
+    -fx-background-color: #1D4ED8;
+}
+
+.login-button:pressed {
+    -fx-background-color: #1E40AF;
+}
+
+.error-label {
+    -fx-text-fill: #DC2626;
+    -fx-font-size: 12px;
+}
+
+.success-label {
+    -fx-text-fill: #16A34A;
+    -fx-font-size: 12px;
+}
