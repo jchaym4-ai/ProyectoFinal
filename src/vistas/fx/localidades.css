@@ -1,0 +1,159 @@
+.root-localidades {
+    -fx-background-color: #F3F4F6;
+}
+
+.module-title {
+    -fx-text-fill: #111827;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.module-subtitle {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 14px;
+}
+
+.form-card,
+.table-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(
+        gaussian,
+        rgba(0, 0, 0, 0.08),
+        15,
+        0.1,
+        0,
+        4
+    );
+}
+
+.section-title {
+    -fx-text-fill: #111827;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+}
+
+.field-label {
+    -fx-text-fill: #374151;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.localidad-field {
+    -fx-background-color: white;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #111827;
+    -fx-padding: 0 12px 0 12px;
+}
+
+.localidad-field:focused {
+    -fx-border-color: #2563EB;
+    -fx-border-width: 1.5px;
+}
+
+.action-button {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+}
+
+.save-button {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+}
+
+.save-button:hover {
+    -fx-background-color: #1D4ED8;
+}
+
+.update-button {
+    -fx-background-color: #F59E0B;
+    -fx-text-fill: white;
+}
+
+.update-button:hover {
+    -fx-background-color: #D97706;
+}
+
+.delete-button {
+    -fx-background-color: #FEE2E2;
+    -fx-text-fill: #B91C1C;
+}
+
+.delete-button:hover {
+    -fx-background-color: #FECACA;
+}
+
+.clear-button {
+    -fx-background-color: #E5E7EB;
+    -fx-text-fill: #374151;
+}
+
+.clear-button:hover {
+    -fx-background-color: #D1D5DB;
+}
+
+.localidades-table {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-table-cell-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.localidades-table .column-header-background {
+    -fx-background-color: #F9FAFB;
+    -fx-background-radius: 8px 8px 0 0;
+}
+
+.localidades-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #E5E7EB transparent;
+}
+
+.localidades-table .column-header .label {
+    -fx-text-fill: #374151;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10px;
+}
+
+.localidades-table .table-cell {
+    -fx-text-fill: #374151;
+    -fx-font-size: 13px;
+    -fx-padding: 10px;
+    -fx-border-color: transparent transparent #F3F4F6 transparent;
+}
+
+.localidades-table .table-row-cell {
+    -fx-background-color: white;
+}
+
+.localidades-table .table-row-cell:hover {
+    -fx-background-color: #F9FAFB;
+}
+
+.localidades-table .table-row-cell:selected {
+    -fx-background-color: #DBEAFE;
+}
+
+.localidades-table .table-row-cell:selected .table-cell {
+    -fx-text-fill: #1E3A8A;
+}
+
+.localidades-table .filler {
+    -fx-background-color: #F9FAFB;
+}
+
+.localidades-table .placeholder .label {
+    -fx-text-fill: #9CA3AF;
+    -fx-font-size: 13px;
+}
