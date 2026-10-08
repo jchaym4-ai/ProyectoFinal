@@ -1,0 +1,133 @@
+
+/* CONTENEDOR PRINCIPAL */
+.artistas-root {
+    -fx-background-color: #F4F7FB;
+    -fx-font-family: "Segoe UI";
+}
+
+/* TITULOS */
+.page-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #172B4D;
+}
+
+.page-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748B;
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E293B;
+}
+
+/* FORMULARIO */
+.form-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 12;
+    -fx-padding: 22;
+    -fx-effect: dropshadow(gaussian, #00000010, 10, 0, 0, 3);
+}
+
+/* CAMPOS */
+.form-input, .search-input {
+    -fx-background-color: #F8FAFC;
+    -fx-background-radius: 7;
+    -fx-border-color: #CBD5E1;
+    -fx-border-radius: 7;
+    -fx-padding: 10;
+    -fx-font-size: 13px;
+}
+
+.form-input:focused, .search-input:focused {
+    -fx-border-color: #2563EB;
+    -fx-background-color: white;
+}
+
+/* BOTONES */
+.btn-guardar, .btn-actualizar,
+.btn-eliminar, .btn-limpiar {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 7;
+    -fx-padding: 10 18;
+    -fx-cursor: hand;
+}
+
+.btn-guardar {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+}
+
+.btn-actualizar {
+    -fx-background-color: #F59E0B;
+    -fx-text-fill: white;
+}
+
+.btn-eliminar {
+    -fx-background-color: #DC2626;
+    -fx-text-fill: white;
+}
+
+.btn-limpiar {
+    -fx-background-color: #E2E8F0;
+    -fx-text-fill: #334155;
+}
+
+/* EFECTOS HOVER */
+.btn-guardar:hover {
+    -fx-background-color: #1D4ED8;
+}
+
+.btn-actualizar:hover {
+    -fx-background-color: #D97706;
+}
+
+.btn-eliminar:hover {
+    -fx-background-color: #B91C1C;
+}
+
+.btn-limpiar:hover {
+    -fx-background-color: #CBD5E1;
+}
+
+/* TABLA */
+.artistas-table {
+    -fx-background-color: white;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.artistas-table .column-header-background {
+    -fx-background-color: #EAF0F8;
+}
+
+.artistas-table .column-header {
+    -fx-background-color: transparent;
+    -fx-padding: 12;
+}
+
+.artistas-table .column-header .label {
+    -fx-text-fill: #334155;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.artistas-table .table-cell {
+    -fx-padding: 11;
+    -fx-font-size: 12px;
+}
+
+.artistas-table .table-row-cell:selected {
+    -fx-background-color: #DBEAFE;
+}
+
+.artistas-table .table-row-cell:selected .text {
+    -fx-fill: #1E3A8A;
+}
+

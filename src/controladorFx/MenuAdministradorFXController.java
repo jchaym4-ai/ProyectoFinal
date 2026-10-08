@@ -52,6 +52,10 @@ public class MenuAdministradorFXController {
         btnDashboard.setOnAction(
                 e -> abrirDashboard()
         );
+        
+        btnArtistas.setOnAction(
+                e -> abrirArtistas()
+        );
     }
 
     public void setUsuario(Usuario usuario) {
@@ -105,6 +109,42 @@ public class MenuAdministradorFXController {
 
         } catch (IOException e) {
 
+            e.printStackTrace();
+        }
+    }
+    
+    private void abrirArtistas (){
+        
+        try{
+            
+            BorderPane rootAdmin =
+                    (BorderPane) btnArtistas
+                            .getScene()
+                            .getRoot();
+            
+            if (dashboardOriginal == null) {
+                dashboardOriginal =
+                        rootAdmin.getCenter();
+            }
+            FXMLLoader loader =
+                    new FXMLLoader (
+                                getClass().getResource(
+                                        "/vistas/fx/ArtistasView.fxml"
+                                        
+                                )
+                    );
+            Parent vistaArtistas =
+                    loader.load();
+            
+            rootAdmin.setCenter(
+                    vistaArtistas
+            );
+            
+            marcarBotonActivo(
+                    btnArtistas
+            );
+            
+        }catch(IOException e){
             e.printStackTrace();
         }
     }
