@@ -60,6 +60,10 @@ public class MenuAdministradorFXController {
         btnUsuarios.setOnAction(
                 e -> abrirUsuarios()        
         );
+        
+        btnConciertos.setOnAction(
+                e -> abrirConciertos()
+        );
     }
 
     public void setUsuario(Usuario usuario) {
@@ -106,7 +110,42 @@ public class MenuAdministradorFXController {
             
         }
     }
+    private void abrirConciertos() {
 
+    try {
+
+        BorderPane rootAdmin =
+                (BorderPane) btnConciertos
+                        .getScene()
+                        .getRoot();
+
+        if (dashboardOriginal == null) {
+            dashboardOriginal = rootAdmin.getCenter();
+        }
+
+        FXMLLoader loader =
+                new FXMLLoader(
+                        getClass().getResource(
+                                "/vistas/fx/ConciertosView.fxml"
+                        )
+                );
+
+        Parent vistaConciertos =
+                loader.load();
+
+        rootAdmin.setCenter(
+                vistaConciertos
+        );
+
+        marcarBotonActivo(
+                btnConciertos
+        );
+
+    } catch (IOException e) {
+
+        e.printStackTrace();
+    }
+}
     private void abrirLocalidades() {
 
         try {

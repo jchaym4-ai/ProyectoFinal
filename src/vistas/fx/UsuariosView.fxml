@@ -20,9 +20,9 @@
 
 <AnchorPane prefHeight="700.0" prefWidth="1100.0" styleClass="root-usuarios" stylesheets="@usuarios.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladorFx.UsuariosFXController">
    <children>
-      <VBox layoutX="43.0" layoutY="30.0" prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="30.799999999999955" AnchorPane.leftAnchor="43.0" AnchorPane.rightAnchor="27.40000000000009" AnchorPane.topAnchor="30.0">
+      <VBox layoutX="43.0" layoutY="30.0" prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="15.0">
          <children>
-            <VBox prefHeight="98.0" prefWidth="1030.0" spacing="5.0" styleClass="form-card">
+            <VBox prefHeight="75.0" prefWidth="1030.0" spacing="5.0" styleClass="form-card">
                <children>
                   <Label styleClass="module-title" text="Gestión de Usuarios">
                      <font>
@@ -36,7 +36,7 @@
                   </Label>
                </children>
             </VBox>
-            <VBox prefHeight="145.0" prefWidth="1030.0" spacing="12.0">
+            <VBox prefHeight="145.0" spacing="12.0">
                <padding>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </padding>
@@ -104,13 +104,13 @@
                   </Button>
                </children>
             </HBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0" styleClass="table-card" VBox.vgrow="ALWAYS">
+            <VBox prefHeight="280.0" prefWidth="1030.0" spacing="15.0" styleClass="table-card" VBox.vgrow="ALWAYS">
                <padding>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </padding>
                <children>
                   <Label styleClass="section-title" text="Usuarios registrados" />
-                  <TableView fx:id="tblUsuarios" prefHeight="164.0" prefWidth="990.0" styleClass="usuarios-table">
+                  <TableView fx:id="tblUsuarios" prefHeight="222.0" prefWidth="990.0" styleClass="usuarios-table">
                     <columns>
                       <TableColumn fx:id="colId" prefWidth="75.0" text="ID" />
                       <TableColumn fx:id="colUsuario" prefWidth="75.0" text="Usuario" />
