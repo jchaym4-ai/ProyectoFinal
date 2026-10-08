@@ -285,4 +285,32 @@ public class UsuarioDAO {
 
         return false;
     }
+    
+    public boolean eliminar(int idUsuario) {
+
+        String sql = "DELETE FROM usuarios "
+                + "WHERE id_usuario = ?";
+
+        try (
+            Connection conn = connFactory.getConection();
+            PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+
+            ps.setInt(
+                    1,
+                    idUsuario
+            );
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+
+            System.err.println(
+                    "Error al eliminar usuario: "
+                    + e.getMessage()
+            );
+        }
+
+        return false;
+    }    
 }

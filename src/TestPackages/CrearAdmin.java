@@ -9,7 +9,7 @@ public class CrearAdmin {
 
         Usuario admin = new Usuario();
 
-        admin.setNombreUsuario("admin");
+        admin.setNombreUsuario("daniel");
         admin.setNombreCompleto("Administrador SVB-GUA");
         admin.setRol("administrador");
 
@@ -21,7 +21,7 @@ public class CrearAdmin {
         if (usuarioDAO.insertar(admin)) {
 
             System.out.println("Administrador creado correctamente.");
-            System.out.println("Usuario: admin");
+            System.out.println("Usuario: daniel");
             System.out.println("Contraseña: 1234");
             System.out.println("ID: " + admin.getIdUsuario());
 
