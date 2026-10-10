@@ -1,0 +1,222 @@
+
+.inventario-root {
+    -fx-background-color: #F4F7FB;
+    -fx-font-family: "Segoe UI";
+}
+
+.page-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #172B4D;
+}
+
+.page-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748B;
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E293B;
+}
+
+.form-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 12;
+    -fx-padding: 22;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);
+}
+
+.field-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: normal;
+    -fx-text-fill: #334155;
+}
+
+.form-input,
+.search-input,
+.form-combo {
+    -fx-background-color: #F8FAFC;
+    -fx-background-radius: 7;
+    -fx-border-color: #CBD5E1;
+    -fx-border-radius: 7;
+    -fx-border-width: 1;
+    -fx-font-size: 13px;
+    -fx-text-fill: #334155;
+}
+
+.form-input {
+    -fx-padding: 5 10;
+    -fx-pref-height: 36;
+    -fx-min-height: 32;
+}
+
+.search-input {
+    -fx-padding: 8 12;
+    -fx-pref-height: 40;
+}
+
+.form-combo {
+    -fx-padding: 0 6;
+    -fx-pref-height: 36;
+    -fx-min-height: 32;
+    -fx-cursor: hand;
+}
+
+.form-input:focused,
+.search-input:focused,
+.form-combo:focused {
+    -fx-border-color: #2563EB;
+    -fx-background-color: white;
+}
+
+.form-combo .list-cell {
+    -fx-text-fill: #334155;
+    -fx-font-size: 13px;
+    -fx-background-color: transparent;
+    -fx-padding: 5 8;
+}
+
+.form-combo .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 5 8;
+}
+
+.form-combo .arrow {
+    -fx-background-color: #64748B;
+}
+
+.form-combo:hover {
+    -fx-border-color: #94A3B8;
+}
+
+.form-input:disabled {
+    -fx-background-color: #E9EEF5;
+    -fx-opacity: 1;
+}
+
+.btn-guardar,
+.btn-actualizar,
+.btn-eliminar,
+.btn-limpiar {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 7;
+    -fx-padding: 10 18;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER;
+}
+
+.btn-guardar {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+}
+
+.btn-guardar:hover {
+    -fx-background-color: #1D4ED8;
+}
+
+.btn-actualizar {
+    -fx-background-color: #F59E0B;
+    -fx-text-fill: white;
+}
+
+.btn-actualizar:hover {
+    -fx-background-color: #D97706;
+}
+
+.btn-eliminar {
+    -fx-background-color: #DC2626;
+    -fx-text-fill: white;
+}
+
+.btn-eliminar:hover {
+    -fx-background-color: #B91C1C;
+}
+
+.btn-limpiar {
+    -fx-background-color: #E2E8F0;
+    -fx-text-fill: #334155;
+}
+
+.btn-limpiar:hover {
+    -fx-background-color: #CBD5E1;
+}
+
+.btn-guardar:pressed,
+.btn-actualizar:pressed,
+.btn-eliminar:pressed,
+.btn-limpiar:pressed {
+    -fx-opacity: 0.85;
+}
+
+.inventario-table {
+    -fx-background-color: white;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-border-width: 1;
+    -fx-table-cell-border-color: #E2E8F0;
+}
+
+.inventario-table .column-header-background {
+    -fx-background-color: #EAF0F8;
+    -fx-background-radius: 8 8 0 0;
+}
+
+.inventario-table .column-header {
+    -fx-background-color: transparent;
+    -fx-padding: 12 5;
+}
+
+.inventario-table .column-header .label {
+    -fx-text-fill: #334155;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.inventario-table .table-cell {
+    -fx-padding: 11 6;
+    -fx-font-size: 12px;
+    -fx-text-fill: #334155;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.inventario-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #F1F5F9 transparent;
+}
+
+.inventario-table .table-row-cell:odd {
+    -fx-background-color: #F8FAFC;
+}
+
+.inventario-table .table-row-cell:hover {
+    -fx-background-color: #EFF6FF;
+}
+
+.inventario-table .table-row-cell:selected {
+    -fx-background-color: #DBEAFE;
+}
+
+.inventario-table .table-row-cell:selected .table-cell {
+    -fx-text-fill: #1E3A8A;
+}
+
+.inventario-table .placeholder .label {
+    -fx-text-fill: #94A3B8;
+    -fx-font-size: 13px;
+}
+
+.inventario-table .scroll-bar:vertical,
+.inventario-table .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.inventario-table .scroll-bar .thumb {
+    -fx-background-color: #CBD5E1;
+    -fx-background-radius: 8;
+}

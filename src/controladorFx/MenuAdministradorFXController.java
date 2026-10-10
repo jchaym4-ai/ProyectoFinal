@@ -64,6 +64,9 @@ public class MenuAdministradorFXController {
         btnConciertos.setOnAction(
                 e -> abrirConciertos()
         );
+        btnInventario.setOnAction(
+                e -> abrirInventario()
+        );
     }
 
     public void setUsuario(Usuario usuario) {
@@ -106,6 +109,34 @@ public class MenuAdministradorFXController {
             
             marcarBotonActivo(btnArtistas);
         }catch(IOException e) {
+            e.printStackTrace();
+            
+        }
+    }
+    
+    public void abrirInventario (){
+        try{
+            BorderPane rootAdmin =
+                    (BorderPane) btnInventario
+                            .getScene()
+                            .getRoot();
+            
+            if (dashboardOriginal == null){
+                dashboardOriginal = rootAdmin.getCenter();
+            }
+            FXMLLoader loader = 
+                    new FXMLLoader (
+                            getClass().getResource(
+                                    "/vistas/fx/InventarioView.fxml"
+                            )
+                    );
+            Parent vistaInventario = loader.load();
+            
+            rootAdmin.setCenter(vistaInventario);
+            
+            marcarBotonActivo(btnInventario);
+            
+        }catch (IOException e){
             e.printStackTrace();
             
         }

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" spacing="15.0" styleClass="inventario-root" stylesheets="@inventario.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladorFx.InventarioFXController">
+   <padding>
+      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+   </padding>
+   <children>
+      <Label styleClass="page-title" text="Gestión de Inventario" />
+      <Label styleClass="page-subtitle" text="Administra la disponibilidad y los precios de los boletos" />
+      <VBox spacing="15.0" styleClass="form-card">
+         <children>
+            <Label styleClass="section-title" text="Datos del inventario" />
+            <GridPane hgap="20.0" vgap="40.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="6.0">
+                     <children>
+                        <Label styleClass="field-label" text="Concierto" />
+                        <ComboBox fx:id="cmbConcierto" prefWidth="150.0" styleClass="form-combo" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="6.0" GridPane.rowIndex="1">
+                     <children>
+                        <Label styleClass="field-label" text="Precio (Q)" />
+                        <TextField fx:id="txtPrecio" prefHeight="40.0" styleClass="form-input" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="6.0" GridPane.rowIndex="2">
+                     <children>
+                        <Label styleClass="field-label" text="Cantidad total" />
+                        <TextField fx:id="txtCantidadTotal" prefHeight="40.0" styleClass="form-input" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="6.0" GridPane.columnIndex="1">
+                     <children>
+                        <Label styleClass="field-label" text="Localidad" />
+                        <ComboBox fx:id="cmbLocalidad" prefHeight="40.0" prefWidth="150.0" styleClass="form-combo" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="6.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <children>
+                        <Label styleClass="field-label" text="Tipo de venta" />
+                        <ComboBox fx:id="cmbTipoVenta" prefHeight="40.0" prefWidth="150.0" styleClass="form-combo" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="6.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <children>
+                        <Label styleClass="field-label" text="Cantidad disponible" />
+                        <TextField fx:id="txtCantidadDisponible" prefHeight="40.0" styleClass="form-input" />
+                     </children>
+                  </VBox>
+               </children>
+            </GridPane>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="12.0">
+               <children>
+                  <Button fx:id="btnGuardar" mnemonicParsing="false" onAction="#guardar" prefHeight="42.0" prefWidth="115.0" styleClass="btn-guardar" text="Guardar" />
+                  <Button fx:id="btnActualizar" mnemonicParsing="false" onAction="#actualizar" prefHeight="42.0" prefWidth="115.0" styleClass="btn-actualizar" text="Actualizar" />
+                  <Button fx:id="btnEliminar" mnemonicParsing="false" onAction="#eliminar" prefHeight="42.0" prefWidth="115.0" styleClass="btn-eliminar" text="Eliminar" />
+                  <Button fx:id="btnLimpiar" mnemonicParsing="false" onAction="#limpiar" prefHeight="42.0" prefWidth="115.0" styleClass="btn-limpiar" text="Limpiar" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+      <Label styleClass="section-title" text="Inventario registrado" />
+      <TextField fx:id="txtBuscar" promptText="Buscar inventario......" styleClass="search-input" />
+      <TableView fx:id="tablaInventario" prefHeight="180.0" prefWidth="280.0" styleClass="inventario-table" VBox.vgrow="ALWAYS">
+        <columns>
+          <TableColumn fx:id="colIdInventario" prefWidth="75.0" text="ID" />
+          <TableColumn fx:id="colConcierto" prefWidth="75.0" text="Concierto" />
+            <TableColumn fx:id="colLocalidad" prefWidth="75.0" text="Localidad" />
+            <TableColumn fx:id="colPrecio" prefWidth="75.0" text="Precio (Q)" />
+            <TableColumn fx:id="colCantidadTotal" prefWidth="75.0" text="Total" />
+            <TableColumn fx:id="colCantidadDisponible" prefWidth="75.0" text="Disponible" />
+            <TableColumn fx:id="colTipoVenta" prefWidth="75.0" text="Tipo de venta" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+   </children>
+</VBox>
