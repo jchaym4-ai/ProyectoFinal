@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" styleClass="root-admin" stylesheets="@menu-admin.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladorFx.MenuAdministradorFXController">
+<BorderPane prefHeight="700.0" prefWidth="1200.0" styleClass="root-admin" stylesheets="@menu-admin.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladorFx.MenuAdministradorFXController">
    <left>
       <VBox prefHeight="8.0" prefWidth="230.0" styleClass="sidebar" BorderPane.alignment="CENTER">
          <BorderPane.margin>
@@ -84,7 +84,9 @@
                      </padding>
                      <children>
                         <Label styleClass="card-title" text="Artistas " />
-                        <Label styleClass="card-value" text="0" />
+                        <Label fx:id="lblTotalArtistas"
+                               styleClass="card-value"
+                               text="0" />
                      </children>
                   </VBox>
                   <VBox prefHeight="130.0" prefWidth="260.0" spacing="8.0" styleClass="dashboard-card" GridPane.columnIndex="1">
@@ -93,13 +95,17 @@
                      </padding>
                      <children>
                         <Label styleClass="card-title" text="Conciertos" />
-                        <Label styleClass="card-value" text="0" />
+                        <Label fx:id="lblTotalConciertos"
+                               styleClass="card-value"
+                               text="0" />
                      </children>
                   </VBox>
                   <VBox prefHeight="130.0" prefWidth="260.0" spacing="8.0" styleClass="dashboard-card" GridPane.rowIndex="1">
                      <children>
                         <Label styleClass="card-title" text="Localidades" />
-                        <Label styleClass="card-value" text="0" />
+                        <Label fx:id="lblTotalLocalidades"
+                               styleClass="card-value"
+                               text="0" />
                      </children>
                      <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
@@ -111,7 +117,9 @@
                      </padding>
                      <children>
                         <Label styleClass="card-title" text="Inventario" />
-                        <Label styleClass="card-value" text="0" />
+                        <Label fx:id="lblTotalInventario"
+                               styleClass="card-value"
+                               text="0" />
                      </children>
                   </VBox>
                </children>

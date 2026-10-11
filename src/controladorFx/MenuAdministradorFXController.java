@@ -11,11 +11,28 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import modelo.Usuario;
+import dao.ArtistaDAO;
+import dao.ConciertoDAO;
+import dao.LocalidadDAO;
+import dao.InventarioBoletoDAO;
+import javafx.scene.control.ScrollPane;
 
 public class MenuAdministradorFXController {
 
     @FXML
     private Label lblNombreUsuario;
+    
+    @FXML
+    private Label lblTotalArtistas;
+
+    @FXML
+    private Label lblTotalConciertos;
+
+    @FXML
+    private Label lblTotalLocalidades;
+
+    @FXML
+    private Label lblTotalInventario;
 
     @FXML
     private Button btnDashboard;
@@ -44,6 +61,8 @@ public class MenuAdministradorFXController {
 
     @FXML
     private void initialize() {
+        
+        cargarContadoresDashboard();
 
         btnLocalidades.setOnAction(
                 e -> abrirLocalidades()
@@ -85,62 +104,62 @@ public class MenuAdministradorFXController {
         return usuario;
     }
     
-    private void abrirUsuarios (){
-        try{
-            
-            BorderPane rootAdmin = 
-                    (BorderPane) btnUsuarios
-                            .getScene()
-                            .getRoot();
-            if (dashboardOriginal == null){
-                dashboardOriginal = 
-                        rootAdmin.getCenter();
-            }
-            
-            FXMLLoader loader = 
-                    new FXMLLoader (
-                            getClass().getResource(
-                                    "/vistas/fx/UsuariosView.fxml"
-                            )
-                    );
-            Parent vistaUsuarios =
-                    loader.load();
-            rootAdmin.setCenter(vistaUsuarios);
-            
-            marcarBotonActivo(btnArtistas);
-        }catch(IOException e) {
-            e.printStackTrace();
-            
-        }
-    }
-    
-    public void abrirInventario (){
-        try{
+
+
+    public void abrirInventario() {
+
+        try {
+
             BorderPane rootAdmin =
                     (BorderPane) btnInventario
                             .getScene()
                             .getRoot();
-            
-            if (dashboardOriginal == null){
+
+            if (dashboardOriginal == null) {
                 dashboardOriginal = rootAdmin.getCenter();
             }
-            FXMLLoader loader = 
-                    new FXMLLoader (
-                            getClass().getResource(
-                                    "/vistas/fx/InventarioView.fxml"
-                            )
-                    );
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource(
+                            "/vistas/fx/InventarioView.fxml"
+                    )
+            );
+
             Parent vistaInventario = loader.load();
-            
-            rootAdmin.setCenter(vistaInventario);
-            
+
+            ScrollPane scroll = new ScrollPane();
+
+            scroll.setContent(vistaInventario);
+            scroll.setFitToWidth(true);
+            scroll.setFitToHeight(false);
+
+            scroll.setHbarPolicy(
+                    ScrollPane.ScrollBarPolicy.NEVER
+            );
+
+            scroll.setVbarPolicy(
+                    ScrollPane.ScrollBarPolicy.AS_NEEDED
+            );
+
+            scroll.setPannable(false);
+
+            rootAdmin.setCenter(scroll);
+
             marcarBotonActivo(btnInventario);
-            
-        }catch (IOException e){
+
+        } catch (IOException e) {
             e.printStackTrace();
-            
         }
     }
+
+    private void abrirUsuarios() {
+
+        abrirVistaConScroll(
+                btnUsuarios,
+                "/vistas/fx/UsuariosView.fxml"
+        );
+    }
+
     private void abrirConciertos() {
 
     try {
@@ -177,80 +196,26 @@ public class MenuAdministradorFXController {
         e.printStackTrace();
     }
 }
+
     private void abrirLocalidades() {
 
-        try {
-
-            BorderPane rootAdmin =
-                    (BorderPane) btnLocalidades
-                            .getScene()
-                            .getRoot();
-
-            if (dashboardOriginal == null) {
-
-                dashboardOriginal =
-                        rootAdmin.getCenter();
-            }
-
-            FXMLLoader loader =
-                    new FXMLLoader(
-                            getClass().getResource(
-                                    "/vistas/fx/LocalidadesView.fxml"
-                            )
-                    );
-
-            Parent vistaLocalidades =
-                    loader.load();
-
-            rootAdmin.setCenter(
-                    vistaLocalidades
-            );
-
-            marcarBotonActivo(
-                    btnLocalidades
-            );
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
+        abrirVistaConScroll(
+                btnLocalidades,
+                "/vistas/fx/LocalidadesView.fxml"
+        );
     }
+
     
-    private void abrirArtistas (){
-        
-        try{
-            
-            BorderPane rootAdmin =
-                    (BorderPane) btnArtistas
-                            .getScene()
-                            .getRoot();
-            
-            if (dashboardOriginal == null) {
-                dashboardOriginal =
-                        rootAdmin.getCenter();
-            }
-            FXMLLoader loader =
-                    new FXMLLoader (
-                                getClass().getResource(
-                                        "/vistas/fx/ArtistasView.fxml"
-                                        
-                                )
-                    );
-            Parent vistaArtistas =
-                    loader.load();
-            
-            rootAdmin.setCenter(
-                    vistaArtistas
-            );
-            
-            marcarBotonActivo(
-                    btnArtistas
-            );
-            
-        }catch(IOException e){
-            e.printStackTrace();
-        }
+
+    private void abrirArtistas() {
+
+        abrirVistaConScroll(
+                btnArtistas,
+                "/vistas/fx/ArtistasView.fxml"
+        );
     }
+
+
 
     private void abrirDashboard() {
 
@@ -266,10 +231,13 @@ public class MenuAdministradorFXController {
             );
         }
 
+        cargarContadoresDashboard();
+
         marcarBotonActivo(
                 btnDashboard
         );
     }
+
 
     private void marcarBotonActivo(
             Button botonActivo
@@ -350,4 +318,95 @@ public class MenuAdministradorFXController {
             e.printStackTrace();
         }
     }
+    
+
+    private void cargarContadoresDashboard() {
+
+        ArtistaDAO artistaDAO = new ArtistaDAO();
+        ConciertoDAO conciertoDAO = new ConciertoDAO();
+        LocalidadDAO localidadDAO = new LocalidadDAO();
+        InventarioBoletoDAO inventarioDAO =
+                new InventarioBoletoDAO();
+
+        int totalArtistas =
+                artistaDAO.listarTodos().size();
+
+        int totalConciertos =
+                conciertoDAO.listarTodos().size();
+
+        int totalLocalidades =
+                localidadDAO.listarTodos().size();
+
+        int totalInventario =
+                inventarioDAO.listarTodos().size();
+
+        lblTotalArtistas.setText(
+                String.valueOf(totalArtistas)
+        );
+
+        lblTotalConciertos.setText(
+                String.valueOf(totalConciertos)
+        );
+
+        lblTotalLocalidades.setText(
+                String.valueOf(totalLocalidades)
+        );
+
+        lblTotalInventario.setText(
+                String.valueOf(totalInventario)
+        );
+    }
+    
+    private void abrirVistaConScroll(
+            Button boton,
+            String rutaFXML) {
+
+        try {
+
+            BorderPane rootAdmin =
+                    (BorderPane) boton
+                            .getScene()
+                            .getRoot();
+
+            if (dashboardOriginal == null) {
+                dashboardOriginal = rootAdmin.getCenter();
+            }
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource(rutaFXML)
+            );
+
+            Parent vista = loader.load();
+
+            ScrollPane scroll;
+
+            if (vista instanceof ScrollPane) {
+                scroll = (ScrollPane) vista;
+            } else {
+                scroll = new ScrollPane(vista);
+            }
+
+            scroll.setFitToWidth(true);
+            scroll.setFitToHeight(false);
+
+            scroll.setHbarPolicy(
+                    ScrollPane.ScrollBarPolicy.NEVER
+            );
+
+            scroll.setVbarPolicy(
+                    ScrollPane.ScrollBarPolicy.AS_NEEDED
+            );
+
+            scroll.setPannable(false);
+
+            rootAdmin.setCenter(scroll);
+
+            marcarBotonActivo(boton);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
 }

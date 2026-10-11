@@ -84,6 +84,8 @@ public class LoginFXController {
             System.out.println(
                     "Login correcto - VENDEDOR"
             );
+            
+            abrirMenuVendedor(usuario);
 
             // Aquí abriremos después el menú de vendedor
         }
@@ -144,14 +146,13 @@ public class LoginFXController {
 
             stage.setTitle("SVB-GUA - Administración");
             stage.setScene(scene);
-            stage.setResizable(false);
+            stage.setResizable(true);
             stage.show();
 
             Stage loginStage =
                     (Stage) btnIniciarSesion
                             .getScene()
                             .getWindow();
-
             loginStage.close();
 
         } catch (IOException e) {
@@ -163,4 +164,41 @@ public class LoginFXController {
             );
         }
     }    
+    private void abrirMenuVendedor(Usuario usuario){
+        try{
+            
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource(
+                            "/vistas/fx/MenuVendedorView.fxml"
+                    )
+            );
+            
+        Parent root = loader.load();
+        MenuVendedorFXController controller = 
+                loader.getController();
+        
+        controller.setUsuario(usuario);
+        
+        Stage stage = new Stage();
+        Scene scene = new Scene(root);
+        
+        stage.setTitle("SVB-GUA - VENDEDOR");
+        stage.setScene(scene);
+        stage.setResizable(true);
+        stage.show();
+        
+        Stage loginStage =
+                    (Stage) btnIniciarSesion
+                            .getScene()
+                            .getWindow();
+            loginStage.close();
+        
+        }catch(IOException e){
+            e.printStackTrace(); 
+            mostrarError(
+                    "No se pudo abrir el menú de administración."
+            );
+        }
+        
+    }
 }
