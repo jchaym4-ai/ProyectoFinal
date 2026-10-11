@@ -1,15 +1,28 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package controladorFx;
 
-/**
- *
- * @author Abdias M
- */
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import modelo.Usuario;
+
 public class MenuVendedorFXController {
-    
+
+    @FXML
+    private Label lblNombreUsuario;
+
     private Usuario usuario;
-    
+
+    public void setUsuario(Usuario usuario) {
+
+        if (usuario == null) {
+            throw new IllegalArgumentException(
+                    "El usuario no puede ser nulo."
+            );
+        }
+
+        this.usuario = usuario;
+
+        lblNombreUsuario.setText(
+                usuario.getNombreCompleto()
+        );
+    }
 }

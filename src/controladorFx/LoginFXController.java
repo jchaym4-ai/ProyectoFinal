@@ -196,7 +196,7 @@ public class LoginFXController {
         }catch(IOException e){
             e.printStackTrace(); 
             mostrarError(
-                    "No se pudo abrir el menú de administración."
+                    "No se pudo abrir el menú de vendedor."
             );
         }
         
