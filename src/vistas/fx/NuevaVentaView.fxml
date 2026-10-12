@@ -15,86 +15,250 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<ScrollPane
+    fitToWidth="true"
+    fitToHeight="false"
+    hbarPolicy="NEVER"
+    vbarPolicy="AS_NEEDED"
+    pannable="true"
+    prefHeight="600.0"
+    prefWidth="950.0"
+    xmlns="http://javafx.com/javafx/26"
+    xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="controladorFx.NuevaVentaFXController">
 
-<ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" prefHeight="600.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
-   <content>
-      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="950.0" styleClass="nueva-venta-root" stylesheets="@nuevaventa.css">
-         <top>
-            <VBox alignment="CENTER_LEFT" prefWidth="100.0" spacing="12.0" styleClass="venta-header" BorderPane.alignment="CENTER">
-               <BorderPane.margin>
-                  <Insets bottom="20.0" left="20.0" right="25.0" top="20.0" />
-               </BorderPane.margin>
-               <children>
-                  <Label styleClass="venta-titulo" text="Nueva Venta">
-                     <font>
-                        <Font name="System Bold" size="28.0" />
-                     </font>
-                  </Label>
-                  <Label styleClass="venta-subtitulo" text="Selecciona un concierto para consultar las localidades disponibles." />
-                  <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="200.0" spacing="15.0">
-                     <children>
-                        <ComboBox fx:id="cmbConciertos" maxWidth="-Infinity" prefHeight="40.0" prefWidth="693.0" promptText="Seleccionar concierto..." styleClass="venta-combo" />
-                        <Button fx:id="btnConsultarConcierto" mnemonicParsing="false" prefHeight="40.0" prefWidth="120.0" styleClass="venta-boton" text="Consultar" />
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </top>
-         <center>
-            <StackPane fx:id="contenedorMapa" prefHeight="150.0" prefWidth="200.0" styleClass="venta-mapa" BorderPane.alignment="CENTER">
-               <children>
-                  <VBox minWidth="300.0" prefHeight="200.0" prefWidth="300.0" spacing="12.0" styleClass="venta-mapa">
-                     <StackPane.margin>
-                        <Insets />
-                     </StackPane.margin>
-                     <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                     </padding>
-                     <children>
-                        <Label styleClass="venta-seccion-titulo" text="Mapa de localidades" />
-                        <ScrollPane fx:id="panelMapa" minWidth="0.0" prefHeight="550.0" prefWidth="500.0" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="550.0" styleClass="venta-mapa-lienzo" />
-                          </content>
-                        </ScrollPane>
-                     </children>
-                  </VBox>
-               </children>
-               <BorderPane.margin>
-                  <Insets right="20.0" />
-               </BorderPane.margin>
-            </StackPane>
-         </center>
-         <right>
-            <VBox maxHeight="-Infinity" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" spacing="10.0" styleClass="venta-resumen" BorderPane.alignment="CENTER">
-               <padding>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </padding>
-               <children>
-                  <Label styleClass="venta-seccion-titulo" text="Resumen de compra" />
-                  <Separator prefWidth="200.0" styleClass="venta-separador" />
-                  <Label styleClass="venta-campo-etiqueta" text="Localidad seleccionada" />
-                  <Label fx:id="lblLocalidadSeleccionada" styleClass="venta-campo-valor" text="Sin seleccionar" />
-                  <Label styleClass="venta-campo-etiqueta" text="Precio unitario" />
-                  <Label fx:id="lblPrecioUnitario" styleClass="venta-valor" text="Q 0.00" />
-                  <Label styleClass="venta-campo-etiqueta" text="Disponibilidad" />
-                  <Label fx:id="lblDisponibles" styleClass="venta-campo-valor" text="0 boletos" />
-                  <Label styleClass="venta-campo-etiqueta" text="Cantidad de boletos (aforo)" />
-                  <Spinner fx:id="spnCantidad" styleClass="venta-spinner" />
-                  <Label styleClass="venta-campo-etiqueta" text="Asientos seleccionados" />
-                  <Label fx:id="lblAsientosSeleccionados" styleClass="venta-campo-valor" text="Ninguno" />
-                  <Separator prefWidth="200.0" styleClass="venta-separador" />
-                  <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-                     <children>
-                        <Label styleClass="venta-total-texto" text="Total" />
-                        <Region prefHeight="28.0" prefWidth="123.0" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="lblTotal" alignment="CENTER_RIGHT" styleClass="venta-total" text="Q 0.00" />
-                     </children>
-                  </HBox>
-                  <Button fx:id="btnConfirmarVenta" mnemonicParsing="false" prefHeight="45.0" prefWidth="240.0" styleClass="venta-boton" text="Confirmar Venta" />
-               </children>
-            </VBox>
-         </right>
-      </BorderPane>
-   </content>
+    <content>
+
+        <BorderPane
+            prefWidth="950.0"
+            styleClass="nueva-venta-root"
+            stylesheets="@nuevaventa.css">
+
+            <top>
+
+                <VBox
+                    alignment="CENTER_LEFT"
+                    spacing="12.0"
+                    styleClass="venta-header"
+                    BorderPane.alignment="CENTER">
+
+                    <BorderPane.margin>
+                        <Insets
+                            top="20.0"
+                            right="25.0"
+                            bottom="20.0"
+                            left="20.0" />
+                    </BorderPane.margin>
+
+                    <children>
+
+                        <Label
+                            text="Nueva Venta"
+                            styleClass="venta-titulo">
+
+                            <font>
+                                <Font
+                                    name="System Bold"
+                                    size="28.0" />
+                            </font>
+
+                        </Label>
+
+                        <Label
+                            text="Selecciona un concierto para consultar las localidades disponibles."
+                            styleClass="venta-subtitulo" />
+
+                        <HBox
+                            alignment="CENTER_LEFT"
+                            spacing="15.0"
+                            prefHeight="45.0">
+
+                            <children>
+
+                                <ComboBox
+                                    fx:id="cmbConciertos"
+                                    prefWidth="693.0"
+                                    prefHeight="40.0"
+                                    maxWidth="Infinity"
+                                    promptText="Seleccionar concierto..."
+                                    styleClass="venta-combo"
+                                    HBox.hgrow="ALWAYS" />
+
+                                <Button
+                                    fx:id="btnConsultarConcierto"
+                                    text="Consultar"
+                                    mnemonicParsing="false"
+                                    prefWidth="120.0"
+                                    prefHeight="40.0"
+                                    styleClass="venta-boton" />
+
+                            </children>
+
+                        </HBox>
+
+                    </children>
+
+                </VBox>
+
+            </top>
+
+            <center>
+
+                <StackPane
+                    fx:id="contenedorMapa"
+                    BorderPane.alignment="TOP_CENTER">
+
+                    <BorderPane.margin>
+                        <Insets right="20.0" />
+                    </BorderPane.margin>
+
+                    <children>
+
+                        <VBox
+                            spacing="12.0"
+                            minWidth="0.0"
+                            maxWidth="Infinity"
+                            styleClass="venta-mapa"
+                            style="-fx-padding: 16px;">
+
+                            <children>
+
+                                <Label
+                                    text="Mapa de localidades"
+                                    styleClass="venta-seccion-titulo" />
+
+                                <AnchorPane
+                                    fx:id="panelMapa"
+                                    minWidth="590.0"
+                                    minHeight="650.0"
+                                    prefWidth="590.0"
+                                    prefHeight="650.0"
+                                    styleClass="venta-mapa-lienzo" />
+
+                            </children>
+
+                        </VBox>
+
+                    </children>
+
+                </StackPane>
+
+            </center>
+
+            <right>
+
+                <VBox
+                    minWidth="300.0"
+                    prefWidth="300.0"
+                    maxWidth="300.0"
+                    maxHeight="-Infinity"
+                    spacing="10.0"
+                    styleClass="venta-resumen"
+                    BorderPane.alignment="TOP_CENTER">
+
+                    <children>
+
+                        <Label
+                            text="Resumen de compra"
+                            styleClass="venta-resumen-titulo" />
+
+                        <Separator
+                            prefWidth="200.0"
+                            styleClass="venta-separador" />
+
+                        <Label
+                            text="Localidad seleccionada"
+                            styleClass="venta-campo-etiqueta" />
+
+                        <Label
+                            fx:id="lblLocalidadSeleccionada"
+                            text="Sin seleccionar"
+                            styleClass="venta-campo-valor" />
+
+                        <Label
+                            text="Precio unitario"
+                            styleClass="venta-campo-etiqueta" />
+
+                        <Label
+                            fx:id="lblPrecioUnitario"
+                            text="Q 0.00"
+                            styleClass="venta-valor" />
+
+                        <Label
+                            text="Disponibilidad"
+                            styleClass="venta-campo-etiqueta" />
+
+                        <Label
+                            fx:id="lblDisponibles"
+                            text="0 boletos"
+                            styleClass="venta-campo-valor" />
+
+                        <Label
+                            text="Cantidad de boletos (aforo)"
+                            styleClass="venta-campo-etiqueta" />
+
+                        <Spinner
+                            fx:id="spnCantidad"
+                            prefHeight="40.0"
+                            maxWidth="Infinity"
+                            styleClass="venta-spinner" />
+
+                        <Label
+                            text="Asientos seleccionados"
+                            styleClass="venta-campo-etiqueta" />
+
+                        <Label
+                            fx:id="lblAsientosSeleccionados"
+                            text="Ninguno"
+                            styleClass="venta-campo-valor" />
+
+                        <Separator
+                            prefWidth="200.0"
+                            styleClass="venta-separador" />
+
+                        <HBox
+                            alignment="CENTER_LEFT"
+                            prefHeight="40.0"
+                            spacing="10.0">
+
+                            <children>
+
+                                <Label
+                                    text="Total"
+                                    styleClass="venta-total-texto" />
+
+                                <Region
+                                    prefWidth="0.0"
+                                    maxWidth="Infinity"
+                                    HBox.hgrow="ALWAYS" />
+
+                                <Label
+                                    fx:id="lblTotal"
+                                    text="Q 0.00"
+                                    alignment="CENTER_RIGHT"
+                                    styleClass="venta-total" />
+
+                            </children>
+
+                        </HBox>
+
+                        <Button
+                            fx:id="btnConfirmarVenta"
+                            text="Confirmar Venta"
+                            mnemonicParsing="false"
+                            prefHeight="45.0"
+                            prefWidth="240.0"
+                            maxWidth="Infinity"
+                            styleClass="venta-boton" />
+
+                    </children>
+
+                </VBox>
+
+            </right>
+
+        </BorderPane>
+
+    </content>
+
 </ScrollPane>

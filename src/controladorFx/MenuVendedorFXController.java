@@ -98,47 +98,80 @@ public class MenuVendedorFXController {
     // DASHBOARD VENDEDOR
 
 
-private void abrirDashboard() {
+    private void abrirDashboard() {
 
-    if (usuario == null) {
-        return;
+        if (usuario == null) {
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                    "/vistas/fx/DashboardVendedorView.fxml"
+                )
+            );
+
+            Parent vista = loader.load();
+
+            DashboardVendedorFXController controller =
+                    loader.getController();
+
+            controller.setUsuario(usuario);
+
+            contenedorCentral.getChildren().setAll(vista);
+
+            marcarBotonActivo(btnDashboard);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
-    try {
-        FXMLLoader loader = new FXMLLoader(
-            getClass().getResource(
-                "/vistas/fx/DashboardVendedorView.fxml"
-            )
-        );
-
-        Parent vista = loader.load();
-
-        DashboardVendedorFXController controller =
-                loader.getController();
-
-        controller.setUsuario(usuario);
-
-        contenedorCentral.getChildren().setAll(vista);
-
-        marcarBotonActivo(btnDashboard);
-
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-}
 
 
     // NUEVA VENTA
 
+
     private void abrirNuevaVenta() {
 
-        mostrarSeccion(
-                "Nueva Venta",
-                "Aquí se realizará la venta de boletos."
-        );
+        try {
 
-        marcarBotonActivo(btnNuevaVenta);
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource(
+                            "/vistas/fx/NuevaVentaView.fxml"
+                    )
+            );
+
+            Parent vistaNuevaVenta = loader.load();
+
+            NuevaVentaFXController controller =
+                    loader.getController();
+
+            controller.setUsuario(usuario);
+
+            contenedorCentral.getChildren().setAll(
+                    vistaNuevaVenta
+            );
+
+            marcarBotonActivo(btnNuevaVenta);
+
+        } catch (IOException | RuntimeException e) {
+
+            e.printStackTrace();
+
+            javafx.scene.control.Alert alerta =
+                    new javafx.scene.control.Alert(
+                            javafx.scene.control.Alert.AlertType.ERROR
+                    );
+
+            alerta.setTitle("Error");
+            alerta.setHeaderText(
+                    "No se pudo abrir Nueva Venta"
+            );
+            alerta.setContentText(e.getMessage());
+            alerta.showAndWait();
+        }
     }
+
 
     // HISTORIAL DE VENTAS
 
