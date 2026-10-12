@@ -1,0 +1,27 @@
+/* SVB-GUA | Dashboard Vendedor | solo presentación */
+.dashboard-scroll { -fx-background: #f3f6fb; -fx-background-color: #f3f6fb; -fx-border-color: transparent; }
+.dashboard-scroll > .viewport { -fx-background-color: #f3f6fb; }
+.dashboard-root { -fx-background-color: #f3f6fb; -fx-font-family: "Segoe UI", Arial, sans-serif; }
+.page-title { -fx-text-fill: #172b4d; -fx-font-size: 27px; -fx-font-weight: bold; }
+.page-subtitle { -fx-text-fill: #708099; -fx-font-size: 13px; }
+.refresh-button { -fx-background-color: #1e5bba; -fx-background-radius: 9; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 11 20 11 20; -fx-cursor: hand; }
+.refresh-button:disabled { -fx-opacity: 0.50; -fx-cursor: default; }
+.stat-card { -fx-background-color: white; -fx-background-radius: 14; -fx-border-color: #e6ecf4; -fx-border-radius: 14; -fx-border-width: 1; -fx-padding: 22 24 22 24; -fx-min-height: 151; -fx-effect: dropshadow(gaussian, rgba(20,42,76,0.06), 14, 0.10, 0, 3); }
+.stat-label { -fx-text-fill: #657790; -fx-font-size: 11px; -fx-font-weight: bold; }
+.stat-value { -fx-text-fill: #164e9d; -fx-font-size: 32px; -fx-font-weight: bold; }
+.stat-hint { -fx-text-fill: #8a97a8; -fx-font-size: 11px; }
+.table-card { -fx-background-color: white; -fx-background-radius: 14; -fx-border-color: #e6ecf4; -fx-border-radius: 14; -fx-padding: 20 22 22 22; -fx-effect: dropshadow(gaussian, rgba(20,42,76,0.04), 13, 0.10, 0, 2); }
+.section-title { -fx-text-fill: #172b4d; -fx-font-size: 17px; -fx-font-weight: bold; }
+.section-subtitle { -fx-text-fill: #7b899e; -fx-font-size: 12px; }
+.read-only-tag { -fx-background-color: #e9f3ff; -fx-background-radius: 7; -fx-text-fill: #2865ae; -fx-padding: 6 9; -fx-font-size: 10px; -fx-font-weight: bold; }
+.sales-table { -fx-background-color: white; -fx-border-color: #e8edf5; -fx-border-radius: 7; -fx-background-radius: 7; -fx-table-cell-border-color: transparent; }
+.sales-table .column-header-background { -fx-background-color: #edf3fb; }
+.sales-table .column-header { -fx-background-color: transparent; -fx-size: 38; }
+.sales-table .column-header .label { -fx-text-fill: #536781; -fx-font-weight: bold; -fx-font-size: 11px; }
+.sales-table .table-row-cell { -fx-cell-size: 35px; -fx-background-color: white; }
+.sales-table .table-row-cell:odd { -fx-background-color: #f8fafd; }
+.sales-table .table-row-cell:selected { -fx-background-color: #d8e8fc; }
+.sales-table .table-cell { -fx-text-fill: #34465c; -fx-font-size: 12px; }
+.empty-label { -fx-text-fill: #8995a8; -fx-font-size: 12px; -fx-alignment: center; }
+.status-dot { -fx-text-fill: #db991f; -fx-font-size: 12px; }
+.status-text { -fx-text-fill: #748399; -fx-font-size: 11px; }
