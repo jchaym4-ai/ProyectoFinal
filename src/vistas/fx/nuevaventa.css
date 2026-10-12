@@ -1,0 +1,341 @@
+
+/* FONDO PRINCIPAL */
+
+.nueva-venta-root {
+    -fx-background-color: #F3F4F6;
+}
+
+/* ENCABEZADO */
+
+.venta-header {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: transparent transparent #E5E7EB transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.venta-titulo {
+    -fx-text-fill: #111827;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.venta-subtitulo {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 14px;
+}
+
+/* MAPA DE LOCALIDADES */
+
+.venta-mapa {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12px;
+}
+
+.venta-seccion-titulo {
+    -fx-text-fill: #111827;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/* RESUMEN DE COMPRA */
+
+.venta-resumen {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12px;
+}
+
+.venta-valor {
+    -fx-text-fill: #111827;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.venta-total {
+    -fx-text-fill: #2563EB;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/* BOTONES */
+
+.venta-boton {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+}
+
+.venta-boton:hover {
+    -fx-background-color: #1D4ED8;
+}
+
+
+/* =========================================
+   SVB-GUA - NUEVA VENTA
+   ========================================= */
+
+/* FONDO GENERAL */
+
+.nueva-venta-root {
+    -fx-background-color: #F3F4F6;
+}
+
+/* =========================================
+   ENCABEZADO
+   ========================================= */
+
+.venta-header {
+    -fx-background-color: white;
+    -fx-padding: 20px 25px;
+    -fx-spacing: 12px;
+    -fx-background-radius: 12px;
+}
+
+.venta-titulo {
+    -fx-text-fill: #111827;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+.venta-subtitulo {
+    -fx-text-fill: #64748B;
+    -fx-font-size: 13px;
+}
+
+/* COMBOBOX */
+
+.venta-combo {
+    -fx-background-color: #F8FAFC;
+    -fx-border-color: #CBD5E1;
+    -fx-border-radius: 7px;
+    -fx-background-radius: 7px;
+    -fx-font-size: 13px;
+}
+
+.venta-combo:focused {
+    -fx-border-color: #2563EB;
+}
+
+/* =========================================
+   MAPA DE LOCALIDADES
+   ========================================= */
+
+.venta-mapa {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-padding: 20px;
+    -fx-spacing: 12px;
+}
+
+.venta-seccion-titulo {
+    -fx-text-fill: #111827;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/* =========================================
+   PANEL RESUMEN DE COMPRA
+   ========================================= */
+
+.venta-resumen {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-padding: 20px;
+    -fx-spacing: 12px;
+    -fx-effect: dropshadow(
+        gaussian,
+        rgba(0, 0, 0, 0.06),
+        12,
+        0.1,
+        0,
+        3
+    );
+}
+
+/* TITULO RESUMEN */
+
+.venta-resumen-titulo {
+    -fx-text-fill: #111827;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/* ETIQUETAS PEQUEÑAS */
+
+.venta-campo-etiqueta {
+    -fx-text-fill: #64748B;
+    -fx-font-size: 12px;
+    -fx-font-weight: normal;
+}
+
+/* VALORES DE CADA CAMPO */
+
+.venta-campo-valor {
+    -fx-text-fill: #111827;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* PRECIO UNITARIO */
+
+.venta-valor {
+    -fx-text-fill: #111827;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* =========================================
+   CANTIDAD DE BOLETOS
+   ========================================= */
+
+.venta-spinner {
+    -fx-background-color: white;
+    -fx-border-color: #CBD5E1;
+    -fx-border-radius: 7px;
+    -fx-background-radius: 7px;
+}
+
+.venta-spinner .text-field {
+    -fx-background-color: white;
+    -fx-text-fill: #111827;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.venta-spinner .increment-arrow-button,
+.venta-spinner .decrement-arrow-button {
+    -fx-background-color: #F1F5F9;
+}
+
+/* =========================================
+   SEPARADORES
+   ========================================= */
+
+.venta-separador .line {
+    -fx-border-color: #E2E8F0;
+    -fx-border-width: 1px 0 0 0;
+}
+
+/* =========================================
+   TOTAL DE COMPRA
+   ========================================= */
+
+.venta-total-texto {
+    -fx-text-fill: #111827;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.venta-total {
+    -fx-text-fill: #111827;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/* =========================================
+   BOTONES
+   ========================================= */
+
+.venta-boton {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 7px;
+    -fx-padding: 12px 16px;
+    -fx-cursor: hand;
+}
+
+.venta-boton:hover {
+    -fx-background-color: #1D4ED8;
+}
+
+.venta-boton:pressed {
+    -fx-background-color: #1E40AF;
+}
+
+.venta-boton:disabled {
+    -fx-background-color: #94A3B8;
+    -fx-opacity: 0.7;
+}
+
+
+.venta-header {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 14px;
+    -fx-border-radius: 14px;
+    -fx-border-color: #E2E8F0;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 14, 0, 0, 4);
+}
+
+.venta-mapa {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 14px;
+    -fx-border-radius: 14px;
+    -fx-border-color: #E2E8F0;
+    -fx-border-width: 1px;
+    -fx-padding: 25px;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 14, 0, 0, 4);
+}
+
+.venta-mapa-lienzo {
+    -fx-background-color: #F8FAFC;
+    -fx-background-radius: 10px;
+    -fx-border-color: #CBD5E1;
+    -fx-border-radius: 10px;
+    -fx-border-width: 1px;
+}
+
+.venta-resumen {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 14px;
+    -fx-border-radius: 14px;
+    -fx-border-color: #E2E8F0;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.07), 16, 0, 0, 4);
+}
+
+.venta-seccion-titulo,
+.venta-resumen-titulo {
+    -fx-text-fill: #0F172A;
+    -fx-font-size: 19px;
+    -fx-font-weight: bold;
+}
+
+.venta-combo {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #CBD5E1;
+    -fx-border-width: 1px;
+    -fx-border-radius: 9px;
+    -fx-background-radius: 9px;
+}
+
+.venta-combo:hover {
+    -fx-border-color: #93C5FD;
+}
+
+.venta-combo:focused {
+    -fx-border-color: #2563EB;
+    -fx-border-width: 1.5px;
+}
+
+.venta-boton {
+    -fx-background-color: #2563EB;
+    -fx-background-radius: 9px;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.15), 9, 0, 0, 3);
+}
+
+.venta-boton:hover {
+    -fx-background-color: #1D4ED8;
+}
+
+.venta-boton:pressed {
+    -fx-background-color: #1E40AF;
+}
+
+
