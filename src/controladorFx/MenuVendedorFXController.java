@@ -86,23 +86,47 @@ public class MenuVendedorFXController {
         lblNombreUsuario.setText(
                 usuario.getNombreCompleto()
         );
+        abrirDashboard();
     }
 
     public Usuario getUsuario() {
         return usuario;
+        
+        
     }
 
     // DASHBOARD VENDEDOR
 
-    private void abrirDashboard() {
 
-        mostrarSeccion(
-                "Dashboard Vendedor",
-                "Bienvenido al panel de ventas de SVB-GUA."
+private void abrirDashboard() {
+
+    if (usuario == null) {
+        return;
+    }
+
+    try {
+        FXMLLoader loader = new FXMLLoader(
+            getClass().getResource(
+                "/vistas/fx/DashboardVendedorView.fxml"
+            )
         );
 
+        Parent vista = loader.load();
+
+        DashboardVendedorFXController controller =
+                loader.getController();
+
+        controller.setUsuario(usuario);
+
+        contenedorCentral.getChildren().setAll(vista);
+
         marcarBotonActivo(btnDashboard);
+
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+}
+
 
     // NUEVA VENTA
 
@@ -118,15 +142,37 @@ public class MenuVendedorFXController {
 
     // HISTORIAL DE VENTAS
 
-    private void abrirHistorialVentas() {
+    
+private void abrirHistorialVentas() {
 
-        mostrarSeccion(
-                "Historial de Ventas",
-                "Aquí se consultarán las ventas registradas."
+    if (usuario == null) {
+        return;
+    }
+
+    try {
+
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/vistas/fx/HistorialVentasView.fxml"
+                )
         );
 
+        Parent vista = loader.load();
+
+        HistorialVentasFXController controller =
+                loader.getController();
+
+        controller.setUsuario(usuario);
+
+        contenedorCentral.getChildren().setAll(vista);
+
         marcarBotonActivo(btnHistorialVentas);
+
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+}
+
 
     // CONSULTAR BOLETOS
 
