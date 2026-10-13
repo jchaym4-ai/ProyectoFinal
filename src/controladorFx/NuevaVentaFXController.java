@@ -1,13 +1,18 @@
 
 package controladorFx;
 
+import dao.AsientoDAO;
 import dao.ConciertoDAO;
 import dao.MapaLocalidadDAO;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -18,8 +23,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.effect.DropShadow;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -28,56 +34,67 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.StringConverter;
+import modelo.Asiento;
 import modelo.Concierto;
 import modelo.MapaLocalidad;
 import modelo.Usuario;
 
+import javafx.geometry.Point2D;
+import javafx.scene.Node;
+import javafx.scene.input.MouseButton;
+import javafx.scene.transform.Scale;
+
+
 public class NuevaVentaFXController {
 
-    @FXML
-    private ComboBox<Concierto> cmbConciertos;
+    @FXML private ComboBox<Concierto> cmbConciertos;
+    @FXML private Button btnConsultarConcierto;
+    @FXML private StackPane contenedorMapa;
+    @FXML private AnchorPane panelMapa;
+    @FXML private Label lblLocalidadSeleccionada;
+    @FXML private Label lblPrecioUnitario;
+    @FXML private Label lblDisponibles;
+    @FXML private Spinner<Integer> spnCantidad;
+    @FXML private Label lblAsientosSeleccionados;
+    @FXML private Label lblTotal;
+    @FXML private Button btnConfirmarVenta;
+    
+    private static final double ZOOM_MINIMO = 1.0;
+    private static final double ZOOM_MAXIMO = 3.0;
+    private static final double PASO_ZOOM = 1.15;
 
-    @FXML
-    private Button btnConsultarConcierto;
+    private double nivelZoom = 1.0;
+    private double arrastreInicioX;
+    private double arrastreInicioY;
+    private double traslacionInicioX;
+    private double traslacionInicioY;
 
-    @FXML
-    private StackPane contenedorMapa;
+    private final Scale escalaMapa = new Scale(1, 1, 295, 285);
+    
+    private boolean arrastrandoMapa = false;
 
-    @FXML
-    private AnchorPane panelMapa;
 
-    @FXML
-    private Label lblLocalidadSeleccionada;
-
-    @FXML
-    private Label lblPrecioUnitario;
-
-    @FXML
-    private Label lblDisponibles;
-
-    @FXML
-    private Spinner<Integer> spnCantidad;
-
-    @FXML
-    private Label lblAsientosSeleccionados;
-
-    @FXML
-    private Label lblTotal;
-
-    @FXML
-    private Button btnConfirmarVenta;
 
     private Usuario usuario;
-
     private MapaLocalidad localidadSeleccionada;
-
-    private Group grupoSeleccionado;
 
     private final ConciertoDAO conciertoDAO =
             new ConciertoDAO();
 
     private final MapaLocalidadDAO mapaDAO =
             new MapaLocalidadDAO();
+
+    private final AsientoDAO asientoDAO =
+            new AsientoDAO();
+
+    private final Map<Integer, Asiento> asientosSeleccionados =
+            new LinkedHashMap<>();
+
+    private final Map<Integer, Rectangle> casillasSeleccionadas =
+            new HashMap<>();
+
+    private final Map<Integer, Color> coloresOriginales =
+            new HashMap<>();
 
     private final DateTimeFormatter formatoFecha =
             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -88,6 +105,7 @@ public class NuevaVentaFXController {
         configurarSpinner();
         configurarComboBox();
         limpiarResumen();
+        configurarZoomMapa();
 
         btnConsultarConcierto.setDisable(true);
         btnConfirmarVenta.setDisable(true);
@@ -102,8 +120,7 @@ public class NuevaVentaFXController {
         );
 
         spnCantidad.valueProperty().addListener(
-                (obs, anterior, nuevo) ->
-                        actualizarTotal()
+                (obs, anterior, nuevo) -> actualizarTotal()
         );
 
         btnConsultarConcierto.setOnAction(
@@ -148,10 +165,8 @@ public class NuevaVentaFXController {
                         }
 
                         return concierto.getTituloEvento()
-                                + " - "
-                                + fecha
-                                + " - "
-                                + concierto.getRecinto();
+                                + " - " + fecha
+                                + " - " + concierto.getRecinto();
                     }
 
                     @Override
@@ -166,11 +181,12 @@ public class NuevaVentaFXController {
 
         cmbConciertos.getItems().clear();
 
-        for (Concierto concierto :
-                conciertoDAO.listarTodos()) {
+        for (Concierto concierto : conciertoDAO.listarTodos()) {
 
-            if ("programado".equals(concierto.getEstado())
-                    || "activo".equals(concierto.getEstado())) {
+            String estado = concierto.getEstado();
+
+            if ("programado".equalsIgnoreCase(estado)
+                    || "activo".equalsIgnoreCase(estado)) {
 
                 cmbConciertos.getItems().add(concierto);
             }
@@ -208,8 +224,7 @@ public class NuevaVentaFXController {
 
             if (localidades.isEmpty()) {
                 mostrarMensajeMapa(
-                        "Este concierto no tiene localidades "
-                        + "configuradas en el mapa."
+                        "Este concierto no tiene localidades registradas."
                 );
                 return;
             }
@@ -218,107 +233,116 @@ public class NuevaVentaFXController {
 
         } catch (SQLException e) {
 
-            e.printStackTrace();
-
             mostrarMensajeMapa(
                     "No se pudo cargar el mapa."
             );
 
-            Alert alerta = new Alert(
-                    Alert.AlertType.ERROR
-            );
-
+            Alert alerta = new Alert(Alert.AlertType.ERROR);
             alerta.setTitle("Error");
             alerta.setHeaderText(
                     "Error al consultar PostgreSQL"
             );
-
             alerta.setContentText(e.getMessage());
             alerta.showAndWait();
         }
     }
 
     private void dibujarMapa(
-            List<MapaLocalidad> localidades) {
+            List<MapaLocalidad> localidades) throws SQLException {
 
         panelMapa.getChildren().clear();
         panelMapa.setPrefSize(590, 650);
 
+        List<List<Asiento>> asientosPorLocalidad =
+                new ArrayList<>();
+
+        List<Integer> anillosPorLocalidad =
+                new ArrayList<>();
+
+        int totalAnillos = 0;
+
+        for (MapaLocalidad localidad : localidades) {
+
+            List<Asiento> asientos = new ArrayList<>();
+
+            int anillos;
+
+            if ("numerado".equalsIgnoreCase(
+                    localidad.getTipoVenta())) {
+
+                asientos = asientoDAO.listarPorInventario(
+                        localidad.getIdInventario()
+                );
+
+                anillos = Math.max(
+                        1,
+                        (int) Math.ceil(asientos.size() / 65.0)
+                );
+
+            } else {
+
+                anillos = 2;
+            }
+
+            asientosPorLocalidad.add(asientos);
+            anillosPorLocalidad.add(anillos);
+            totalAnillos += anillos;
+        }
+
         Ellipse estadio = new Ellipse(
-                295, 290, 280, 222
+                295, 285, 280, 222
         );
 
         estadio.setFill(Color.web("#E2E8F0"));
         estadio.setStroke(Color.web("#CBD5E1"));
         estadio.setStrokeWidth(4);
 
+        panelMapa.getChildren().add(estadio);
+
+        FlowPane leyenda = new FlowPane();
+
+        leyenda.setHgap(8);
+        leyenda.setVgap(8);
+        leyenda.setPrefWrapLength(540);
+        leyenda.setLayoutX(20);
+        leyenda.setLayoutY(530);
+
+        int anilloActual = 0;
+
+        for (int indice = 0;
+                indice < localidades.size();
+                indice++) {
+
+            MapaLocalidad localidad = localidades.get(indice);
+
+            int cantidadAnillos =
+                    anillosPorLocalidad.get(indice);
+
+            List<Asiento> asientos =
+                    asientosPorLocalidad.get(indice);
+
+            dibujarLocalidad(
+                    localidad,
+                    asientos,
+                    anilloActual,
+                    cantidadAnillos,
+                    totalAnillos,
+                    leyenda
+            );
+
+            anilloActual += cantidadAnillos;
+        }
+
         Ellipse interior = new Ellipse(
-                295, 290, 112, 76
+                295, 285, 110, 78
         );
 
         interior.setFill(Color.web("#F8FAFC"));
         interior.setStroke(Color.web("#CBD5E1"));
         interior.setStrokeWidth(2);
 
-        panelMapa.getChildren().add(estadio);
-
-        MapaLocalidad vip = buscarLocalidad(
-                localidades, "VIP"
-        );
-
-        MapaLocalidad oro = buscarLocalidad(
-                localidades, "ORO"
-        );
-
-        MapaLocalidad estandar = buscarLocalidad(
-                localidades, "ESTANDAR"
-        );
-
-        HBox leyenda = new HBox(12);
-        leyenda.setAlignment(Pos.CENTER_LEFT);
-        leyenda.setLayoutX(20);
-        leyenda.setLayoutY(540);
-
-        if (estandar != null) {
-            agregarZona(
-                    estandar,
-                    4,
-                    220,
-                    169,
-                    13,
-                    11,
-                    leyenda
-            );
-        }
-
-        if (oro != null) {
-            agregarZona(
-                    oro,
-                    4,
-                    163,
-                    121,
-                    12,
-                    11,
-                    leyenda
-            );
-        }
-
-        if (vip != null) {
-            agregarZona(
-                    vip,
-                    3,
-                    118,
-                    87,
-                    13,
-                    10,
-                    leyenda
-            );
-        }
-
-        panelMapa.getChildren().add(interior);
-
         Rectangle escenario = new Rectangle(
-                234, 258, 122, 64
+                234, 253, 122, 64
         );
 
         escenario.setArcWidth(16);
@@ -328,232 +352,251 @@ public class NuevaVentaFXController {
         Label lblEscenario = new Label("ESCENARIO");
 
         lblEscenario.setFont(
-                Font.font(
-                        "System",
-                        FontWeight.BOLD,
-                        15
-                )
+                Font.font("System", FontWeight.BOLD, 15)
         );
 
         lblEscenario.setTextFill(Color.WHITE);
         lblEscenario.setAlignment(Pos.CENTER);
         lblEscenario.setLayoutX(234);
-        lblEscenario.setLayoutY(278);
+        lblEscenario.setLayoutY(273);
         lblEscenario.setPrefWidth(122);
 
         panelMapa.getChildren().addAll(
+                interior,
                 escenario,
-                lblEscenario
+                lblEscenario,
+                leyenda
         );
 
-        panelMapa.getChildren().add(leyenda);
-
         Label nota = new Label(
-                "Distribución ilustrativa de zonas de aforo."
+                "Selecciona una casilla para consultar su asiento."
         );
 
         nota.setTextFill(Color.web("#64748B"));
         nota.setFont(Font.font("System", 12));
         nota.setLayoutX(20);
-        nota.setLayoutY(605);
+        nota.setLayoutY(615);
 
         panelMapa.getChildren().add(nota);
     }
 
-    private MapaLocalidad buscarLocalidad(
-            List<MapaLocalidad> localidades,
-            String nombre) {
-
-        for (MapaLocalidad localidad : localidades) {
-
-            if (localidad.getNombreLocalidad() != null
-                    && localidad.getNombreLocalidad()
-                            .equalsIgnoreCase(nombre)) {
-
-                return localidad;
-            }
-        }
-
-        return null;
-    }
-
-    private void agregarZona(
+    private void dibujarLocalidad(
             MapaLocalidad localidad,
-            int filas,
-            double radioXInicial,
-            double radioYInicial,
-            double pasoX,
-            double pasoY,
-            HBox leyenda) {
+            List<Asiento> asientos,
+            int anilloInicial,
+            int cantidadAnillos,
+            int totalAnillos,
+            FlowPane leyenda) {
 
-        Group grupo = new Group();
-
-        String codigoColor = colorSeguro(
-                localidad.getColor()
+        Color color = Color.web(
+                colorSeguro(localidad.getColor())
         );
 
-        Color color = Color.web(codigoColor);
+        boolean numerado = "numerado".equalsIgnoreCase(
+                localidad.getTipoVenta()
+        );
 
-        boolean agotado =
-                localidad.getCantidadDisponible() <= 0;
+        int indiceAsiento = 0;
+        Group grupoAforo = new Group();
 
-        if (agotado) {
-            color = Color.web("#94A3B8");
-        }
+        for (int anillo = 0;
+                anillo < cantidadAnillos;
+                anillo++) {
 
-        for (int fila = 0; fila < filas; fila++) {
+            int posicionAnillo = anilloInicial + anillo;
 
-            double radioX =
-                    radioXInicial + fila * pasoX;
+            double proporcion =
+                    (posicionAnillo + 0.5)
+                    / Math.max(1.0, totalAnillos);
 
-            double radioY =
-                    radioYInicial + fila * pasoY;
+            double radioX = 119 + proporcion * 147;
+            double radioY = 87 + proporcion * 124;
 
-            for (int angulo = 0;
-                    angulo < 360;
-                    angulo += 5) {
+            int cantidadCasillas;
 
-                if (angulo % 45 == 0) {
-                    continue;
-                }
+            if (numerado) {
 
-                double radianes =
-                        Math.toRadians(angulo);
+                int restantes =
+                        asientos.size() - indiceAsiento;
 
-                double x = 295
-                        + radioX * Math.cos(radianes);
+                int anillosRestantes =
+                        cantidadAnillos - anillo;
 
-                double y = 290
-                        + radioY * Math.sin(radianes);
-
-                Rectangle casilla = new Rectangle(
-                        8, 10
+                cantidadCasillas = (int) Math.ceil(
+                        (double) restantes / anillosRestantes
                 );
 
+            } else {
+
+                cantidadCasillas = 60;
+            }
+
+            for (int posicion = 0;
+                    posicion < cantidadCasillas;
+                    posicion++) {
+
+                double angulo =
+                        (2 * Math.PI * posicion)
+                        / cantidadCasillas;
+
+                double x = 295 + radioX * Math.cos(angulo);
+                double y = 285 + radioY * Math.sin(angulo);
+
+                Rectangle casilla = new Rectangle(7, 9);
+
+                casilla.setX(x - 3.5);
+                casilla.setY(y - 4.5);
+                casilla.setRotate(Math.toDegrees(angulo) + 90);
                 casilla.setArcWidth(2);
                 casilla.setArcHeight(2);
-
-                casilla.setLayoutX(x - 4);
-                casilla.setLayoutY(y - 5);
-
-                casilla.setRotate(angulo + 90);
-
-                casilla.setFill(color);
-
                 casilla.setStroke(Color.WHITE);
-                casilla.setStrokeWidth(0.7);
+                casilla.setStrokeWidth(0.5);
 
-                grupo.getChildren().add(casilla);
+                if (numerado) {
+
+                    Asiento asiento =
+                            asientos.get(indiceAsiento++);
+
+                    boolean disponible =
+                            "disponible".equalsIgnoreCase(
+                                    asiento.getEstado()
+                            );
+
+                    casilla.setFill(
+                            disponible
+                            ? color
+                            : Color.web("#94A3B8")
+                    );
+
+                    Tooltip.install(
+                            casilla,
+                            new Tooltip(
+                                    localidad.getNombreLocalidad()
+                                    + "\nFila: " + asiento.getFila()
+                                    + "\nAsiento: " + asiento.getNumero()
+                                    + "\nEstado: " + asiento.getEstado()
+                            )
+                    );
+
+                    
+                    if (disponible) {
+
+                        casilla.setCursor(Cursor.HAND);
+
+                        casilla.setOnMousePressed(e -> {
+                            arrastrandoMapa = false;
+                            e.consume();
+                        });
+
+                        casilla.setOnMouseClicked(e -> {
+                            seleccionarAsiento(
+                                    localidad,
+                                    asiento,
+                                    casilla,
+                                    color
+                            );
+                            e.consume();
+                        });
+                    }
+
+
+                    panelMapa.getChildren().add(casilla);
+
+                } else {
+
+                    casilla.setFill(
+                            localidad.getCantidadDisponible() > 0
+                            ? color
+                            : Color.web("#94A3B8")
+                    );
+
+                    grupoAforo.getChildren().add(casilla);
+                }
             }
         }
 
-        grupo.setOpacity(
-                agotado ? 0.35 : 0.85
-        );
+        if (!numerado) {
 
-        if (!agotado) {
+            if (localidad.getCantidadDisponible() > 0) {
 
-            grupo.setCursor(Cursor.HAND);
+                grupoAforo.setCursor(Cursor.HAND);
 
-            grupo.setOnMouseClicked(
-                    e -> seleccionarLocalidad(
-                            localidad,
-                            grupo
-                    )
-            );
+                grupoAforo.setOnMouseClicked(
+                        e -> seleccionarAforo(localidad)
+                );
+            }
+
+            panelMapa.getChildren().add(grupoAforo);
         }
 
-        panelMapa.getChildren().add(grupo);
-
-        Rectangle muestraColor = new Rectangle(
-                17, 17
-        );
-
-        muestraColor.setArcWidth(4);
-        muestraColor.setArcHeight(4);
-        muestraColor.setFill(color);
+        Rectangle muestra = new Rectangle(14, 14);
+        muestra.setArcWidth(3);
+        muestra.setArcHeight(3);
+        muestra.setFill(color);
 
         Label nombre = new Label(
                 localidad.getNombreLocalidad()
         );
 
         nombre.setFont(
-                Font.font(
-                        "System",
-                        FontWeight.BOLD,
-                        12
-                )
+                Font.font("System", FontWeight.BOLD, 11)
         );
 
-        nombre.setTextFill(
-                Color.web("#334155")
-        );
-
-        HBox elementoLeyenda = new HBox(
-                6,
-                muestraColor,
-                nombre
-        );
-
-        elementoLeyenda.setAlignment(
-                Pos.CENTER_LEFT
-        );
-
-        elementoLeyenda.setStyle(
+        HBox elemento = new HBox(6, muestra, nombre);
+        elemento.setAlignment(Pos.CENTER_LEFT);
+        elemento.setStyle(
                 "-fx-background-color: white;"
                 + "-fx-border-color: #E2E8F0;"
                 + "-fx-border-radius: 7px;"
                 + "-fx-background-radius: 7px;"
-                + "-fx-padding: 8px;"
+                + "-fx-padding: 7px;"
         );
 
-        if (!agotado) {
+        if (!numerado
+                && localidad.getCantidadDisponible() > 0) {
 
-            elementoLeyenda.setCursor(Cursor.HAND);
-
-            elementoLeyenda.setOnMouseClicked(
-                    e -> seleccionarLocalidad(
-                            localidad,
-                            grupo
-                    )
-            );
-
-        } else {
-            nombre.setText(
-                    localidad.getNombreLocalidad()
-                    + " (agotado)"
+            elemento.setCursor(Cursor.HAND);
+            elemento.setOnMouseClicked(
+                    e -> seleccionarAforo(localidad)
             );
         }
 
-        leyenda.getChildren().add(
-                elementoLeyenda
-        );
+        leyenda.getChildren().add(elemento);
     }
 
-    private void seleccionarLocalidad(
+    private void seleccionarAsiento(
             MapaLocalidad localidad,
-            Group grupo) {
+            Asiento asiento,
+            Rectangle casilla,
+            Color colorOriginal) {
 
-        if (localidad.getCantidadDisponible() <= 0) {
-            return;
+        if (localidadSeleccionada == null
+                || localidadSeleccionada.getIdInventario()
+                != localidad.getIdInventario()) {
+
+            limpiarAsientosSeleccionados();
+            localidadSeleccionada = localidad;
         }
 
-        if (grupoSeleccionado != null) {
-            grupoSeleccionado.setEffect(null);
-            grupoSeleccionado.setOpacity(0.85);
+        int idAsiento = asiento.getIdAsiento();
+
+        if (asientosSeleccionados.containsKey(idAsiento)) {
+
+            asientosSeleccionados.remove(idAsiento);
+            casilla.setFill(colorOriginal);
+            casillasSeleccionadas.remove(idAsiento);
+            coloresOriginales.remove(idAsiento);
+
+        } else {
+
+            asientosSeleccionados.put(idAsiento, asiento);
+            casillasSeleccionadas.put(idAsiento, casilla);
+            coloresOriginales.put(idAsiento, colorOriginal);
+
+            casilla.setFill(Color.web("#2563EB"));
         }
 
-        localidadSeleccionada = localidad;
-        grupoSeleccionado = grupo;
-
-        grupoSeleccionado.setOpacity(1.0);
-
-        grupoSeleccionado.setEffect(
-                new DropShadow(
-                        12,
-                        Color.web("#1E40AF")
-                )
-        );
+        configurarSpinner();
 
         lblLocalidadSeleccionada.setText(
                 localidad.getNombreLocalidad()
@@ -564,69 +607,140 @@ public class NuevaVentaFXController {
         );
 
         lblDisponibles.setText(
-                localidad.getCantidadDisponible()
-                + " boletos"
+                localidad.getCantidadDisponible() + " boletos"
         );
 
-        if ("aforo".equals(localidad.getTipoVenta())) {
+        actualizarResumenNumerado();
+    }
 
-            spnCantidad.setValueFactory(
-                    new SpinnerValueFactory.IntegerSpinnerValueFactory(
-                            1,
-                            localidad.getCantidadDisponible(),
-                            1
-                    )
-            );
+    private void seleccionarAforo(MapaLocalidad localidad) {
 
-            spnCantidad.setDisable(false);
+        limpiarAsientosSeleccionados();
 
-            lblAsientosSeleccionados.setText(
-                    "No aplica (aforo)"
-            );
+        localidadSeleccionada = localidad;
 
-        } else {
+        lblLocalidadSeleccionada.setText(
+                localidad.getNombreLocalidad()
+        );
 
-            configurarSpinner();
+        lblPrecioUnitario.setText(
+                formatearPrecio(localidad.getPrecio())
+        );
 
-            lblAsientosSeleccionados.setText(
-                    "Pendiente: selección de asientos"
-            );
+        lblDisponibles.setText(
+                localidad.getCantidadDisponible() + " boletos"
+        );
+
+        int disponibles = localidad.getCantidadDisponible();
+
+        spnCantidad.setValueFactory(
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(
+                        1, disponibles, 1
+                )
+        );
+
+        spnCantidad.setDisable(false);
+
+        lblAsientosSeleccionados.setText(
+                "No aplica (aforo)"
+        );
+
+        actualizarTotal();
+    }
+
+    private void actualizarResumenNumerado() {
+
+        int cantidad = asientosSeleccionados.size();
+
+        if (cantidad == 0) {
+
+            lblAsientosSeleccionados.setText("Ninguno");
+            lblTotal.setText("Q 0.00");
+            return;
         }
+
+        StringBuilder detalle = new StringBuilder();
+
+        int mostrados = 0;
+
+        for (Asiento asiento : asientosSeleccionados.values()) {
+
+            if (mostrados == 8) {
+                break;
+            }
+
+            if (mostrados > 0) {
+                detalle.append(", ");
+            }
+
+            detalle.append(asiento.getFila())
+                    .append("-")
+                    .append(asiento.getNumero());
+
+            mostrados++;
+        }
+
+        if (cantidad > mostrados) {
+            detalle.append(" +")
+                    .append(cantidad - mostrados)
+                    .append(" más");
+        }
+
+        lblAsientosSeleccionados.setText(
+                detalle.toString()
+        );
 
         actualizarTotal();
     }
 
     private void actualizarTotal() {
 
-        if (localidadSeleccionada == null
-                || !"aforo".equals(
-                        localidadSeleccionada.getTipoVenta()
-                )) {
+        if (localidadSeleccionada == null) {
 
             lblTotal.setText("Q 0.00");
             return;
         }
 
-        Integer cantidad = spnCantidad.getValue();
+        int cantidad;
 
-        if (cantidad == null || cantidad <= 0) {
-            lblTotal.setText("Q 0.00");
-            return;
+        if ("numerado".equalsIgnoreCase(
+                localidadSeleccionada.getTipoVenta())) {
+
+            cantidad = asientosSeleccionados.size();
+
+        } else {
+
+            Integer valor = spnCantidad.getValue();
+            cantidad = valor == null ? 0 : valor;
         }
 
-        BigDecimal total =
-                localidadSeleccionada.getPrecio()
-                        .multiply(
-                                BigDecimal.valueOf(cantidad)
-                        );
+        BigDecimal total = localidadSeleccionada
+                .getPrecio()
+                .multiply(BigDecimal.valueOf(cantidad));
 
-        lblTotal.setText(
-                formatearPrecio(total)
-        );
+        lblTotal.setText(formatearPrecio(total));
     }
 
-    private String formatearPrecio(
-            BigDecimal precio) {
+    private void limpiarAsientosSeleccionados() {
+
+        for (Map.Entry<Integer, Rectangle> entrada
+                : casillasSeleccionadas.entrySet()) {
+
+            Color original = coloresOriginales.get(
+                    entrada.getKey()
+            );
+
+            if (original != null) {
+                entrada.getValue().setFill(original);
+            }
+        }
+
+        asientosSeleccionados.clear();
+        casillasSeleccionadas.clear();
+        coloresOriginales.clear();
+    }
+
+    private String formatearPrecio(BigDecimal precio) {
 
         if (precio == null) {
             return "Q 0.00";
@@ -650,13 +764,11 @@ public class NuevaVentaFXController {
         return "#64748B";
     }
 
-    private void mostrarMensajeMapa(
-            String texto) {
+    private void mostrarMensajeMapa(String texto) {
 
         panelMapa.getChildren().clear();
 
         Label mensaje = new Label(texto);
-
         mensaje.setWrapText(true);
         mensaje.setLayoutX(20);
         mensaje.setLayoutY(20);
@@ -667,33 +779,144 @@ public class NuevaVentaFXController {
 
     private void limpiarResumen() {
 
+        limpiarAsientosSeleccionados();
+
         localidadSeleccionada = null;
-        grupoSeleccionado = null;
 
         lblLocalidadSeleccionada.setText(
                 "Sin seleccionar"
         );
 
-        lblPrecioUnitario.setText(
-                "Q 0.00"
-        );
-
-        lblDisponibles.setText(
-                "0 boletos"
-        );
-
-        lblAsientosSeleccionados.setText(
-                "Ninguno"
-        );
-
-        lblTotal.setText(
-                "Q 0.00"
-        );
+        lblPrecioUnitario.setText("Q 0.00");
+        lblDisponibles.setText("0 boletos");
+        lblAsientosSeleccionados.setText("Ninguno");
+        lblTotal.setText("Q 0.00");
 
         configurarSpinner();
 
         panelMapa.getChildren().clear();
 
         btnConfirmarVenta.setDisable(true);
+        restablecerZoom();
     }
+
+    private void configurarZoomMapa() {
+        
+        javafx.scene.shape.Rectangle recorte =
+                new javafx.scene.shape.Rectangle();
+
+        recorte.widthProperty().bind(
+                contenedorMapa.widthProperty()
+        );
+
+        recorte.heightProperty().bind(
+                contenedorMapa.heightProperty()
+        );
+
+        contenedorMapa.setClip(recorte);
+
+
+        panelMapa.getTransforms().add(escalaMapa);
+
+        contenedorMapa.setOnScroll(event -> {
+
+            if (panelMapa.getChildren().isEmpty()) {
+                return;
+            }
+
+            double factor = event.getDeltaY() > 0
+                    ? PASO_ZOOM
+                    : 1.0 / PASO_ZOOM;
+
+            aplicarZoom(factor);
+
+            event.consume();
+        });
+
+
+        contenedorMapa.setOnMousePressed(event -> {
+
+            if (event.getButton() != MouseButton.PRIMARY
+                    && event.getButton() != MouseButton.SECONDARY
+                    && event.getButton() != MouseButton.MIDDLE) {
+                return;
+            }
+
+            if (event.getButton() == MouseButton.PRIMARY
+                    && event.getTarget() instanceof Rectangle
+                    && nivelZoom <= 1.0) {
+                return;
+            }
+
+            arrastrandoMapa = true;
+
+            arrastreInicioX = event.getSceneX();
+            arrastreInicioY = event.getSceneY();
+
+            traslacionInicioX = panelMapa.getTranslateX();
+            traslacionInicioY = panelMapa.getTranslateY();
+        });
+
+        contenedorMapa.setOnMouseDragged(event -> {
+
+            if (!arrastrandoMapa) {
+                return;
+            }
+
+            double desplazamientoX =
+                    event.getSceneX() - arrastreInicioX;
+
+            double desplazamientoY =
+                    event.getSceneY() - arrastreInicioY;
+
+            panelMapa.setTranslateX(
+                    traslacionInicioX + desplazamientoX
+            );
+
+            panelMapa.setTranslateY(
+                    traslacionInicioY + desplazamientoY
+            );
+        });
+
+        contenedorMapa.setOnMouseReleased(event -> {
+            arrastrandoMapa = false;
+        });
+
+        contenedorMapa.setOnMouseClicked(event -> {
+
+            if (event.getButton() == MouseButton.SECONDARY
+                    && event.getClickCount() == 2) {
+
+                restablecerZoom();
+                event.consume();
+            }
+        });
+    }
+
+    private void aplicarZoom(double factor) {
+
+        double nuevoZoom = nivelZoom * factor;
+
+        nuevoZoom = Math.max(
+                ZOOM_MINIMO,
+                Math.min(ZOOM_MAXIMO, nuevoZoom)
+        );
+
+        nivelZoom = nuevoZoom;
+
+        escalaMapa.setX(nivelZoom);
+        escalaMapa.setY(nivelZoom);
+    }
+
+    private void restablecerZoom() {
+
+        nivelZoom = 1.0;
+
+        escalaMapa.setX(1.0);
+        escalaMapa.setY(1.0);
+
+        panelMapa.setTranslateX(0);
+        panelMapa.setTranslateY(0);
+    }
+
 }

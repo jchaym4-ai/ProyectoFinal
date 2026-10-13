@@ -28,6 +28,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 
+import servicio.GeneradorAsientosService;
+import dao.AsientoDAO;
+import java.sql.SQLException;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+
+
 public class InventarioFXController {
 
     @FXML private ComboBox<Concierto> cmbConcierto;
@@ -48,6 +56,18 @@ public class InventarioFXController {
     @FXML private TableColumn<InventarioBoleto, Integer> colCantidadTotal;
     @FXML private TableColumn<InventarioBoleto, Integer> colCantidadDisponible;
     @FXML private TableColumn<InventarioBoleto, String> colTipoVenta;
+    
+    @FXML private VBox panelConfiguracionAsientos;
+    @FXML private Label lblCapacidadAsientos;
+    @FXML private Label lblEstadoAsientos;
+    @FXML private TextField txtAsientosPorFila;
+    @FXML private Button btnGenerarAsientos;
+
+    private final GeneradorAsientosService generadorAsientos =
+            new GeneradorAsientosService();
+
+    private final AsientoDAO asientoDAO = new AsientoDAO();
+
 
     private final InventarioBoletoDAO inventarioDAO =
             new InventarioBoletoDAO();
@@ -78,6 +98,13 @@ public class InventarioFXController {
 
         cargarCatalogos();
         cargarTabla();
+        
+        panelConfiguracionAsientos.setDisable(true);
+
+        btnGenerarAsientos.setOnAction(
+                event -> generarAsientos()
+        );
+
     }
 
     private void configurarCombos() {
@@ -290,6 +317,7 @@ public class InventarioFXController {
                         cmbConcierto.setDisable(false);
                         cmbLocalidad.setDisable(false);
                         cmbTipoVenta.setDisable(false);
+                        actualizarPanelAsientos();
                         return;
                     }
 
@@ -338,6 +366,7 @@ public class InventarioFXController {
                     cmbConcierto.setDisable(true);
                     cmbLocalidad.setDisable(true);
                     cmbTipoVenta.setDisable(true);
+                    actualizarPanelAsientos();
                 });
     }
 
@@ -563,6 +592,43 @@ public class InventarioFXController {
         if (nuevo == null) {
             return;
         }
+        
+        if (original.getCantidadTotal()
+                != nuevo.getCantidadTotal()) {
+
+            try {
+
+                int asientosExistentes = asientoDAO
+                        .listarPorInventario(
+                                original.getIdInventario()
+                        ).size();
+
+                if (asientosExistentes > 0) {
+
+                    mostrarMensaje(
+                            Alert.AlertType.WARNING,
+                            "Este inventario ya tiene "
+                            + asientosExistentes
+                            + " asientos registrados. "
+                            + "No puede modificar su capacidad "
+                            + "sin reconfigurar los asientos."
+                    );
+
+                    return;
+                }
+
+            } catch (SQLException e) {
+
+                mostrarMensaje(
+                        Alert.AlertType.ERROR,
+                        "No se pudo verificar el inventario:\n"
+                        + e.getMessage()
+                );
+
+                return;
+            }
+        }
+
 
         boolean sinCambios =
                 original.getPrecio().compareTo(nuevo.getPrecio()) == 0
@@ -702,6 +768,7 @@ public class InventarioFXController {
 
     @FXML
     private void limpiar() {
+        actualizarPanelAsientos();
 
         tablaInventario.getSelectionModel().clearSelection();
 
@@ -730,4 +797,183 @@ public class InventarioFXController {
         alerta.setContentText(mensaje);
         alerta.showAndWait();
     }
+    
+    private void actualizarPanelAsientos() {
+
+        InventarioBoleto seleccionado =
+                tablaInventario.getSelectionModel().getSelectedItem();
+
+        panelConfiguracionAsientos.setDisable(true);
+        btnGenerarAsientos.setDisable(true);
+
+        if (seleccionado == null) {
+            lblCapacidadAsientos.setText(
+                    "Seleccione un inventario"
+            );
+            lblEstadoAsientos.setText(
+                    "Seleccione una localidad numerada."
+            );
+            txtAsientosPorFila.clear();
+            return;
+        }
+
+        if (!"numerado".equalsIgnoreCase(
+                seleccionado.getTipoVenta())) {
+
+            lblCapacidadAsientos.setText(
+                    String.valueOf(seleccionado.getCantidadTotal())
+            );
+
+            lblEstadoAsientos.setText(
+                    "Esta localidad es de aforo. "
+                    + "No necesita asientos numerados."
+            );
+
+            txtAsientosPorFila.clear();
+            return;
+        }
+
+        panelConfiguracionAsientos.setDisable(false);
+
+        lblCapacidadAsientos.setText(
+                seleccionado.getCantidadTotal() + " asientos"
+        );
+
+        try {
+
+            int existentes = asientoDAO
+                    .listarPorInventario(
+                            seleccionado.getIdInventario()
+                    ).size();
+
+            if (existentes > 0) {
+
+                lblEstadoAsientos.setText(
+                        "Esta localidad ya tiene "
+                        + existentes
+                        + " asientos registrados."
+                );
+
+                btnGenerarAsientos.setDisable(true);
+                txtAsientosPorFila.setDisable(true);
+
+            } else {
+
+                lblEstadoAsientos.setText(
+                        "Asientos pendientes de generar."
+                );
+
+                txtAsientosPorFila.setDisable(false);
+                btnGenerarAsientos.setDisable(false);
+            }
+
+        } catch (SQLException e) {
+
+            lblEstadoAsientos.setText(
+                    "Error al consultar los asientos: "
+                    + e.getMessage()
+            );
+
+            btnGenerarAsientos.setDisable(true);
+            txtAsientosPorFila.setDisable(true);
+        }
+    }
+
+    private void generarAsientos() {
+
+        InventarioBoleto seleccionado =
+                tablaInventario.getSelectionModel().getSelectedItem();
+
+        if (seleccionado == null) {
+            mostrarMensaje(
+                    Alert.AlertType.WARNING,
+                    "Seleccione un inventario."
+            );
+            return;
+        }
+
+        if (!"numerado".equalsIgnoreCase(
+                seleccionado.getTipoVenta())) {
+
+            mostrarMensaje(
+                    Alert.AlertType.WARNING,
+                    "Solo puede generar asientos para "
+                    + "localidades numeradas."
+            );
+            return;
+        }
+
+        int asientosPorFila;
+
+        try {
+
+            asientosPorFila = Integer.parseInt(
+                    txtAsientosPorFila.getText().trim()
+            );
+
+            if (asientosPorFila <= 0) {
+                throw new NumberFormatException();
+            }
+
+        } catch (NumberFormatException e) {
+
+            mostrarMensaje(
+                    Alert.AlertType.WARNING,
+                    "Ingrese un número válido de asientos por fila."
+            );
+
+            return;
+        }
+
+        int capacidad = seleccionado.getCantidadTotal();
+        int filas = (capacidad + asientosPorFila - 1)
+                / asientosPorFila;
+
+        Alert confirmacion = new Alert(
+                Alert.AlertType.CONFIRMATION,
+                "Localidad: "
+                + nombreLocalidad(seleccionado.getIdLocalidad())
+                + "\nCapacidad: " + capacidad
+                + "\nAsientos por fila: " + asientosPorFila
+                + "\nFilas necesarias: " + filas
+                + "\n\n¿Desea generar estos asientos?",
+                ButtonType.YES,
+                ButtonType.NO
+        );
+
+        confirmacion.setTitle("Generar asientos");
+        confirmacion.setHeaderText(null);
+
+        if (confirmacion.showAndWait()
+                .orElse(ButtonType.NO) != ButtonType.YES) {
+            return;
+        }
+
+        try {
+
+            int generados = generadorAsientos.generarAsientos(
+                    seleccionado.getIdInventario(),
+                    asientosPorFila
+            );
+
+            mostrarMensaje(
+                    Alert.AlertType.INFORMATION,
+                    "Se generaron correctamente "
+                    + generados + " asientos."
+            );
+
+            actualizarPanelAsientos();
+
+        } catch (SQLException | IllegalArgumentException e) {
+
+            mostrarMensaje(
+                    Alert.AlertType.ERROR,
+                    "No se pudieron generar los asientos:\n"
+                    + e.getMessage()
+            );
+
+            actualizarPanelAsientos();
+        }
+    }
+
 }
