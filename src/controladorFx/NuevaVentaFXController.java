@@ -43,6 +43,10 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
 import javafx.scene.transform.Scale;
+import servicio.VentaService;
+import java.util.ArrayList;
+import javafx.scene.control.ButtonType;
+
 
 
 public class NuevaVentaFXController {
@@ -86,6 +90,10 @@ public class NuevaVentaFXController {
 
     private final AsientoDAO asientoDAO =
             new AsientoDAO();
+    
+    private final VentaService ventaService =
+            new VentaService();
+
 
     private final Map<Integer, Asiento> asientosSeleccionados =
             new LinkedHashMap<>();
@@ -127,6 +135,11 @@ public class NuevaVentaFXController {
                 e -> consultarConcierto()
         );
 
+        btnConfirmarVenta.setOnAction(
+                e -> confirmarVenta()
+        );
+
+
         cargarConciertos();
     }
 
@@ -139,6 +152,7 @@ public class NuevaVentaFXController {
         }
 
         this.usuario = usuario;
+        actualizarTotal();
     }
 
     public Usuario getUsuario() {
@@ -693,11 +707,13 @@ public class NuevaVentaFXController {
         actualizarTotal();
     }
 
+
     private void actualizarTotal() {
 
         if (localidadSeleccionada == null) {
 
             lblTotal.setText("Q 0.00");
+            btnConfirmarVenta.setDisable(true);
             return;
         }
 
@@ -708,10 +724,27 @@ public class NuevaVentaFXController {
 
             cantidad = asientosSeleccionados.size();
 
-        } else {
+        } else if ("aforo".equalsIgnoreCase(
+                localidadSeleccionada.getTipoVenta())) {
 
             Integer valor = spnCantidad.getValue();
+
             cantidad = valor == null ? 0 : valor;
+
+        } else {
+
+            lblTotal.setText("Q 0.00");
+            btnConfirmarVenta.setDisable(true);
+            return;
+        }
+
+        if (cantidad <= 0
+                || cantidad > localidadSeleccionada
+                        .getCantidadDisponible()) {
+
+            lblTotal.setText("Q 0.00");
+            btnConfirmarVenta.setDisable(true);
+            return;
         }
 
         BigDecimal total = localidadSeleccionada
@@ -719,6 +752,8 @@ public class NuevaVentaFXController {
                 .multiply(BigDecimal.valueOf(cantidad));
 
         lblTotal.setText(formatearPrecio(total));
+
+        btnConfirmarVenta.setDisable(usuario == null);
     }
 
     private void limpiarAsientosSeleccionados() {
@@ -918,5 +953,119 @@ public class NuevaVentaFXController {
         panelMapa.setTranslateX(0);
         panelMapa.setTranslateY(0);
     }
+    
+
+    private void confirmarVenta() {
+
+        if (usuario == null || localidadSeleccionada == null) {
+            mostrarAlertaVenta(
+                    Alert.AlertType.WARNING,
+                    "No existe un vendedor o una localidad seleccionada."
+            );
+            return;
+        }
+
+        boolean numerado = "numerado".equalsIgnoreCase(
+                localidadSeleccionada.getTipoVenta()
+        );
+
+        int cantidad;
+        List<Integer> idsAsientos = new ArrayList<>();
+
+        if (numerado) {
+
+            for (Asiento asiento : asientosSeleccionados.values()) {
+                idsAsientos.add(asiento.getIdAsiento());
+            }
+
+            cantidad = idsAsientos.size();
+
+        } else {
+
+            Integer valor = spnCantidad.getValue();
+            cantidad = valor == null ? 0 : valor;
+        }
+
+        if (cantidad <= 0) {
+            mostrarAlertaVenta(
+                    Alert.AlertType.WARNING,
+                    "Debe seleccionar al menos un boleto."
+            );
+            return;
+        }
+
+        BigDecimal totalEstimado =
+                localidadSeleccionada.getPrecio()
+                        .multiply(BigDecimal.valueOf(cantidad));
+
+        Alert confirmacion = new Alert(
+                Alert.AlertType.CONFIRMATION
+        );
+
+        confirmacion.setTitle("Confirmar venta");
+        confirmacion.setHeaderText("Resumen de la venta");
+
+        confirmacion.setContentText(
+                "Localidad: "
+                + localidadSeleccionada.getNombreLocalidad()
+                + "\nCantidad: " + cantidad
+                + "\nTipo: " + localidadSeleccionada.getTipoVenta()
+                + "\nTotal estimado: "
+                + formatearPrecio(totalEstimado)
+                + "\n\n¿Desea registrar esta venta?"
+        );
+
+        if (confirmacion.showAndWait()
+                .orElse(ButtonType.CANCEL) != ButtonType.OK) {
+            return;
+        }
+
+        btnConfirmarVenta.setDisable(true);
+
+        try {
+
+            int idVenta = ventaService.registrarVenta(
+                    usuario.getIdUsuario(),
+                    localidadSeleccionada.getIdInventario(),
+                    cantidad,
+                    idsAsientos
+            );
+
+            mostrarAlertaVenta(
+                    Alert.AlertType.INFORMATION,
+                    "Venta registrada correctamente."
+                    + "\nNúmero de venta: " + idVenta
+                    + "\nBoletos generados: " + cantidad
+                    + "\n\nLa venta quedó guardada en PostgreSQL."
+            );
+
+        } catch (SQLException e) {
+
+            mostrarAlertaVenta(
+                    Alert.AlertType.ERROR,
+                    "No se pudo completar la venta."
+                    + "\n\n" + e.getMessage()
+                    + "\n\nSe actualizará el mapa para consultar "
+                    + "la disponibilidad vigente."
+            );
+
+        } finally {
+
+            consultarConcierto();
+        }
+    }
+
+    private void mostrarAlertaVenta(
+            Alert.AlertType tipo,
+            String mensaje) {
+
+        Alert alerta = new Alert(tipo);
+
+        alerta.setTitle("SVB-GUA - Nueva Venta");
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
+    }
+
 
 }
