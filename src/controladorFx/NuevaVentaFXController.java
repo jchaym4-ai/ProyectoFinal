@@ -1,7 +1,7 @@
+
 package controladorFx;
 
 import dao.AsientoDAO;
-import dao.BoletoDAO;
 import dao.ConciertoDAO;
 import dao.MapaLocalidadDAO;
 import java.math.BigDecimal;
@@ -9,10 +9,12 @@ import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -35,7 +37,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.StringConverter;
 import modelo.Asiento;
-import modelo.Boleto;
 import modelo.Concierto;
 import modelo.MapaLocalidad;
 import modelo.Usuario;
@@ -48,6 +49,23 @@ import servicio.VentaService;
 import servicio.PublicacionBoletosService;
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.DirectoryChooser;
+import dao.BoletoDAO;
+import modelo.Boleto;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 
 
 
@@ -68,6 +86,23 @@ public class NuevaVentaFXController {
     private static final double ZOOM_MINIMO = 1.0;
     private static final double ZOOM_MAXIMO = 3.0;
     private static final double PASO_ZOOM = 1.15;
+
+    // Colores de alto contraste. El primero corresponde a la zona mas cara.
+    // Si hay mas localidades, se generan tonos adicionales sin duplicados RGB.
+    private static final String[] PALETA_LOCALIDADES = {
+        "#0D9488", // Turquesa
+        "#F59E0B", // Dorado
+        "#7C3AED", // Violeta
+        "#DC2626", // Rojo
+        "#0284C7", // Celeste
+        "#65A30D", // Verde lima
+        "#DB2777", // Rosa
+        "#A16207", // Marron
+        "#4338CA", // Indigo
+        "#15803D", // Verde
+        "#EA580C", // Naranja
+        "#0E7490"  // Azul petroleo
+    };
 
     private double nivelZoom = 1.0;
     private double arrastreInicioX;
@@ -269,6 +304,30 @@ public class NuevaVentaFXController {
         panelMapa.getChildren().clear();
         panelMapa.setPrefSize(590, 650);
 
+        // Del escenario hacia afuera: precio mas alto primero.
+        // En caso de empate, el ID de inventario mantiene un orden estable.
+        List<MapaLocalidad> localidadesOrdenadas =
+                new ArrayList<>(localidades);
+        localidadesOrdenadas.sort((primera, segunda) -> {
+            BigDecimal p1 = primera.getPrecio() == null
+                    ? BigDecimal.ZERO : primera.getPrecio();
+            BigDecimal p2 = segunda.getPrecio() == null
+                    ? BigDecimal.ZERO : segunda.getPrecio();
+            int porPrecio = p2.compareTo(p1);
+            if (porPrecio != 0) {
+                return porPrecio;
+            }
+            return Integer.compare(
+                    primera.getIdInventario(),
+                    segunda.getIdInventario()
+            );
+        });
+
+        // Los colores no dependen de Neon ni se repiten dentro del concierto.
+        // La misma lista ordenada conserva sus colores al volver a consultar.
+        List<Color> coloresLocalidades =
+                generarColoresDistintos(localidadesOrdenadas.size());
+
         List<List<Asiento>> asientosPorLocalidad =
                 new ArrayList<>();
 
@@ -277,7 +336,7 @@ public class NuevaVentaFXController {
 
         int totalAnillos = 0;
 
-        for (MapaLocalidad localidad : localidades) {
+        for (MapaLocalidad localidad : localidadesOrdenadas) {
 
             List<Asiento> asientos = new ArrayList<>();
 
@@ -326,10 +385,10 @@ public class NuevaVentaFXController {
         int anilloActual = 0;
 
         for (int indice = 0;
-                indice < localidades.size();
+                indice < localidadesOrdenadas.size();
                 indice++) {
 
-            MapaLocalidad localidad = localidades.get(indice);
+            MapaLocalidad localidad = localidadesOrdenadas.get(indice);
 
             int cantidadAnillos =
                     anillosPorLocalidad.get(indice);
@@ -343,6 +402,7 @@ public class NuevaVentaFXController {
                     anilloActual,
                     cantidadAnillos,
                     totalAnillos,
+                    coloresLocalidades.get(indice),
                     leyenda
             );
 
@@ -402,11 +462,8 @@ public class NuevaVentaFXController {
             int anilloInicial,
             int cantidadAnillos,
             int totalAnillos,
+            Color color,
             FlowPane leyenda) {
-
-        Color color = Color.web(
-                colorSeguro(localidad.getColor())
-        );
 
         boolean numerado = "numerado".equalsIgnoreCase(
                 localidad.getTipoVenta()
@@ -790,15 +847,41 @@ public class NuevaVentaFXController {
         );
     }
 
-    private String colorSeguro(String color) {
+    private List<Color> generarColoresDistintos(int cantidad) {
 
-        if (color != null
-                && color.matches("#[0-9a-fA-F]{6}")) {
+        List<Color> resultado = new ArrayList<>();
+        Set<String> usados = new HashSet<>();
 
-            return color;
+        for (int indice = 0; indice < cantidad; indice++) {
+            Color color;
+            int intento = 0;
+
+            // Paleta visible para las primeras 12 localidades. Para
+            // conciertos grandes se distribuyen tonos con angulo dorado.
+            do {
+                if (indice < PALETA_LOCALIDADES.length && intento == 0) {
+                    color = Color.web(PALETA_LOCALIDADES[indice]);
+                } else {
+                    int semilla = indice + intento * 53;
+                    double tono = (semilla * 137.50776405) % 360.0;
+                    double saturacion = 0.69 + (semilla % 3) * 0.09;
+                    double brillo = 0.73 + ((semilla / 3) % 3) * 0.06;
+                    color = Color.hsb(tono, saturacion, brillo);
+                }
+                intento++;
+            } while (!usados.add(claveRGB(color)));
+
+            resultado.add(color);
         }
 
-        return "#64748B";
+        return resultado;
+    }
+
+    private String claveRGB(Color color) {
+        return String.format(Locale.ROOT, "%02X%02X%02X",
+                (int) Math.round(color.getRed() * 255.0),
+                (int) Math.round(color.getGreen() * 255.0),
+                (int) Math.round(color.getBlue() * 255.0));
     }
 
     private void mostrarMensajeMapa(String texto) {
@@ -1027,8 +1110,7 @@ public class NuevaVentaFXController {
             @Override
             protected ResultadoVenta call() throws Exception {
 
-                // Primero se confirma la venta en Neon. Nunca se repite
-                // automaticamente si falla Cloudflare.
+                // La transaccion se confirma primero en Neon.
                 int idVenta = ventaService.registrarVenta(
                         idVendedor,
                         idInventario,
@@ -1036,18 +1118,19 @@ public class NuevaVentaFXController {
                         asientosFinales
                 );
 
-                String mensaje;
+                // Un error de Cloudflare NO revierte una venta ya registrada.
                 try {
                     PublicacionBoletosService publicacion =
                             new PublicacionBoletosService();
-
                     List<String> enlaces =
                             publicacion.publicarBoletosVenta(idVenta);
 
-                    mensaje = "Venta #" + idVenta + " registrada correctamente."
-                            + "\nBoletos vendidos: " + cantidadFinal
-                            + "\nPDF publicados: " + enlaces.size()
-                            + "\n\nSeleccione los boletos que desea descargar.";
+                    return new ResultadoVenta(
+                            idVenta,
+                            cantidadFinal,
+                            true,
+                            "Venta registrada correctamente."
+                    );
 
                 } catch (Exception errorPublicacion) {
                     System.err.println(
@@ -1055,24 +1138,14 @@ public class NuevaVentaFXController {
                     );
                     errorPublicacion.printStackTrace();
 
-                    mensaje = "Venta #" + idVenta + " REGISTRADA en Neon."
-                            + "\nBoletos vendidos: " + cantidadFinal
-                            + "\n\nAlgunos PDF pueden estar pendientes de publicacion."
-                            + "\nNO vuelva a registrar esta venta.";
+                    return new ResultadoVenta(
+                            idVenta,
+                            cantidadFinal,
+                            false,
+                            "Venta registrada en Neon, pero algunos PDF "
+                            + "no pudieron publicarse. No repita la venta."
+                    );
                 }
-
-                // Obtener URLs ya guardadas, incluso si alguna publicacion
-                // quedo pendiente. Esta consulta tambien va en el hilo de fondo.
-                List<Boleto> boletos;
-                try {
-                    boletos = new BoletoDAO().listarPorVenta(idVenta);
-                } catch (SQLException errorConsulta) {
-                    errorConsulta.printStackTrace();
-                    boletos = List.of();
-                    mensaje += "\nNo se pudo consultar la lista de descargas.";
-                }
-
-                return new ResultadoVenta(idVenta, mensaje, boletos);
             }
         };
 
@@ -1080,14 +1153,7 @@ public class NuevaVentaFXController {
             ResultadoVenta resultado = tarea.getValue();
             restaurarInterfazVenta();
             consultarConcierto();
-
-            // Abrir la ventana de descarga, no solo una alerta informativa.
-            VentanaDescargaBoletosFX.mostrar(
-                    btnConfirmarVenta.getScene().getWindow(),
-                    resultado.idVenta(),
-                    resultado.boletos(),
-                    resultado.mensaje()
-            );
+            mostrarVentanaBoletos(resultado);
         });
 
         tarea.setOnFailed(e -> {
@@ -1110,11 +1176,140 @@ public class NuevaVentaFXController {
         hilo.start();
     }
 
-    // Resultado que viaja del hilo de fondo a la interfaz JavaFX.
-    private record ResultadoVenta(
-            int idVenta,
-            String mensaje,
-            List<Boleto> boletos) {
+    private static record ResultadoVenta(
+            int idVenta, int cantidad, boolean publicado, String mensaje) { }
+
+    private void mostrarVentanaBoletos(ResultadoVenta resultado) {
+        try {
+            List<Boleto> boletos = new BoletoDAO().listarPorVenta(resultado.idVenta());
+
+            Dialog<Void> ventana = new Dialog<>();
+            ventana.setTitle("SVB-GUA - Boletos de la venta");
+            ventana.setHeaderText("Venta #" + resultado.idVenta()
+                    + " - " + resultado.cantidad() + " boleto(s)");
+            ventana.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+            ventana.initOwner(btnConfirmarVenta.getScene().getWindow());
+
+            VBox contenido = new VBox(12);
+            contenido.setStyle("-fx-padding: 15;");
+            Label estado = new Label(resultado.mensaje());
+            estado.setWrapText(true);
+            contenido.getChildren().add(estado);
+
+            int publicados = 0;
+            for (Boleto boleto : boletos) {
+                boolean disponible = boleto.getRutaPdf() != null
+                        && !boleto.getRutaPdf().isBlank();
+                if (disponible) publicados++;
+
+                Label titulo = new Label("Boleto #" + boleto.getIdBoleto()
+                        + (disponible ? " - PDF listo" : " - Pendiente"));
+                titulo.setMinWidth(180);
+                Button descargar = new Button("Descargar PDF");
+                descargar.setDisable(!disponible);
+                descargar.setOnAction(ev -> descargarBoleto(boleto));
+                HBox fila = new HBox(12, titulo, descargar);
+                fila.setAlignment(Pos.CENTER_LEFT);
+                contenido.getChildren().add(fila);
+            }
+
+            if (publicados > 1) {
+                Button descargarTodos = new Button("Descargar todos");
+                descargarTodos.setOnAction(ev -> descargarTodos(boletos));
+                contenido.getChildren().add(descargarTodos);
+            }
+
+            if (publicados == 0) {
+                Label aviso = new Label("No hay PDF publicados aún. "
+                        + "La venta permanece registrada en Neon.");
+                aviso.setWrapText(true);
+                contenido.getChildren().add(aviso);
+            }
+
+            ScrollPane scroll = new ScrollPane(contenido);
+            scroll.setFitToWidth(true);
+            scroll.setPrefViewportWidth(490);
+            scroll.setPrefViewportHeight(Math.min(380, 110 + boletos.size() * 54));
+            ventana.getDialogPane().setContent(scroll);
+            ventana.showAndWait();
+
+        } catch (SQLException ex) {
+            mostrarAlertaVenta(Alert.AlertType.WARNING,
+                    "Venta #" + resultado.idVenta() + " registrada. "
+                    + "No se pudo cargar la ventana de descarga: " + ex.getMessage());
+        }
+    }
+
+    private void descargarBoleto(Boleto boleto) {
+        FileChooser selector = new FileChooser();
+        selector.setTitle("Guardar boleto #" + boleto.getIdBoleto());
+        selector.setInitialFileName("boleto-" + boleto.getIdBoleto() + ".pdf");
+        selector.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Archivos PDF", "*.pdf"));
+        File destino = selector.showSaveDialog(btnConfirmarVenta.getScene().getWindow());
+        if (destino == null) return;
+
+        try {
+            guardarPDF(boleto, destino.toPath());
+            mostrarAlertaVenta(Alert.AlertType.INFORMATION,
+                    "Boleto descargado en:\n" + destino.getAbsolutePath());
+        } catch (Exception ex) {
+            mostrarAlertaVenta(Alert.AlertType.ERROR,
+                    "No se pudo descargar el boleto #" + boleto.getIdBoleto()
+                    + ":\n" + ex.getMessage());
+        }
+    }
+
+    private void descargarTodos(List<Boleto> boletos) {
+        DirectoryChooser selector = new DirectoryChooser();
+        selector.setTitle("Elegir carpeta para los boletos");
+        File carpeta = selector.showDialog(btnConfirmarVenta.getScene().getWindow());
+        if (carpeta == null) return;
+
+        int guardados = 0;
+        StringBuilder errores = new StringBuilder();
+        for (Boleto boleto : boletos) {
+            if (boleto.getRutaPdf() == null || boleto.getRutaPdf().isBlank()) continue;
+            try {
+                guardarPDF(boleto, carpeta.toPath().resolve(
+                        "boleto-" + boleto.getIdBoleto() + ".pdf"));
+                guardados++;
+            } catch (Exception ex) {
+                errores.append("Boleto #").append(boleto.getIdBoleto())
+                        .append(": ").append(ex.getMessage()).append("\n");
+            }
+        }
+        mostrarAlertaVenta(errores.isEmpty()
+                        ? Alert.AlertType.INFORMATION : Alert.AlertType.WARNING,
+                guardados + " PDF guardados en:\n" + carpeta.getAbsolutePath()
+                        + (errores.isEmpty() ? "" : "\n\nErrores:\n" + errores));
+    }
+
+    private void guardarPDF(Boleto boleto, Path destino) throws Exception {
+        if (boleto.getRutaPdf() == null || boleto.getRutaPdf().isBlank()) {
+            throw new IOException("El PDF aún no está publicado.");
+        }
+        // La URL guardada en Neon es la referencia definitiva, no un PDF regenerado.
+        URI url = URI.create(boleto.getRutaPdf());
+        if (!"https".equalsIgnoreCase(url.getScheme())
+                || !"svb-gua-boletos.jchaym4.workers.dev".equalsIgnoreCase(url.getHost())
+                || !url.getPath().matches("/b/[a-f0-9]{32}")) {
+            throw new IOException("La URL del PDF no corresponde al servidor SVB-GUA.");
+        }
+        HttpRequest solicitud = HttpRequest.newBuilder(url)
+                .timeout(Duration.ofSeconds(30)).GET().build();
+        try (HttpClient cliente = HttpClient.newHttpClient()) {
+            HttpResponse<byte[]> respuesta = cliente.send(
+                    solicitud, HttpResponse.BodyHandlers.ofByteArray());
+            byte[] datos = respuesta.body();
+            if (respuesta.statusCode() != 200 || datos.length < 5
+                    || datos[0] != '%' || datos[1] != 'P' || datos[2] != 'D'
+                    || datos[3] != 'F' || datos[4] != '-') {
+                throw new IOException("Cloudflare no devolvió un PDF válido (HTTP "
+                        + respuesta.statusCode() + ").");
+            }
+            Files.write(destino, datos);
+        }
     }
 
     private void restaurarInterfazVenta() {
