@@ -1,328 +1,148 @@
-
 package controladorFx;
 
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import modelo.Usuario;
 
 public class MenuVendedorFXController {
 
-    // COMPONENTES DEL FXML
-
-    @FXML
-    private Label lblNombreUsuario;
-
-    @FXML
-    private Button btnDashboard;
-
-    @FXML
-    private Button btnNuevaVenta;
-
-    @FXML
-    private Button btnHistorialVentas;
-
-    @FXML
-    private Button btnConsultarBoletos;
-
-    @FXML
-    private Button btnCerrarSesion;
-
-    @FXML
-    private StackPane contenedorCentral;
-
-    // USUARIO AUTENTICADO
+    @FXML private Label lblNombreUsuario;
+    @FXML private Button btnDashboard;
+    @FXML private Button btnNuevaVenta;
+    @FXML private Button btnHistorialVentas;
+    @FXML private Button btnConsultarBoletos;
+    @FXML private Button btnCerrarSesion;
+    @FXML private StackPane contenedorCentral;
 
     private Usuario usuario;
 
-    // INICIALIZACIÓN
-
     @FXML
     private void initialize() {
-
-        btnDashboard.setOnAction(
-                e -> abrirDashboard()
-        );
-
-        btnNuevaVenta.setOnAction(
-                e -> abrirNuevaVenta()
-        );
-
-        btnHistorialVentas.setOnAction(
-                e -> abrirHistorialVentas()
-        );
-
-        btnConsultarBoletos.setOnAction(
-                e -> abrirConsultarBoletos()
-        );
-
-        btnCerrarSesion.setOnAction(
-                e -> cerrarSesion()
-        );
-
+        btnDashboard.setOnAction(e -> abrirDashboard());
+        btnNuevaVenta.setOnAction(e -> abrirNuevaVenta());
+        btnHistorialVentas.setOnAction(e -> abrirHistorialVentas());
+        btnConsultarBoletos.setOnAction(e -> abrirConsultarBoletos());
+        btnCerrarSesion.setOnAction(e -> cerrarSesion());
         abrirDashboard();
     }
 
-    // RECIBIR USUARIO DEL LOGIN
-
     public void setUsuario(Usuario usuario) {
-
         if (usuario == null) {
-            throw new IllegalArgumentException(
-                    "El usuario no puede ser nulo."
-            );
+            throw new IllegalArgumentException("El usuario no puede ser nulo.");
         }
-
         this.usuario = usuario;
-
-        lblNombreUsuario.setText(
-                usuario.getNombreCompleto()
-        );
+        lblNombreUsuario.setText(usuario.getNombreCompleto());
         abrirDashboard();
     }
 
     public Usuario getUsuario() {
         return usuario;
-        
-        
     }
-
-    // DASHBOARD VENDEDOR
-
 
     private void abrirDashboard() {
-
-        if (usuario == null) {
-            return;
-        }
-
+        if (usuario == null) return;
         try {
-            FXMLLoader loader = new FXMLLoader(
-                getClass().getResource(
-                    "/vistas/fx/DashboardVendedorView.fxml"
-                )
-            );
-
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/vistas/fx/DashboardVendedorView.fxml"));
             Parent vista = loader.load();
-
-            DashboardVendedorFXController controller =
-                    loader.getController();
-
+            DashboardVendedorFXController controller = loader.getController();
             controller.setUsuario(usuario);
-
             contenedorCentral.getChildren().setAll(vista);
-
             marcarBotonActivo(btnDashboard);
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | RuntimeException e) {
+            mostrarError("No se pudo abrir Dashboard", e);
         }
     }
-
-
-    // NUEVA VENTA
-
 
     private void abrirNuevaVenta() {
-
+        if (usuario == null) return;
         try {
-
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource(
-                            "/vistas/fx/NuevaVentaView.fxml"
-                    )
-            );
-
-            Parent vistaNuevaVenta = loader.load();
-
-            NuevaVentaFXController controller =
-                    loader.getController();
-
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/vistas/fx/NuevaVentaView.fxml"));
+            Parent vista = loader.load();
+            NuevaVentaFXController controller = loader.getController();
             controller.setUsuario(usuario);
-
-            contenedorCentral.getChildren().setAll(
-                    vistaNuevaVenta
-            );
-
+            contenedorCentral.getChildren().setAll(vista);
             marcarBotonActivo(btnNuevaVenta);
-
         } catch (IOException | RuntimeException e) {
-
-            e.printStackTrace();
-
-            javafx.scene.control.Alert alerta =
-                    new javafx.scene.control.Alert(
-                            javafx.scene.control.Alert.AlertType.ERROR
-                    );
-
-            alerta.setTitle("Error");
-            alerta.setHeaderText(
-                    "No se pudo abrir Nueva Venta"
-            );
-            alerta.setContentText(e.getMessage());
-            alerta.showAndWait();
+            mostrarError("No se pudo abrir Nueva Venta", e);
         }
     }
 
-
-    // HISTORIAL DE VENTAS
-
-    
-private void abrirHistorialVentas() {
-
-    if (usuario == null) {
-        return;
+    private void abrirHistorialVentas() {
+        if (usuario == null) return;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/vistas/fx/HistorialVentasView.fxml"));
+            Parent vista = loader.load();
+            HistorialVentasFXController controller = loader.getController();
+            controller.setUsuario(usuario);
+            contenedorCentral.getChildren().setAll(vista);
+            marcarBotonActivo(btnHistorialVentas);
+        } catch (IOException | RuntimeException e) {
+            mostrarError("No se pudo abrir Historial de Ventas", e);
+        }
     }
-
-    try {
-
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource(
-                        "/vistas/fx/HistorialVentasView.fxml"
-                )
-        );
-
-        Parent vista = loader.load();
-
-        HistorialVentasFXController controller =
-                loader.getController();
-
-        controller.setUsuario(usuario);
-
-        contenedorCentral.getChildren().setAll(vista);
-
-        marcarBotonActivo(btnHistorialVentas);
-
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-}
-
-
-    // CONSULTAR BOLETOS
 
     private void abrirConsultarBoletos() {
-
-        mostrarSeccion(
-                "Consultar Boletos",
-                "Aquí se consultarán los boletos emitidos."
-        );
-
-        marcarBotonActivo(btnConsultarBoletos);
+        if (usuario == null) return;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/vistas/fx/ConsultarBoletosView.fxml"));
+            Parent vista = loader.load();
+            contenedorCentral.getChildren().setAll(vista);
+            marcarBotonActivo(btnConsultarBoletos);
+        } catch (IOException | RuntimeException e) {
+            mostrarError("No se pudo abrir Consultar Boletos", e);
+        }
     }
 
-    // CONTENIDO TEMPORAL DEL PANEL CENTRAL
-
-    private void mostrarSeccion(
-            String titulo,
-            String descripcion) {
-
-        Label lblTitulo = new Label(titulo);
-        lblTitulo.getStyleClass().add(
-                "content-title"
-        );
-
-        Label lblDescripcion = new Label(descripcion);
-        lblDescripcion.getStyleClass().add(
-                "content-subtitle"
-        );
-
-        VBox contenido = new VBox(
-                12,
-                lblTitulo,
-                lblDescripcion
-        );
-
-        contenido.getStyleClass().add(
-                "content-area"
-        );
-
-        contenido.setPadding(
-                new Insets(35)
-        );
-
-        contenido.setMaxSize(
-                Double.MAX_VALUE,
-                Double.MAX_VALUE
-        );
-
-        contenedorCentral.getChildren().setAll(
-                contenido
-        );
-    }
-
-    // MARCAR BOTÓN SELECCIONADO
-
-    private void marcarBotonActivo(
-            Button botonActivo) {
-
+    private void marcarBotonActivo(Button botonActivo) {
         Button[] botones = {
-            btnDashboard,
-            btnNuevaVenta,
-            btnHistorialVentas,
-            btnConsultarBoletos
+            btnDashboard, btnNuevaVenta,
+            btnHistorialVentas, btnConsultarBoletos
         };
-
         for (Button boton : botones) {
-
-            boton.getStyleClass().remove(
-                    "menu-button-active"
-            );
+            boton.getStyleClass().remove("menu-button-active");
         }
-
-        if (!botonActivo.getStyleClass().contains(
-                "menu-button-active")) {
-
-            botonActivo.getStyleClass().add(
-                    "menu-button-active"
-            );
+        if (!botonActivo.getStyleClass().contains("menu-button-active")) {
+            botonActivo.getStyleClass().add("menu-button-active");
         }
     }
-
-    // CERRAR SESIÓN
 
     @FXML
     private void cerrarSesion() {
-
         try {
-
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource(
-                            "/vistas/fx/LoginView.fxml"
-                    )
-            );
-
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/vistas/fx/LoginView.fxml"));
             Parent root = loader.load();
-
-            Stage stage = (Stage) btnCerrarSesion
-                    .getScene()
-                    .getWindow();
-
-            stage.setScene(
-                    new Scene(root)
-            );
-
-            stage.setTitle(
-                    "SVB-GUA - Inicio de Sesión"
-            );
-
+            Stage stage = (Stage) btnCerrarSesion.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("SVB-GUA - Inicio de Sesion");
             stage.setResizable(false);
             stage.sizeToScene();
             stage.centerOnScreen();
-
             usuario = null;
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
+        } catch (IOException | RuntimeException e) {
+            mostrarError("No se pudo cerrar sesion", e);
         }
+    }
+
+    private void mostrarError(String titulo, Exception e) {
+        e.printStackTrace();
+        Alert alerta = new Alert(Alert.AlertType.ERROR);
+        alerta.setTitle("SVB-GUA - Vendedor");
+        alerta.setHeaderText(titulo);
+        alerta.setContentText(e.getMessage() == null
+                ? "Error desconocido." : e.getMessage());
+        alerta.showAndWait();
     }
 }
