@@ -19,7 +19,7 @@ public class CreateConnection {
     
     
     public CreateConnection (){
-        String path = "C:\\NetBeansProjects\\ProyectoFInalUMG\\src\\coneccion\\db_config.properties";
+        String path = "C:\\Users\\Abdias M\\Documents\\NetBeansProjects\\ProyectoFInalUMG\\src\\coneccion\\db_config.properties";
         InputStream in = null;
         
             try {
@@ -43,9 +43,12 @@ public class CreateConnection {
     }
     public Connection getConection(){
         try {
-            Connection conn = null;
-            String jdbURL = "jdbc:postgresql://"+this.hostname+":"+
-                    this.port + "/" + this.database;
+            Connection conn = null;            
+            String jdbURL = "jdbc:postgresql://"
+                    + this.hostname + ":"
+                    + this.port + "/"
+                    + this.database
+                    + "?sslmode=require";
             conn = DriverManager.getConnection(jdbURL, username, password);
             System.out.println("Conexion establecida");
             // retorna la secion abierta de bd
