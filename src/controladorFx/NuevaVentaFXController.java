@@ -1,7 +1,7 @@
-
 package controladorFx;
 
 import dao.AsientoDAO;
+import dao.BoletoDAO;
 import dao.ConciertoDAO;
 import dao.MapaLocalidadDAO;
 import java.math.BigDecimal;
@@ -35,6 +35,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.StringConverter;
 import modelo.Asiento;
+import modelo.Boleto;
 import modelo.Concierto;
 import modelo.MapaLocalidad;
 import modelo.Usuario;
@@ -44,7 +45,8 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
 import javafx.scene.transform.Scale;
 import servicio.VentaService;
-import java.util.ArrayList;
+import servicio.PublicacionBoletosService;
+import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 
 
@@ -969,19 +971,15 @@ public class NuevaVentaFXController {
                 localidadSeleccionada.getTipoVenta()
         );
 
-        int cantidad;
         List<Integer> idsAsientos = new ArrayList<>();
+        int cantidad;
 
         if (numerado) {
-
             for (Asiento asiento : asientosSeleccionados.values()) {
                 idsAsientos.add(asiento.getIdAsiento());
             }
-
             cantidad = idsAsientos.size();
-
         } else {
-
             Integer valor = spnCantidad.getValue();
             cantidad = valor == null ? 0 : valor;
         }
@@ -994,24 +992,17 @@ public class NuevaVentaFXController {
             return;
         }
 
-        BigDecimal totalEstimado =
-                localidadSeleccionada.getPrecio()
-                        .multiply(BigDecimal.valueOf(cantidad));
+        BigDecimal totalEstimado = localidadSeleccionada.getPrecio()
+                .multiply(BigDecimal.valueOf(cantidad));
 
-        Alert confirmacion = new Alert(
-                Alert.AlertType.CONFIRMATION
-        );
-
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacion.setTitle("Confirmar venta");
         confirmacion.setHeaderText("Resumen de la venta");
-
         confirmacion.setContentText(
-                "Localidad: "
-                + localidadSeleccionada.getNombreLocalidad()
+                "Localidad: " + localidadSeleccionada.getNombreLocalidad()
                 + "\nCantidad: " + cantidad
                 + "\nTipo: " + localidadSeleccionada.getTipoVenta()
-                + "\nTotal estimado: "
-                + formatearPrecio(totalEstimado)
+                + "\nTotal estimado: " + formatearPrecio(totalEstimado)
                 + "\n\n¿Desea registrar esta venta?"
         );
 
@@ -1020,39 +1011,117 @@ public class NuevaVentaFXController {
             return;
         }
 
+        // Capturar datos antes de iniciar el trabajo en segundo plano.
+        final int idVendedor = usuario.getIdUsuario();
+        final int idInventario = localidadSeleccionada.getIdInventario();
+        final int cantidadFinal = cantidad;
+        final List<Integer> asientosFinales = new ArrayList<>(idsAsientos);
+
         btnConfirmarVenta.setDisable(true);
+        cmbConciertos.setDisable(true);
+        btnConsultarConcierto.setDisable(true);
+        contenedorMapa.setDisable(true);
+        spnCantidad.setDisable(true);
 
-        try {
+        Task<ResultadoVenta> tarea = new Task<>() {
+            @Override
+            protected ResultadoVenta call() throws Exception {
 
-            int idVenta = ventaService.registrarVenta(
-                    usuario.getIdUsuario(),
-                    localidadSeleccionada.getIdInventario(),
-                    cantidad,
-                    idsAsientos
+                // Primero se confirma la venta en Neon. Nunca se repite
+                // automaticamente si falla Cloudflare.
+                int idVenta = ventaService.registrarVenta(
+                        idVendedor,
+                        idInventario,
+                        cantidadFinal,
+                        asientosFinales
+                );
+
+                String mensaje;
+                try {
+                    PublicacionBoletosService publicacion =
+                            new PublicacionBoletosService();
+
+                    List<String> enlaces =
+                            publicacion.publicarBoletosVenta(idVenta);
+
+                    mensaje = "Venta #" + idVenta + " registrada correctamente."
+                            + "\nBoletos vendidos: " + cantidadFinal
+                            + "\nPDF publicados: " + enlaces.size()
+                            + "\n\nSeleccione los boletos que desea descargar.";
+
+                } catch (Exception errorPublicacion) {
+                    System.err.println(
+                            "Publicacion pendiente de venta #" + idVenta
+                    );
+                    errorPublicacion.printStackTrace();
+
+                    mensaje = "Venta #" + idVenta + " REGISTRADA en Neon."
+                            + "\nBoletos vendidos: " + cantidadFinal
+                            + "\n\nAlgunos PDF pueden estar pendientes de publicacion."
+                            + "\nNO vuelva a registrar esta venta.";
+                }
+
+                // Obtener URLs ya guardadas, incluso si alguna publicacion
+                // quedo pendiente. Esta consulta tambien va en el hilo de fondo.
+                List<Boleto> boletos;
+                try {
+                    boletos = new BoletoDAO().listarPorVenta(idVenta);
+                } catch (SQLException errorConsulta) {
+                    errorConsulta.printStackTrace();
+                    boletos = List.of();
+                    mensaje += "\nNo se pudo consultar la lista de descargas.";
+                }
+
+                return new ResultadoVenta(idVenta, mensaje, boletos);
+            }
+        };
+
+        tarea.setOnSucceeded(e -> {
+            ResultadoVenta resultado = tarea.getValue();
+            restaurarInterfazVenta();
+            consultarConcierto();
+
+            // Abrir la ventana de descarga, no solo una alerta informativa.
+            VentanaDescargaBoletosFX.mostrar(
+                    btnConfirmarVenta.getScene().getWindow(),
+                    resultado.idVenta(),
+                    resultado.boletos(),
+                    resultado.mensaje()
             );
+        });
 
-            mostrarAlertaVenta(
-                    Alert.AlertType.INFORMATION,
-                    "Venta registrada correctamente."
-                    + "\nNúmero de venta: " + idVenta
-                    + "\nBoletos generados: " + cantidad
-                    + "\n\nLa venta quedó guardada en PostgreSQL."
-            );
-
-        } catch (SQLException e) {
-
+        tarea.setOnFailed(e -> {
+            Throwable error = tarea.getException();
+            restaurarInterfazVenta();
             mostrarAlertaVenta(
                     Alert.AlertType.ERROR,
-                    "No se pudo completar la venta."
-                    + "\n\n" + e.getMessage()
+                    "No se pudo registrar la venta."
+                    + "\n\n" + (error == null
+                            ? "Error desconocido."
+                            : error.getMessage())
                     + "\n\nSe actualizará el mapa para consultar "
                     + "la disponibilidad vigente."
             );
-
-        } finally {
-
             consultarConcierto();
-        }
+        });
+
+        Thread hilo = new Thread(tarea, "svb-gua-publicar-venta");
+        hilo.setDaemon(true);
+        hilo.start();
+    }
+
+    // Resultado que viaja del hilo de fondo a la interfaz JavaFX.
+    private record ResultadoVenta(
+            int idVenta,
+            String mensaje,
+            List<Boleto> boletos) {
+    }
+
+    private void restaurarInterfazVenta() {
+        cmbConciertos.setDisable(false);
+        btnConsultarConcierto.setDisable(cmbConciertos.getValue() == null);
+        contenedorMapa.setDisable(false);
+        // consultarConcierto reconstruye la seleccion y el spinner.
     }
 
     private void mostrarAlertaVenta(
