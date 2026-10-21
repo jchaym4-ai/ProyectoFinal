@@ -46,10 +46,16 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
 import javafx.scene.transform.Scale;
 import servicio.VentaService;
+import servicio.FacturaPDFService;
 import servicio.PublicacionBoletosService;
 import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.layout.GridPane;
+import javafx.geometry.HPos;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -1094,6 +1100,12 @@ public class NuevaVentaFXController {
             return;
         }
 
+        // Solicitar los datos ANTES de guardar la venta.
+        DatosComprador comprador = solicitarDatosComprador();
+        if (comprador == null) {
+            return; // Cancelar aquí NO crea venta ni descuenta inventario.
+        }
+
         // Capturar datos antes de iniciar el trabajo en segundo plano.
         final int idVendedor = usuario.getIdUsuario();
         final int idInventario = localidadSeleccionada.getIdInventario();
@@ -1115,7 +1127,10 @@ public class NuevaVentaFXController {
                         idVendedor,
                         idInventario,
                         cantidadFinal,
-                        asientosFinales
+                        asientosFinales,
+                        comprador.nombre(),
+                        comprador.nit(),
+                        comprador.direccion()
                 );
 
                 // Un error de Cloudflare NO revierte una venta ya registrada.
@@ -1176,6 +1191,77 @@ public class NuevaVentaFXController {
         hilo.start();
     }
 
+    // Datos para la factura academica; no es una factura FEL.
+    private static record DatosComprador(
+            String nombre, String nit, String direccion) { }
+
+    private DatosComprador solicitarDatosComprador() {
+        Dialog<DatosComprador> dialogo = new Dialog<>();
+        dialogo.setTitle("SVB-GUA - Datos de facturacion");
+        dialogo.setHeaderText("Datos del comprador (factura de demostracion)");
+        dialogo.initOwner(btnConfirmarVenta.getScene().getWindow());
+
+        ButtonType aceptar = new ButtonType(
+                "Continuar con la venta", ButtonBar.ButtonData.OK_DONE);
+        dialogo.getDialogPane().getButtonTypes().addAll(
+                aceptar, ButtonType.CANCEL);
+
+        TextField txtNombre = new TextField("Consumidor Final");
+        TextField txtNit = new TextField("CF");
+        TextField txtDireccion = new TextField();
+        txtNombre.setPromptText("Nombre completo o Consumidor Final");
+        txtNit.setPromptText("NIT o CF");
+        txtDireccion.setPromptText("Direccion (opcional)");
+
+        txtNombre.setTextFormatter(new TextFormatter<String>(c ->
+                c.getControlNewText().length() <= 150 ? c : null));
+        txtNit.setTextFormatter(new TextFormatter<String>(c ->
+                c.getControlNewText().length() <= 20 ? c : null));
+        txtDireccion.setTextFormatter(new TextFormatter<String>(c ->
+                c.getControlNewText().length() <= 250 ? c : null));
+
+        GridPane formulario = new GridPane();
+        formulario.setHgap(12);
+        formulario.setVgap(12);
+        formulario.setStyle("-fx-padding: 18;");
+        formulario.add(new Label("Nombre:"), 0, 0);
+        formulario.add(txtNombre, 1, 0);
+        formulario.add(new Label("NIT:"), 0, 1);
+        formulario.add(txtNit, 1, 1);
+        formulario.add(new Label("Direccion:"), 0, 2);
+        formulario.add(txtDireccion, 1, 2);
+        Label nota = new Label(
+                "Comprobante academico sin validez tributaria.\n"
+                + "Para consumidor final puedes dejar CF.");
+        nota.setWrapText(true);
+        formulario.add(nota, 0, 3, 2, 1);
+        dialogo.getDialogPane().setContent(formulario);
+
+        Node botonAceptar = dialogo.getDialogPane().lookupButton(aceptar);
+        botonAceptar.addEventFilter(javafx.event.ActionEvent.ACTION, ev -> {
+            if (txtNombre.getText().trim().isEmpty()
+                    || txtNit.getText().trim().isEmpty()) {
+                ev.consume();
+                Alert aviso = new Alert(Alert.AlertType.WARNING,
+                        "Ingresa el nombre y el NIT, o usa CF para consumidor final.",
+                        ButtonType.OK);
+                aviso.initOwner(dialogo.getDialogPane().getScene().getWindow());
+                aviso.showAndWait();
+            }
+        });
+
+        dialogo.setResultConverter(opcion -> {
+            if (opcion != aceptar) {
+                return null;
+            }
+            return new DatosComprador(
+                    txtNombre.getText().trim(),
+                    txtNit.getText().trim().toUpperCase(Locale.ROOT),
+                    txtDireccion.getText().trim());
+        });
+        return dialogo.showAndWait().orElse(null);
+    }
+
     private static record ResultadoVenta(
             int idVenta, int cantidad, boolean publicado, String mensaje) { }
 
@@ -1219,6 +1305,21 @@ public class NuevaVentaFXController {
                 contenido.getChildren().add(descargarTodos);
             }
 
+            // Una factura por venta, independientemente de cuántos boletos tenga.
+            Button descargarFactura = new Button("Descargar factura PDF");
+            descargarFactura.setStyle(
+                    "-fx-background-color: #0D9488;"
+                    + "-fx-text-fill: white;"
+                    + "-fx-font-weight: bold;"
+                    + "-fx-padding: 10 18;"
+                    + "-fx-background-radius: 7;"
+            );
+            descargarFactura.setMaxWidth(Double.MAX_VALUE);
+            descargarFactura.setOnAction(ev -> descargarFactura(resultado.idVenta()));
+            contenido.getChildren().add(new javafx.scene.control.Separator());
+            contenido.getChildren().add(new Label("Factura ficticia de la compra"));
+            contenido.getChildren().add(descargarFactura);
+
             if (publicados == 0) {
                 Label aviso = new Label("No hay PDF publicados aún. "
                         + "La venta permanece registrada en Neon.");
@@ -1237,6 +1338,30 @@ public class NuevaVentaFXController {
             mostrarAlertaVenta(Alert.AlertType.WARNING,
                     "Venta #" + resultado.idVenta() + " registrada. "
                     + "No se pudo cargar la ventana de descarga: " + ex.getMessage());
+        }
+    }
+
+    private void descargarFactura(int idVenta) {
+        FileChooser selector = new FileChooser();
+        selector.setTitle("Guardar factura - Venta #" + idVenta);
+        selector.setInitialFileName("factura-venta-" + idVenta + ".pdf");
+        selector.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Archivos PDF", "*.pdf"));
+
+        File destino = selector.showSaveDialog(
+                btnConfirmarVenta.getScene().getWindow());
+        if (destino == null) {
+            return;
+        }
+
+        try {
+            new FacturaPDFService().generarFactura(idVenta, destino.toPath());
+            mostrarAlertaVenta(Alert.AlertType.INFORMATION,
+                    "Factura guardada en:\n" + destino.getAbsolutePath());
+        } catch (Exception ex) {
+            mostrarAlertaVenta(Alert.AlertType.ERROR,
+                    "No se pudo generar la factura de la venta #"
+                    + idVenta + ":\n" + ex.getMessage());
         }
     }
 

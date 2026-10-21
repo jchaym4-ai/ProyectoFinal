@@ -27,6 +27,26 @@ public class VentaService {
             int cantidad,
             List<Integer> idsAsientos) throws SQLException {
 
+        return registrarVenta(
+                idVendedor, idInventario, cantidad, idsAsientos,
+                "Consumidor Final", "CF", null
+        );
+    }
+
+    // Nueva version para ventas con datos de facturacion ficticia.
+    public int registrarVenta(
+            int idVendedor,
+            int idInventario,
+            int cantidad,
+            List<Integer> idsAsientos,
+            String nombreComprador,
+            String nitComprador,
+            String direccionComprador) throws SQLException {
+
+        nombreComprador = validarTexto(nombreComprador, 150, "nombre del comprador", false);
+        nitComprador = validarTexto(nitComprador, 20, "NIT", false).toUpperCase(java.util.Locale.ROOT);
+        direccionComprador = validarTexto(direccionComprador, 250, "direccion", true);
+
         if (idVendedor <= 0 || idInventario <= 0) {
             throw new IllegalArgumentException(
                     "El vendedor y el inventario deben ser válidos."
@@ -154,7 +174,10 @@ public class VentaService {
                 int idVenta = insertarVenta(
                         conn,
                         idVendedor,
-                        total
+                        total,
+                        nombreComprador,
+                        nitComprador,
+                        direccionComprador
                 );
 
                 int idDetalle = insertarDetalle(
@@ -280,15 +303,33 @@ public class VentaService {
         }
     }
 
+    private String validarTexto(String valor, int maximo,
+            String campo, boolean opcional) {
+        String texto = valor == null ? "" : valor.trim();
+        if (texto.isEmpty()) {
+            if (opcional) return null;
+            throw new IllegalArgumentException("Debe ingresar " + campo + ".");
+        }
+        if (texto.length() > maximo) {
+            throw new IllegalArgumentException(
+                    "El campo " + campo + " supera " + maximo + " caracteres.");
+        }
+        return texto;
+    }
+
     private int insertarVenta(
             Connection conn,
             int idVendedor,
-            BigDecimal total) throws SQLException {
+            BigDecimal total,
+            String nombreComprador,
+            String nitComprador,
+            String direccionComprador) throws SQLException {
 
         String sql = """
                 INSERT INTO ventas
-                    (id_vendedor, total_venta)
-                VALUES (?, ?)
+                    (id_vendedor, total_venta, nombre_comprador,
+                     nit_comprador, direccion_comprador)
+                VALUES (?, ?, ?, ?, ?)
                 RETURNING id_venta
                 """;
 
@@ -297,6 +338,9 @@ public class VentaService {
 
             ps.setInt(1, idVendedor);
             ps.setBigDecimal(2, total);
+            ps.setString(3, nombreComprador);
+            ps.setString(4, nitComprador);
+            ps.setString(5, direccionComprador);
 
             try (ResultSet rs = ps.executeQuery()) {
 

@@ -6,6 +6,11 @@ import modelo.DetalleHistorialVenta;
 import modelo.Usuario;
 
 import java.math.BigDecimal;
+import java.io.File;
+import java.nio.file.Path;
+import javafx.scene.control.Alert;
+import javafx.stage.FileChooser;
+import servicio.FacturaPDFService;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -133,6 +138,8 @@ public class HistorialVentasFXController {
         btnBuscar.setDisable(true);
         btnLimpiar.setDisable(true);
         btnVerBoletos.setDisable(true);
+        btnVerBoletos.setText("Descargar factura");
+        btnVerBoletos.setOnAction(e -> descargarFacturaSeleccionada());
 
         // BOTÓN BUSCAR
         btnBuscar.setOnAction(
@@ -357,9 +364,8 @@ public class HistorialVentasFXController {
                 )
         );
 
-        // Este botón se conectará en el
-        // módulo de Consulta de Boletos.
-        btnVerBoletos.setDisable(true);
+        // Permitir recuperar la factura de la venta seleccionada.
+        btnVerBoletos.setDisable(false);
     }
 
     // ==========================================
@@ -622,4 +628,73 @@ public class HistorialVentasFXController {
 
         hilo.start();
     }
+
+    // ==========================================
+    // DESCARGAR FACTURA DESDE EL HISTORIAL
+    // ==========================================
+    private void descargarFacturaSeleccionada() {
+        HistorialVenta venta = tablaHistorial.getSelectionModel().getSelectedItem();
+        if (venta == null || usuario == null) {
+            mostrarMensaje(Alert.AlertType.WARNING,
+                    "Selecciona una venta antes de descargar la factura.");
+            return;
+        }
+
+        final int idVenta = venta.getIdVenta();
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Guardar factura de venta #" + idVenta);
+        chooser.setInitialFileName("factura-venta-" + idVenta + ".pdf");
+        chooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Documento PDF", "*.pdf"));
+
+        File destino = chooser.showSaveDialog(
+                btnVerBoletos.getScene().getWindow());
+        if (destino == null) {
+            return;
+        }
+        Path archivo = destino.toPath();
+
+        btnVerBoletos.setDisable(true);
+        lblEstadoHistorial.setText("Generando factura de venta #" + idVenta + "...");
+
+        Task<Void> tarea = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                new FacturaPDFService().generarFactura(idVenta, archivo);
+                return null;
+            }
+        };
+
+        tarea.setOnSucceeded(e -> {
+            HistorialVenta actual = tablaHistorial.getSelectionModel().getSelectedItem();
+            btnVerBoletos.setDisable(actual == null);
+            lblEstadoHistorial.setText("Factura generada correctamente.");
+            mostrarMensaje(Alert.AlertType.INFORMATION,
+                    "Factura de la venta #" + idVenta
+                    + " guardada en:\n" + archivo.toAbsolutePath());
+        });
+
+        tarea.setOnFailed(e -> {
+            HistorialVenta actual = tablaHistorial.getSelectionModel().getSelectedItem();
+            btnVerBoletos.setDisable(actual == null);
+            lblEstadoHistorial.setText("No se pudo generar la factura.");
+            Throwable causa = tarea.getException();
+            mostrarMensaje(Alert.AlertType.ERROR,
+                    "Error al generar la factura de venta #" + idVenta
+                    + ":\n" + (causa == null ? "Error desconocido" : causa.getMessage()));
+        });
+
+        Thread hilo = new Thread(tarea, "historial-factura-" + idVenta);
+        hilo.setDaemon(true);
+        hilo.start();
+    }
+
+    private void mostrarMensaje(Alert.AlertType tipo, String mensaje) {
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle("SVB-GUA - Factura académica");
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
+    }
+
 }
