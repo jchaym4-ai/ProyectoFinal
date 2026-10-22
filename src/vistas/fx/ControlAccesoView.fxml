@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controladorFx.ControlAccesoFXController"
+            style="-fx-background-color: #F4F7FB;">
+    <top>
+        <VBox spacing="6" style="-fx-padding: 22 24 12 24;">
+            <Label text="Control de acceso" style="-fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: #0F172A;" />
+            <Label text="Paso 72: prueba de cámaras en vivo. Todavía NO se validan boletos."
+                   style="-fx-font-size: 12px; -fx-text-fill: #64748B;" />
+        </VBox>
+    </top>
+    <center>
+        <VBox spacing="14" style="-fx-padding: 10 24 22 24;">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Cámara:" style="-fx-font-weight: bold; -fx-text-fill: #334155;" />
+                <ComboBox fx:id="cmbCamaras" prefWidth="320" promptText="Selecciona un dispositivo" />
+                <Button fx:id="btnActualizar" text="Actualizar cámaras" onAction="#actualizarCamaras" />
+            </HBox>
+            <StackPane minHeight="290" prefHeight="410" style="-fx-background-color: #111827; -fx-background-radius: 14;">
+                <ImageView fx:id="imgCamara" fitWidth="720" fitHeight="395" preserveRatio="true" smooth="true" />
+                <Label fx:id="lblVistaPrevia" text="La cámara está detenida"
+                       style="-fx-text-fill: #CBD5E1; -fx-font-size: 17px; -fx-font-weight: bold;" />
+            </StackPane>
+            <HBox spacing="10">
+                <Button fx:id="btnIniciar" text="Iniciar cámara" onAction="#iniciarCamara"
+                        style="-fx-background-color: #0D9488; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;" />
+                <Button fx:id="btnDetener" text="Detener cámara" onAction="#detenerCamara"
+                        style="-fx-padding: 10 20;" />
+            </HBox>
+            <Label fx:id="lblEstado" text="Buscando dispositivos..." wrapText="true"
+                   style="-fx-font-size: 13px; -fx-text-fill: #334155;" />
+            <Label text="Cuando veamos el video en JavaFX, agregaremos ZXing y la validación en Neon."
+                   wrapText="true" style="-fx-font-size: 12px; -fx-text-fill: #64748B;" />
+        </VBox>
+    </center>
+</BorderPane>

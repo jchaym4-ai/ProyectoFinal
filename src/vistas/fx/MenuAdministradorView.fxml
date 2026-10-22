@@ -15,37 +15,32 @@
 
 <BorderPane prefHeight="700.0" prefWidth="1200.0" styleClass="root-admin" stylesheets="@menu-admin.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladorFx.MenuAdministradorFXController">
    <left>
-      <VBox prefHeight="8.0" prefWidth="230.0" styleClass="sidebar" BorderPane.alignment="CENTER">
+      <VBox prefWidth="230.0" styleClass="sidebar" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="25.0" left="15.0" right="15.0" top="25.0" />
          </BorderPane.margin>
          <children>
             <Label alignment="CENTER" styleClass="sidebar-title" text="SVB-GUA" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="24.0" />
-               </font>
+               <font><Font name="System Bold" size="24.0" /></font>
             </Label>
             <Label alignment="CENTER" styleClass="sidebar-subtitle" text="Panel de Administración" textFill="#9ca3af" />
             <Separator prefWidth="200.0" />
             <Button fx:id="btnDashboard" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Dashboard">
-               <styleClass>
-                  <String fx:value="menu-button-active" />
-                  <String fx:value="menu-button" />
-               </styleClass>
+               <styleClass><String fx:value="menu-button-active" /><String fx:value="menu-button" /></styleClass>
             </Button>
             <Button fx:id="btnArtistas" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" styleClass="menu-button" text="Artistas" />
             <Button fx:id="btnLocalidades" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" styleClass="menu-button" text="Localidades" />
             <Button fx:id="btnConciertos" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" styleClass="menu-button" text="Conciertos" />
             <Button fx:id="btnInventario" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" styleClass="menu-button" text="Inventario" />
             <Button fx:id="btnUsuarios" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" styleClass="menu-button" text="Usuarios" />
+            <Separator prefWidth="200.0" />
+            <Button fx:id="btnControlAcceso" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" styleClass="menu-button" text="Control de acceso" />
          </children>
       </VBox>
    </left>
    <top>
       <HBox prefHeight="100.0" prefWidth="70.0" spacing="15.0" styleClass="topbar" BorderPane.alignment="CENTER_RIGHT">
-         <BorderPane.margin>
-            <Insets bottom="10.0" left="25.0" right="25.0" top="10.0" />
-         </BorderPane.margin>
+         <BorderPane.margin><Insets bottom="10.0" left="25.0" right="25.0" top="10.0" /></BorderPane.margin>
          <children>
             <Label fx:id="lblNombreUsuario" styleClass="user-label" text=" Administrador" />
             <Button fx:id="btnCerrarSesion" mnemonicParsing="false" onAction="#cerrarSesion" styleClass="logout-button" text="Cerrar Sesión" />
@@ -54,20 +49,10 @@
    </top>
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" styleClass="content-area" BorderPane.alignment="CENTER">
-         <padding>
-            <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
-         </padding>
+         <padding><Insets bottom="35.0" left="35.0" right="35.0" top="35.0" /></padding>
          <children>
-            <Label styleClass="content-title" text="Panel principal">
-               <font>
-                  <Font name="System Bold" size="28.0" />
-               </font>
-            </Label>
-            <Label styleClass="content-subtitle" text="Bienvenido al sistema de administración de SVB-GUA" textFill="#6b7280">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
+            <Label styleClass="content-title" text="Panel principal"><font><Font name="System Bold" size="28.0" /></font></Label>
+            <Label styleClass="content-subtitle" text="Bienvenido al sistema de administración de SVB-GUA" textFill="#6b7280"><font><Font size="24.0" /></font></Label>
             <GridPane hgap="20.0" prefHeight="300.0" prefWidth="110.0" vgap="20.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -79,48 +64,20 @@
               </rowConstraints>
                <children>
                   <VBox prefHeight="130.0" prefWidth="260.0" spacing="8.0" styleClass="dashboard-card">
-                     <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                     </padding>
-                     <children>
-                        <Label styleClass="card-title" text="Artistas " />
-                        <Label fx:id="lblTotalArtistas"
-                               styleClass="card-value"
-                               text="0" />
-                     </children>
+                     <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                     <children><Label styleClass="card-title" text="Artistas " /><Label fx:id="lblTotalArtistas" styleClass="card-value" text="0" /></children>
                   </VBox>
                   <VBox prefHeight="130.0" prefWidth="260.0" spacing="8.0" styleClass="dashboard-card" GridPane.columnIndex="1">
-                     <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                     </padding>
-                     <children>
-                        <Label styleClass="card-title" text="Conciertos" />
-                        <Label fx:id="lblTotalConciertos"
-                               styleClass="card-value"
-                               text="0" />
-                     </children>
+                     <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                     <children><Label styleClass="card-title" text="Conciertos" /><Label fx:id="lblTotalConciertos" styleClass="card-value" text="0" /></children>
                   </VBox>
                   <VBox prefHeight="130.0" prefWidth="260.0" spacing="8.0" styleClass="dashboard-card" GridPane.rowIndex="1">
-                     <children>
-                        <Label styleClass="card-title" text="Localidades" />
-                        <Label fx:id="lblTotalLocalidades"
-                               styleClass="card-value"
-                               text="0" />
-                     </children>
-                     <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                     </padding>
+                     <children><Label styleClass="card-title" text="Localidades" /><Label fx:id="lblTotalLocalidades" styleClass="card-value" text="0" /></children>
+                     <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
                   </VBox>
                   <VBox prefHeight="130.0" prefWidth="260.0" spacing="8.0" styleClass="dashboard-card" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                     </padding>
-                     <children>
-                        <Label styleClass="card-title" text="Inventario" />
-                        <Label fx:id="lblTotalInventario"
-                               styleClass="card-value"
-                               text="0" />
-                     </children>
+                     <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                     <children><Label styleClass="card-title" text="Inventario" /><Label fx:id="lblTotalInventario" styleClass="card-value" text="0" /></children>
                   </VBox>
                </children>
             </GridPane>
