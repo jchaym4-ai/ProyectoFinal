@@ -15,6 +15,7 @@ import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -54,6 +55,7 @@ public class ConsultarBoletosFXController {
     @FXML private TableColumn<DetalleBoleto, String> colLocalidad;
     @FXML private TableColumn<DetalleBoleto, String> colAsiento;
     @FXML private TableColumn<DetalleBoleto, String> colEstado;
+    @FXML private TableColumn<DetalleBoleto, String> colAcceso;
     @FXML private TableColumn<DetalleBoleto, String> colPDF;
     @FXML private TableColumn<DetalleBoleto, DetalleBoleto> colAcciones;
 
@@ -61,6 +63,7 @@ public class ConsultarBoletosFXController {
             FXCollections.observableArrayList();
     private final FilteredList<DetalleBoleto> filtrados =
             new FilteredList<>(datos, boleto -> true);
+    private Map<Integer, ConsultaBoletosDAO.EstadoAcceso> estadosAcceso = Map.of();
 
     @FXML
     private void initialize() {
@@ -81,6 +84,26 @@ public class ConsultarBoletosFXController {
         colLocalidad.setCellValueFactory(c -> valor(c.getValue().getLocalidad()));
         colAsiento.setCellValueFactory(c -> valor(asientoTexto(c.getValue())));
         colEstado.setCellValueFactory(c -> valor(estadoTexto(c.getValue().getEstado())));
+        colAcceso.setCellValueFactory(c -> valor(estadoAccesoTexto(c.getValue())));
+        colAcceso.setCellFactory(columna -> new TableCell<>() {
+            @Override
+            protected void updateItem(String estado, boolean vacio) {
+                super.updateItem(estado, vacio);
+                if (vacio || estado == null) {
+                    setText(null);
+                    setStyle("");
+                    return;
+                }
+                setText(estado);
+                String color = switch (estado) {
+                    case "Sin utilizar" -> "#047857";
+                    case "Ya ingresó" -> "#1D4ED8";
+                    case "Anulado" -> "#B91C1C";
+                    default -> "#64748B";
+                };
+                setStyle("-fx-font-weight: bold; -fx-text-fill: " + color + ";");
+            }
+        });
         colPDF.setCellValueFactory(c -> valor(tienePDF(c.getValue()) ? "Disponible" : "Pendiente"));
 
         colAcciones.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(c.getValue()));
@@ -138,16 +161,18 @@ public class ConsultarBoletosFXController {
         btnActualizar.setDisable(true);
         lblMensaje.setText("Consultando los boletos registrados en Neon...");
 
-        Task<List<DetalleBoleto>> tarea = new Task<>() {
+        Task<ConsultaBoletosDAO.ResultadoConsulta> tarea = new Task<>() {
             @Override
-            protected List<DetalleBoleto> call() throws Exception {
-                return new ConsultaBoletosDAO().listarTodos();
+            protected ConsultaBoletosDAO.ResultadoConsulta call() throws Exception {
+                return new ConsultaBoletosDAO().listarTodosConAcceso();
             }
         };
 
         tarea.setOnSucceeded(e -> {
             btnActualizar.setDisable(false);
-            datos.setAll(tarea.getValue());
+            ConsultaBoletosDAO.ResultadoConsulta resultado = tarea.getValue();
+            estadosAcceso = resultado.accesos();
+            datos.setAll(resultado.boletos());
             tablaBoletos.getSelectionModel().clearSelection();
             aplicarFiltro();
             lblMensaje.setText(datos.isEmpty()
@@ -172,6 +197,7 @@ public class ConsultarBoletosFXController {
                 || contiene(b.getNombreArtista(), busqueda)
                 || contiene(b.getLocalidad(), busqueda)
                 || contiene(b.getEstado(), busqueda)
+                || contiene(estadoAccesoTexto(b), busqueda)
                 || contiene("" + b.getIdBoleto(), busqueda)
                 || contiene("" + b.getIdVenta(), busqueda));
 
@@ -194,7 +220,7 @@ public class ConsultarBoletosFXController {
     private void mostrarDetalle(DetalleBoleto boleto) {
         if (boleto == null) {
             lblDetalleTitulo.setText("Selecciona un boleto de la tabla");
-            lblDetalleDatos.setText("Veras aqui el artista, fecha, recinto, precio y codigo completo.");
+            lblDetalleDatos.setText("Aquí verás el estado de acceso, fecha de ingreso y código completo.");
             return;
         }
 
@@ -211,8 +237,22 @@ public class ConsultarBoletosFXController {
                 + "\nRecinto: " + texto(boleto.getRecinto())
                 + "   |   Localidad: " + texto(boleto.getLocalidad())
                 + "   |   Asiento: " + asientoTexto(boleto)
-                + "\nCodigo: " + texto(boleto.getCodigoBoleto())
+                + "\nEstado de acceso: " + estadoAccesoTexto(boleto)
+                + "   |   Ingreso: " + fechaIngresoTexto(boleto)
+                + "\nCódigo: " + texto(boleto.getCodigoBoleto())
         );
+    }
+
+    private String estadoAccesoTexto(DetalleBoleto boleto) {
+        ConsultaBoletosDAO.EstadoAcceso estado = estadosAcceso.get(boleto.getIdBoleto());
+        return estado == null || estado.descripcion() == null
+                ? "No disponible" : estado.descripcion();
+    }
+
+    private String fechaIngresoTexto(DetalleBoleto boleto) {
+        ConsultaBoletosDAO.EstadoAcceso estado = estadosAcceso.get(boleto.getIdBoleto());
+        return estado == null || estado.fechaIngreso() == null
+                ? "Sin registro" : estado.fechaIngreso().format(FECHA) + " (Guatemala)";
     }
 
     private String asientoTexto(DetalleBoleto boleto) {
@@ -229,7 +269,7 @@ public class ConsultarBoletosFXController {
         return switch (estado.toLowerCase(Locale.ROOT)) {
             case "valido" -> "Valido";
             case "usado" -> "Usado";
-            case "cancelado" -> "Cancelado";
+            case "cancelado", "anulado" -> "Anulado";
             default -> estado;
         };
     }

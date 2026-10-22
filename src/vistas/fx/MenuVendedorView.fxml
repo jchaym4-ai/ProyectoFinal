@@ -7,47 +7,56 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<!-- SVB-GUA | Paso 76.2. Mismo CSS premium que Administrador. -->
+<BorderPane prefHeight="700.0" prefWidth="1200.0" styleClass="root-admin" stylesheets="@menu-admin.css"
+            xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controladorFx.MenuVendedorFXController">
+    <left>
+        <VBox prefWidth="245.0" spacing="5.0" styleClass="sidebar" BorderPane.alignment="CENTER">
+            <padding><Insets top="24.0" bottom="24.0" left="17.0" right="17.0" /></padding>
+            <children>
+                <Label alignment="CENTER_LEFT" text="SVB-GUA" prefWidth="210.0" styleClass="sidebar-title" />
+                <Label text="CONCIERTOS  /  VENTAS" prefWidth="210.0" styleClass="sidebar-subtitle" />
+                <Separator prefWidth="210.0">
+                    <VBox.margin><Insets top="16.0" bottom="12.0" /></VBox.margin>
+                </Separator>
 
-<BorderPane prefHeight="700.0" prefWidth="1200.0" styleClass="root-admin" stylesheets="@menu-admin.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladorFx.MenuVendedorFXController"> 
-   <left>
-      <VBox prefHeight="70.0" prefWidth="230.0" spacing="8.0" styleClass="sidebar" BorderPane.alignment="CENTER">
-         <children>
-            <Label styleClass="sidebar-title" text="SVB-GUA" />
-            <Label styleClass="sidebar-subtitle" text="Panel de Ventas" />
-            <Separator prefWidth="200.0" />
-            <Button fx:id="btnDashboard" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Dashboard">
-               <styleClass>
-                  <String fx:value="menu-button" />
-                  <String fx:value="menu-button-active" />
-               </styleClass>
-            </Button>
-            <Button fx:id="btnNuevaVenta" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" styleClass="menu-button" text="Nueva Venta" />
-            <Button fx:id="btnHistorialVentas" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" styleClass="menu-button" text="Historial de Ventas" />
-            <Button fx:id="btnConsultarBoletos" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" styleClass="menu-button" text="Consultar Boletos" />
-         </children>
-         <BorderPane.margin>
-            <Insets />
-         </BorderPane.margin>
-         <padding>
-            <Insets bottom="25.0" left="15.0" right="15.0" top="25.0" />
-         </padding>
-      </VBox>
-   </left>
-   <top>
-      <HBox alignment="CENTER_RIGHT" prefHeight="70.0" prefWidth="200.0" spacing="15.0" styleClass="topbar">
-         <padding>
-            <Insets left="25.0" right="25.0" />
-         </padding>
-         <children>
-            <Label fx:id="lblNombreUsuario" styleClass="user-label" text="Vendedor" />
-            <Button fx:id="btnCerrarSesion" mnemonicParsing="false" styleClass="logout-button" text="Cerrar Sesión" />
-         </children>
-      </HBox>
-   </top>
-   <center>
-      <StackPane fx:id="contenedorCentral" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-   </center>
+                <Button fx:id="btnDashboard" mnemonicParsing="false" prefHeight="43.0" prefWidth="210.0" text="Dashboard">
+                    <styleClass>
+                        <String fx:value="menu-button" />
+                        <String fx:value="menu-button-active" />
+                    </styleClass>
+                </Button>
+                <Button fx:id="btnNuevaVenta" mnemonicParsing="false" prefHeight="43.0" prefWidth="210.0"
+                        styleClass="menu-button" text="Nueva Venta" />
+                <Button fx:id="btnHistorialVentas" mnemonicParsing="false" prefHeight="43.0" prefWidth="210.0"
+                        styleClass="menu-button" text="Historial de Ventas" />
+                <Button fx:id="btnConsultarBoletos" mnemonicParsing="false" prefHeight="43.0" prefWidth="210.0"
+                        styleClass="menu-button" text="Consultar Boletos" />
+            </children>
+        </VBox>
+    </left>
+
+    <top>
+        <HBox alignment="CENTER_RIGHT" prefHeight="67.0" minHeight="67.0" maxHeight="67.0"
+              spacing="14.0" styleClass="topbar" BorderPane.alignment="CENTER">
+            <padding><Insets top="12.0" bottom="12.0" left="28.0" right="28.0" /></padding>
+            <children>
+                <Label styleClass="topbar-eyebrow" text="SVB-GUA   /   PUNTO DE VENTA" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblNombreUsuario" styleClass="user-label" text="Vendedor" />
+                <Button fx:id="btnCerrarSesion" mnemonicParsing="false" styleClass="logout-button" text="Cerrar sesión" />
+            </children>
+        </HBox>
+    </top>
+
+    <!-- El controlador continúa cargando aquí Dashboard, Nueva Venta, Historial y Consulta. -->
+    <center>
+        <StackPane fx:id="contenedorCentral" prefHeight="150.0" prefWidth="200.0"
+                   styleClass="content-area" BorderPane.alignment="CENTER" />
+    </center>
 </BorderPane>

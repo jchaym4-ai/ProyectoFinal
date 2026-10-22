@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controladorFx.ReportesFXController"
+      spacing="17" prefWidth="930" stylesheets="@reportes.css" styleClass="reportes-root">
+  <padding><Insets top="25" bottom="30" left="25" right="25"/></padding>
+
+  <HBox alignment="CENTER_LEFT" spacing="12">
+    <VBox spacing="6" HBox.hgrow="ALWAYS">
+      <Label text="Reportes y estadísticas" styleClass="reportes-titulo"/>
+      <Label text="Ventas, ingresos, asistencia QR y anulaciones de SVB-GUA"
+             wrapText="true" styleClass="reportes-subtitulo"/>
+    </VBox>
+    <Button fx:id="btnActualizar" text="Actualizar" onAction="#actualizar" styleClass="boton-secundario"/>
+    <Button fx:id="btnExportar" text="Exportar PDF" onAction="#exportarPDF" styleClass="boton-primario"/>
+  </HBox>
+
+  <HBox alignment="CENTER_LEFT" spacing="14" styleClass="reportes-panel">
+    <VBox spacing="5" HBox.hgrow="ALWAYS">
+      <Label text="FILTRAR POR CONCIERTO" styleClass="reportes-etiqueta"/>
+      <ComboBox fx:id="cmbConciertos" prefWidth="420" maxWidth="Infinity"/>
+    </VBox>
+    <VBox alignment="CENTER_RIGHT" spacing="7" HBox.hgrow="ALWAYS">
+      <Label fx:id="lblFiltro" text="Todos los conciertos" wrapText="true" styleClass="reportes-texto-detalle"/>
+      <Label fx:id="lblActualizacion" text="Sin actualizar" styleClass="reportes-texto-tenue"/>
+    </VBox>
+  </HBox>
+
+  <GridPane hgap="12" vgap="12">
+    <columnConstraints>
+      <ColumnConstraints percentWidth="33.33"/>
+      <ColumnConstraints percentWidth="33.33"/>
+      <ColumnConstraints percentWidth="33.34"/>
+    </columnConstraints>
+    <VBox spacing="7" styleClass="reporte-kpi" GridPane.columnIndex="0" GridPane.rowIndex="0">
+      <Label text="INGRESOS NETOS ESTIMADOS" styleClass="reporte-kpi-titulo"/>
+      <Label fx:id="lblNeto" text="Q 0.00" styleClass="reporte-kpi-valor"/>
+      <Label text="Histórico menos devoluciones simuladas" wrapText="true" styleClass="reportes-texto-tenue"/>
+    </VBox>
+    <VBox spacing="7" styleClass="reporte-kpi" GridPane.columnIndex="1" GridPane.rowIndex="0">
+      <Label text="INGRESOS HISTÓRICOS" styleClass="reporte-kpi-titulo"/>
+      <Label fx:id="lblHistorico" text="Q 0.00" styleClass="reporte-kpi-valor"/>
+      <Label text="Importe de todos los boletos emitidos" wrapText="true" styleClass="reportes-texto-tenue"/>
+    </VBox>
+    <VBox spacing="7" styleClass="reporte-kpi" GridPane.columnIndex="2" GridPane.rowIndex="0">
+      <Label text="DEVOLUCIONES SIMULADAS" styleClass="reporte-kpi-titulo"/>
+      <Label fx:id="lblDevoluciones" text="Q 0.00" styleClass="reporte-kpi-valor"/>
+      <Label text="Boletos cancelados, sin reembolso bancario" wrapText="true" styleClass="reportes-texto-tenue"/>
+    </VBox>
+    <VBox spacing="7" styleClass="reporte-kpi" GridPane.columnIndex="0" GridPane.rowIndex="1">
+      <Label text="BOLETOS EMITIDOS" styleClass="reporte-kpi-titulo"/>
+      <Label fx:id="lblEmitidos" text="0" styleClass="reporte-kpi-valor"/>
+      <Label text="Incluye boletos posteriormente cancelados" wrapText="true" styleClass="reportes-texto-tenue"/>
+    </VBox>
+    <VBox spacing="7" styleClass="reporte-kpi" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <Label text="INGRESOS POR QR" styleClass="reporte-kpi-titulo"/>
+      <Label fx:id="lblAccesos" text="0" styleClass="reporte-kpi-valor"/>
+      <Label text="Registros de control de acceso" wrapText="true" styleClass="reportes-texto-tenue"/>
+    </VBox>
+    <VBox spacing="7" styleClass="reporte-kpi" GridPane.columnIndex="2" GridPane.rowIndex="1">
+      <Label text="BOLETOS ANULADOS" styleClass="reporte-kpi-titulo"/>
+      <Label fx:id="lblCancelados" text="0" styleClass="reporte-kpi-valor"/>
+      <Label text="Cancelaciones del sistema" wrapText="true" styleClass="reportes-texto-tenue"/>
+    </VBox>
+  </GridPane>
+
+  <HBox alignment="CENTER_LEFT" spacing="18" styleClass="reportes-panel">
+    <Label text="Ventas:" styleClass="reportes-texto-detalle"/>
+    <Label fx:id="lblVentas" text="0" styleClass="reportes-numero-small"/>
+    <Label text="Sin utilizar:" styleClass="reportes-texto-detalle"/>
+    <Label fx:id="lblSinUtilizar" text="0" styleClass="reportes-numero-small"/>
+    <Label text="Aforo disponible:" styleClass="reportes-texto-detalle"/>
+    <Label fx:id="lblDisponibles" text="0" styleClass="reportes-numero-small"/>
+  </HBox>
+
+  <HBox spacing="13">
+    <VBox spacing="5" styleClass="reportes-panel" HBox.hgrow="ALWAYS" prefWidth="515">
+      <Label text="Ingresos netos por concierto" styleClass="reportes-seccion-titulo"/>
+      <Label text="Hasta 8 conciertos con mayor ingreso" styleClass="reportes-texto-tenue"/>
+      <BarChart fx:id="graficaIngresos" prefHeight="275" animated="false" legendVisible="false" VBox.vgrow="ALWAYS">
+        <xAxis><CategoryAxis label="Concierto"/></xAxis>
+        <yAxis><NumberAxis label="Quetzales"/></yAxis>
+      </BarChart>
+    </VBox>
+    <VBox spacing="5" styleClass="reportes-panel" HBox.hgrow="ALWAYS" prefWidth="345">
+      <Label text="Estado de boletos" styleClass="reportes-seccion-titulo"/>
+      <Label text="Emitidos · ingresaron · anulados" styleClass="reportes-texto-tenue"/>
+      <PieChart fx:id="graficaEstados" prefHeight="275" animated="false" VBox.vgrow="ALWAYS"/>
+    </VBox>
+  </HBox>
+
+  <VBox spacing="10" styleClass="reportes-panel">
+    <Label text="Resultados por concierto" styleClass="reportes-seccion-titulo"/>
+    <TableView fx:id="tablaConciertos" prefHeight="250" minHeight="170">
+      <columns>
+        <TableColumn fx:id="colConcierto" text="Concierto" prefWidth="190"/>
+        <TableColumn fx:id="colFecha" text="Fecha" prefWidth="112"/>
+        <TableColumn fx:id="colVentas" text="Ventas" prefWidth="65"/>
+        <TableColumn fx:id="colEmitidos" text="Emitidos" prefWidth="75"/>
+        <TableColumn fx:id="colAsistencia" text="Ingresaron" prefWidth="86"/>
+        <TableColumn fx:id="colCancelados" text="Anulados" prefWidth="78"/>
+        <TableColumn fx:id="colNetos" text="Ingresos netos" prefWidth="125"/>
+      </columns>
+      <placeholder><Label text="No hay conciertos para mostrar."/></placeholder>
+    </TableView>
+  </VBox>
+
+  <VBox spacing="10" styleClass="reportes-panel">
+    <Label text="Detalle por localidad" styleClass="reportes-seccion-titulo"/>
+    <TableView fx:id="tablaLocalidades" prefHeight="280" minHeight="175">
+      <columns>
+        <TableColumn fx:id="colLocalidadConcierto" text="Concierto" prefWidth="135"/>
+        <TableColumn fx:id="colLocalidad" text="Localidad" prefWidth="105"/>
+        <TableColumn fx:id="colTipoVenta" text="Tipo" prefWidth="80"/>
+        <TableColumn fx:id="colCapacidad" text="Aforo" prefWidth="60"/>
+        <TableColumn fx:id="colDisponibles" text="Disponible" prefWidth="76"/>
+        <TableColumn fx:id="colLocalidadEmitidos" text="Emitidos" prefWidth="69"/>
+        <TableColumn fx:id="colLocalidadIngresos" text="Ingresaron" prefWidth="76"/>
+        <TableColumn fx:id="colLocalidadAnulados" text="Anulados" prefWidth="70"/>
+        <TableColumn fx:id="colLocalidadNetos" text="Neto" prefWidth="112"/>
+      </columns>
+      <placeholder><Label text="No hay localidades para el concierto seleccionado."/></placeholder>
+    </TableView>
+  </VBox>
+  <Label fx:id="lblEstado" wrapText="true" text="Cargando..." styleClass="reportes-estado"/>
+  <Label text="Uso académico. Las devoluciones e ingresos netos son estimaciones: no registran reembolsos bancarios ni sustituyen documentos SAT."
+         wrapText="true" styleClass="reportes-texto-tenue"/>
+</VBox>

@@ -1,102 +1,144 @@
+/* =========================================================
+   SVB-GUA | Administración - Diseño premium (Paso 76.1)
+   Tema: Obsidiana + Violeta. Solo estilos visuales.
+   Conserva las clases usadas por MenuAdministradorView.fxml.
+   ========================================================= */
+
 .root-admin {
-    -fx-background-color: #F3F4F6;
+    -fx-background-color: #F6F5F9;
+    -fx-font-family: "Segoe UI";
 }
 
+/* ---------- NAVEGACIÓN LATERAL ---------- */
 .sidebar {
-    -fx-background-color: #111827;
+    -fx-background-color: #12121F;
+    -fx-border-color: transparent #242436 transparent transparent;
+    -fx-border-width: 0 1 0 0;
 }
 
 .sidebar-title {
-    -fx-text-fill: white;
-    -fx-font-size: 24px;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 27px;
     -fx-font-weight: bold;
 }
 
 .sidebar-subtitle {
-    -fx-text-fill: #9CA3AF;
-    -fx-font-size: 12px;
+    -fx-text-fill: #9C99B2;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.sidebar .separator .line {
+    -fx-border-color: #2D2A3E;
+    -fx-border-width: 1 0 0 0;
 }
 
 .menu-button {
     -fx-background-color: transparent;
-    -fx-text-fill: #D1D5DB;
-    -fx-font-size: 14px;
+    -fx-background-radius: 10px;
+    -fx-border-color: transparent;
+    -fx-border-radius: 10px;
+    -fx-text-fill: #C9C6D8;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
-    -fx-background-radius: 8px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 17px 0 17px;
     -fx-cursor: hand;
 }
 
 .menu-button:hover {
-    -fx-background-color: #1F2937;
-    -fx-text-fill: white;
+    -fx-background-color: #252339;
+    -fx-text-fill: #FFFFFF;
 }
 
-.menu-button-active {
-    -fx-background-color: #2563EB;
-    -fx-text-fill: white;
+.menu-button-active,
+.menu-button-active:hover {
+    -fx-background-color: #6C55D9;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-color: transparent transparent transparent #BFAEFF;
+    -fx-border-width: 0 0 0 3px;
+    -fx-border-radius: 10px;
 }
 
+/* ---------- BARRA SUPERIOR ---------- */
 .topbar {
-    -fx-background-color: white;
-    -fx-border-color: transparent transparent #E5E7EB transparent;
-    -fx-border-width: 0 0 1 0;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: transparent transparent #E8E5EF transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.topbar-eyebrow {
+    -fx-text-fill: #7461C4;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
 }
 
 .user-label {
-    -fx-text-fill: #374151;
-    -fx-font-size: 14px;
+    -fx-text-fill: #302D40;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
 
 .logout-button {
-    -fx-background-color: #FEE2E2;
-    -fx-text-fill: #B91C1C;
+    -fx-background-color: #F0EBFC;
+    -fx-text-fill: #5540AC;
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
-    -fx-background-radius: 8px;
+    -fx-background-radius: 9px;
+    -fx-padding: 10px 15px 10px 15px;
     -fx-cursor: hand;
 }
 
 .logout-button:hover {
-    -fx-background-color: #FECACA;
+    -fx-background-color: #E3DAFB;
+    -fx-text-fill: #392585;
 }
 
+/* ---------- DASHBOARD ---------- */
 .content-area {
-    -fx-background-color: #F3F4F6;
+    -fx-background-color: #F6F5F9;
+}
+
+.content-eyebrow {
+    -fx-text-fill: #7662CE;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
 }
 
 .content-title {
-    -fx-text-fill: #111827;
-    -fx-font-size: 28px;
+    -fx-text-fill: #1D1C2A;
+    -fx-font-size: 29px;
     -fx-font-weight: bold;
 }
 
 .content-subtitle {
-    -fx-text-fill: #6B7280;
-    -fx-font-size: 14px;
+    -fx-text-fill: #7B7889;
+    -fx-font-size: 13px;
 }
 
 .dashboard-card {
-    -fx-background-color: white;
-    -fx-background-radius: 12px;
-    -fx-padding: 20px;
-    -fx-effect: dropshadow(
-        gaussian,
-        rgba(0, 0, 0, 0.08),
-        15,
-        0.1,
-        0,
-        4
-    );
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 16px;
+    -fx-border-color: #E9E6F0;
+    -fx-border-radius: 16px;
+    -fx-border-width: 1px;
+    -fx-padding: 23px;
+    -fx-effect: dropshadow(gaussian, rgba(27, 24, 57, 0.055), 18, 0.12, 0, 5);
+}
+
+.dashboard-card:hover {
+    -fx-border-color: #CFC5F2;
+    -fx-background-color: #FFFFFF;
 }
 
 .card-title {
-    -fx-text-fill: #6B7280;
-    -fx-font-size: 14px;
+    -fx-text-fill: #7A758C;
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
 }
 
 .card-value {
-    -fx-text-fill: #111827;
-    -fx-font-size: 30px;
+    -fx-text-fill: #36296D;
+    -fx-font-size: 34px;
     -fx-font-weight: bold;
 }

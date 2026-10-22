@@ -6,68 +6,99 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/26"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controladorFx.ConsultarBoletosFXController"
-      stylesheets="@consultar-boletos.css"
-      styleClass="consultar-root" spacing="16">
-    <padding>
-        <Insets top="22" right="24" bottom="22" left="24"/>
-    </padding>
-    <children>
-        <VBox spacing="5">
-            <Label text="Consultar boletos" styleClass="page-title"/>
-            <Label text="Todos los boletos registrados en Neon. Encuentra cualquier venta aunque no hayas descargado el PDF."
-                   wrapText="true" styleClass="page-subtitle"/>
-        </VBox>
-
-        <VBox spacing="10" styleClass="search-card">
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <TextField fx:id="txtFiltro" HBox.hgrow="ALWAYS"
-                           promptText="Buscar por codigo, concierto, artista, localidad o numero de venta..."
-                           styleClass="search-input"/>
-                <Button text="Limpiar" onAction="#limpiarFiltro"
-                        styleClass="outline-button"/>
-                <Button fx:id="btnActualizar" text="Actualizar lista" onAction="#actualizarTabla"
-                        styleClass="primary-button"/>
-            </HBox>
-            <HBox spacing="12" alignment="CENTER_LEFT">
-                <Label fx:id="lblResumen" text="Mostrando 0 de 0 boletos" styleClass="count-label"/>
-                <Label fx:id="lblMensaje" text="Cargando boletos..." wrapText="true"
-                       styleClass="helper-label" HBox.hgrow="ALWAYS"/>
-            </HBox>
-        </VBox>
-
-        <VBox spacing="8" styleClass="table-card" VBox.vgrow="ALWAYS">
-            <Label text="Boletos emitidos" styleClass="section-title"/>
-            <TableView fx:id="tablaBoletos" VBox.vgrow="ALWAYS" prefHeight="365"
-                       styleClass="ticket-table">
-                <columns>
-                    <TableColumn fx:id="colBoleto" text="Boleto" prefWidth="65"/>
-                    <TableColumn fx:id="colVenta" text="Venta" prefWidth="55"/>
-                    <TableColumn fx:id="colEvento" text="Concierto" prefWidth="180"/>
-                    <TableColumn fx:id="colLocalidad" text="Localidad" prefWidth="95"/>
-                    <TableColumn fx:id="colAsiento" text="Asiento" prefWidth="100"/>
-                    <TableColumn fx:id="colEstado" text="Estado" prefWidth="80"/>
-                    <TableColumn fx:id="colPDF" text="PDF" prefWidth="80"/>
-                    <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="195"/>
-                </columns>
-                <placeholder>
-                    <Label text="No hay boletos que coincidan con la busqueda."/>
-                </placeholder>
-            </TableView>
-            <Label text="Selecciona una fila para ver el codigo completo y los detalles. Los boletos sin PDF publicado aparecen como Pendiente."
-                   wrapText="true" styleClass="helper-label"/>
-        </VBox>
-
-        <VBox spacing="7" styleClass="detail-card">
-            <Label fx:id="lblDetalleTitulo" text="Selecciona un boleto de la tabla"
-                   styleClass="section-title" wrapText="true"/>
-            <Label fx:id="lblDetalleDatos" text="Aqui veras los detalles del boleto."
-                   styleClass="detail-text" wrapText="true"/>
-        </VBox>
-    </children>
-</VBox>
+<ScrollPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladorFx.ConsultarBoletosFXController" fitToWidth="true" fitToHeight="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" pannable="false" styleClass="consultar-scroll" stylesheets="@consultar-boletos.css">
+    <content>
+        <BorderPane styleClass="consultar-root">
+            <padding>
+                <Insets top="16.0" right="17.0" bottom="16.0" left="17.0"/>
+            </padding>
+            <top>
+                <VBox spacing="12.0">
+                    <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="page-header">
+                        <children>
+                            <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                                <children>
+                                    <Label text="SVB-GUA  /  BOLETERÍA" styleClass="eyebrow"/>
+                                    <Label text="Consultar boletos" styleClass="page-title"/>
+                                    <Label text="Consulta tus boletos, verifica el acceso y recupera sus PDF desde Cloudflare." wrapText="true" styleClass="page-subtitle"/>
+                                </children>
+                            </VBox>
+                            <Label text="CONTROL DE BOLETOS" styleClass="header-pill"/>
+                        </children>
+                    </HBox>
+                    <VBox spacing="12.0" styleClass="search-card">
+                        <children>
+                            <Label text="BÚSQUEDA Y FILTROS" styleClass="field-caption"/>
+                            <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                <children>
+                                    <TextField fx:id="txtFiltro" HBox.hgrow="ALWAYS" promptText="Código, concierto, artista, localidad o número de venta..." styleClass="search-input"/>
+                                    <Button text="Limpiar" onAction="#limpiarFiltro" styleClass="outline-button"/>
+                                    <Button fx:id="btnActualizar" text="Actualizar lista" onAction="#actualizarTabla" styleClass="primary-button"/>
+                                </children>
+                            </HBox>
+                            <HBox spacing="14.0" alignment="CENTER_LEFT">
+                                <children>
+                                    <Label fx:id="lblResumen" text="Mostrando 0 de 0 boletos" styleClass="count-label"/>
+                                    <Region prefWidth="1.0" styleClass="status-divider"/>
+                                    <Label fx:id="lblMensaje" text="Cargando boletos..." wrapText="true" styleClass="helper-label" HBox.hgrow="ALWAYS"/>
+                                </children>
+                            </HBox>
+                        </children>
+                    </VBox>
+                </VBox>
+            </top>
+            <center>
+                <VBox spacing="9.0" styleClass="table-card" VBox.vgrow="ALWAYS">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                            <children>
+                                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label text="Boletos emitidos" styleClass="section-title"/>
+                                        <Label text="Listado, validez, acceso y documentos de cada entrada" styleClass="section-subtitle"/>
+                                    </children>
+                                </VBox>
+                                <Label text="HISTORIAL DE BOLETOS" styleClass="table-eyebrow"/>
+                            </children>
+                        </HBox>
+                        <TableView fx:id="tablaBoletos" VBox.vgrow="ALWAYS" minHeight="160.0" prefHeight="290.0" styleClass="ticket-table" maxHeight="1.7976931348623157E308">
+                            <columns>
+                                <TableColumn fx:id="colBoleto" text="Boleto" prefWidth="55.0"/>
+                                <TableColumn fx:id="colVenta" text="Venta" prefWidth="48.0"/>
+                                <TableColumn fx:id="colEvento" text="Concierto" prefWidth="250.0"/>
+                                <TableColumn fx:id="colLocalidad" text="Localidad" prefWidth="100.0"/>
+                                <TableColumn fx:id="colAsiento" text="Asiento" prefWidth="74.0"/>
+                                <TableColumn fx:id="colEstado" text="Validez" prefWidth="65.0"/>
+                                <TableColumn fx:id="colAcceso" text="Acceso" prefWidth="112.0"/>
+                                <TableColumn fx:id="colPDF" text="PDF" prefWidth="80.0"/>
+                                <TableColumn fx:id="colAcciones" text="Acciones" minWidth="218.0" prefWidth="230.0"/>
+                            </columns>
+                            <placeholder>
+                                <Label text="No hay boletos que coincidan con la búsqueda." styleClass="empty-label"/>
+                            </placeholder>
+                        </TableView>
+                        <Label text="Selecciona un boleto para ver su acceso y la fecha de ingreso. Los PDF no publicados aparecen como Pendiente." wrapText="true" styleClass="helper-label"/>
+                    </children>
+                    <BorderPane.margin>
+                        <Insets top="12.0" bottom="12.0"/>
+                    </BorderPane.margin>
+                </VBox>
+            </center>
+            <bottom>
+                <VBox spacing="8.0" styleClass="detail-card" minHeight="97.0">
+                    <children>
+                        <Label text="DETALLE DEL BOLETO" styleClass="field-caption"/>
+                        <Label fx:id="lblDetalleTitulo" text="Selecciona un boleto de la tabla" styleClass="section-title" wrapText="true"/>
+                        <Label fx:id="lblDetalleDatos" text="Aquí verás los detalles del boleto." styleClass="detail-text" wrapText="true"/>
+                    </children>
+                </VBox>
+            </bottom>
+        </BorderPane>
+    </content>
+</ScrollPane>

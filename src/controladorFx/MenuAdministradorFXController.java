@@ -32,6 +32,8 @@ public class MenuAdministradorFXController {
     @FXML private Button btnInventario;
     @FXML private Button btnUsuarios;
     @FXML private Button btnControlAcceso;
+    @FXML private Button btnAnulaciones;
+    @FXML private Button btnReportes;
     @FXML private Button btnCerrarSesion;
 
     private Usuario usuario;
@@ -48,6 +50,8 @@ public class MenuAdministradorFXController {
         btnConciertos.setOnAction(e -> abrirConciertos());
         btnInventario.setOnAction(e -> abrirInventario());
         btnControlAcceso.setOnAction(e -> abrirControlAcceso());
+        btnAnulaciones.setOnAction(e -> abrirAnulaciones());
+        btnReportes.setOnAction(e -> abrirReportes());
     }
 
     public void setUsuario(Usuario usuario) {
@@ -132,10 +136,59 @@ public class MenuAdministradorFXController {
             ControlAccesoFXController nuevo = loader.getController();
             BorderPane root = obtenerRoot(btnControlAcceso);
             guardarDashboardSiEsNecesario(root);
+            // El validador necesita al administrador autenticado para
+            // registrar quién autorizó cada ingreso.
+            nuevo.setUsuario(usuario);
             detenerCamaraAnterior();
             root.setCenter(vista);
             controladorAcceso = nuevo;
             marcarBotonActivo(btnControlAcceso);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void abrirAnulaciones() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/vistas/fx/AnulacionesView.fxml"));
+            Parent vista = loader.load();
+            AnulacionesFXController controlador = loader.getController();
+            controlador.setUsuario(usuario);
+
+            BorderPane root = obtenerRoot(btnAnulaciones);
+            guardarDashboardSiEsNecesario(root);
+            detenerCamaraAnterior();
+
+            ScrollPane scroll = new ScrollPane(vista);
+            scroll.setFitToWidth(true);
+            scroll.setFitToHeight(false);
+            scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            root.setCenter(scroll);
+            marcarBotonActivo(btnAnulaciones);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void abrirReportes() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/vistas/fx/ReportesView.fxml"));
+            Parent vista = loader.load();
+            BorderPane root = obtenerRoot(btnReportes);
+            guardarDashboardSiEsNecesario(root);
+            detenerCamaraAnterior();
+
+            ScrollPane scroll = new ScrollPane(vista);
+            scroll.setFitToWidth(true);
+            scroll.setFitToHeight(false);
+            scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            scroll.setPannable(false);
+            root.setCenter(scroll);
+            marcarBotonActivo(btnReportes);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -154,7 +207,8 @@ public class MenuAdministradorFXController {
     private void marcarBotonActivo(Button botonActivo) {
         Button[] botones = {
             btnDashboard, btnArtistas, btnLocalidades,
-            btnConciertos, btnInventario, btnUsuarios, btnControlAcceso
+            btnConciertos, btnInventario, btnUsuarios, btnControlAcceso,
+            btnAnulaciones, btnReportes
         };
         for (Button boton : botones) {
             boton.getStyleClass().remove("menu-button-active");

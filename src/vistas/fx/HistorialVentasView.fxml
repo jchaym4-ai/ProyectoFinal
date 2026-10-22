@@ -12,48 +12,56 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<!-- SVB-GUA: Vista de Historial de Ventas. Sin controlador por ahora. -->
-
+<!-- SVB-GUA | Historial de Ventas | Rediseño premium, sin modificar fx:id ni acciones -->
 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="680.0" prefWidth="980.0" styleClass="history-scroll" stylesheets="@historial-ventas.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladorFx.HistorialVentasFXController">
     <content>
-        <VBox spacing="20.0" styleClass="history-root">
+        <VBox spacing="18.0" styleClass="history-root">
             <padding>
-                <Insets bottom="30.0" left="30.0" right="30.0" top="28.0" />
+                <Insets bottom="32.0" left="26.0" right="26.0" top="23.0" />
             </padding>
             <children>
-                <HBox alignment="CENTER_LEFT" spacing="14.0">
+                <!-- Identidad y encabezado -->
+                <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="history-hero">
                     <children>
-                        <VBox spacing="7.0" HBox.hgrow="ALWAYS">
+                        <VBox spacing="8.0" HBox.hgrow="ALWAYS">
                             <children>
+                                <Label styleClass="page-eyebrow" text="SVB-GUA  /  HISTORIAL COMERCIAL" />
                                 <Label styleClass="page-title" text="Historial de Ventas" />
-                                <Label styleClass="page-subtitle" text="Consulta y búsqueda de ventas registradas" />
+                                <Label styleClass="page-subtitle" text="Revisa las transacciones, filtra resultados y consulta los detalles de cada venta." wrapText="true" />
                             </children>
                         </VBox>
                         <Label styleClass="read-only-tag" text="SOLO CONSULTA" />
                     </children>
                 </HBox>
 
+                <!-- Filtros: mantienen los mismos fx:id del controlador -->
                 <VBox spacing="15.0" styleClass="panel-card">
                     <children>
-                        <Label styleClass="section-title" text="Buscar y filtrar" />
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label styleClass="section-eyebrow" text="01  /  EXPLORAR TRANSACCIONES" />
+                                <Label styleClass="section-title" text="Buscar y filtrar" />
+                                <Label styleClass="section-subtitle" text="Encuentra una venta por número, vendedor, concierto o rango de fechas." wrapText="true" />
+                            </children>
+                        </VBox>
                         <HBox alignment="BOTTOM_LEFT" spacing="13.0">
                             <children>
                                 <VBox spacing="7.0" HBox.hgrow="ALWAYS">
                                     <children>
-                                        <Label styleClass="field-title" text="N.º de venta o texto de búsqueda" />
-                                        <TextField fx:id="txtBuscar" prefHeight="38.0" promptText="Buscar venta, vendedor o concierto" styleClass="filter-field" />
+                                        <Label styleClass="field-title" text="N.º DE VENTA O BÚSQUEDA" />
+                                        <TextField fx:id="txtBuscar" prefHeight="40.0" promptText="Número de venta, vendedor o concierto..." styleClass="filter-field" />
                                     </children>
                                 </VBox>
                                 <VBox spacing="7.0">
                                     <children>
-                                        <Label styleClass="field-title" text="Desde" />
-                                        <DatePicker fx:id="dpFechaDesde" prefHeight="38.0" prefWidth="155.0" />
+                                        <Label styleClass="field-title" text="DESDE" />
+                                        <DatePicker fx:id="dpFechaDesde" prefHeight="40.0" prefWidth="150.0" />
                                     </children>
                                 </VBox>
                                 <VBox spacing="7.0">
                                     <children>
-                                        <Label styleClass="field-title" text="Hasta" />
-                                        <DatePicker fx:id="dpFechaHasta" prefHeight="38.0" prefWidth="155.0" />
+                                        <Label styleClass="field-title" text="HASTA" />
+                                        <DatePicker fx:id="dpFechaHasta" prefHeight="40.0" prefWidth="150.0" />
                                     </children>
                                 </VBox>
                             </children>
@@ -61,27 +69,29 @@
                         <HBox alignment="CENTER_RIGHT" spacing="10.0">
                             <children>
                                 <Region HBox.hgrow="ALWAYS" />
-                                <Button fx:id="btnLimpiar" disable="true" styleClass="secondary-button" text="Limpiar filtros" />
-                                <Button fx:id="btnBuscar" disable="true" styleClass="primary-button" text="Buscar ventas" />
+                                <Button fx:id="btnLimpiar" disable="true" prefHeight="38.0" styleClass="secondary-button" text="Limpiar filtros" />
+                                <Button fx:id="btnBuscar" disable="true" prefHeight="38.0" styleClass="primary-button" text="Buscar ventas" />
                             </children>
                         </HBox>
                     </children>
                 </VBox>
 
-                <VBox spacing="12.0" styleClass="panel-card">
+                <!-- Listado: mismas columnas, mismo TableView -->
+                <VBox spacing="14.0" styleClass="panel-card">
                     <children>
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
                             <children>
-                                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                     <children>
+                                        <Label styleClass="section-eyebrow" text="02  /  REGISTROS" />
                                         <Label styleClass="section-title" text="Ventas registradas" />
-                                        <Label styleClass="section-subtitle" text="Selecciona una venta para consultar su detalle" />
+                                        <Label styleClass="section-subtitle" text="Selecciona una fila para consultar la venta y sus boletos." wrapText="true" />
                                     </children>
                                 </VBox>
                                 <Label fx:id="lblCantidadResultados" styleClass="counter-tag" text="Sin cargar" />
                             </children>
                         </HBox>
-                        <TableView fx:id="tablaHistorial" prefHeight="262.0" styleClass="history-table">
+                        <TableView fx:id="tablaHistorial" prefHeight="280.0" styleClass="history-table">
                             <columns>
                                 <TableColumn fx:id="colIdVenta" prefWidth="108.0" text="N.º VENTA" />
                                 <TableColumn fx:id="colFecha" prefWidth="175.0" text="FECHA Y HORA" />
@@ -90,58 +100,60 @@
                                 <TableColumn fx:id="colTotal" prefWidth="132.0" text="TOTAL (Q)" />
                             </columns>
                             <placeholder>
-                                <Label styleClass="empty-label" text="No hay ventas cargadas todavía." />
+                                <Label styleClass="empty-label" text="No hay ventas para mostrar con los filtros actuales." wrapText="true" />
                             </placeholder>
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
                         </TableView>
-                        <HBox alignment="CENTER_LEFT" spacing="8.0">
+                        <HBox alignment="CENTER_LEFT" spacing="8.0" styleClass="status-bar">
                             <children>
                                 <Label styleClass="status-dot" text="●" />
-                                <Label fx:id="lblEstadoHistorial" styleClass="status-text" text="Vista lista. Pendiente de conectar las consultas PostgreSQL." />
+                                <Label fx:id="lblEstadoHistorial" styleClass="status-text" text="Selecciona una venta para ver su información." wrapText="true" />
                             </children>
                         </HBox>
                     </children>
                 </VBox>
 
-                <VBox spacing="12.0" styleClass="panel-card">
+                <!-- Detalle: botones y labels vinculados al mismo controlador -->
+                <VBox spacing="14.0" styleClass="panel-card">
                     <children>
                         <HBox alignment="CENTER_LEFT" spacing="12.0">
                             <children>
-                                <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                     <children>
+                                        <Label styleClass="section-eyebrow" text="03  /  INFORMACIÓN DE COMPRA" />
                                         <Label styleClass="section-title" text="Detalle de la venta" />
-                                        <Label styleClass="section-subtitle" text="Consulta del concierto, localidades y boletos asociados" />
+                                        <Label styleClass="section-subtitle" text="Consulta los conciertos, localidades y cantidades asociadas." wrapText="true" />
                                     </children>
                                 </VBox>
-                                <Button fx:id="btnVerBoletos" disable="true" styleClass="secondary-button" text="Consultar boletos" />
+                                <Button fx:id="btnVerBoletos" disable="true" prefHeight="38.0" styleClass="secondary-button" text="Consultar boletos" />
                             </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="18.0" styleClass="detail-bar">
                             <children>
-                                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                     <children>
                                         <Label styleClass="field-title" text="VENTA" />
                                         <Label fx:id="lblDetalleVenta" styleClass="detail-value" text="—" />
                                     </children>
                                 </VBox>
-                                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                     <children>
                                         <Label styleClass="field-title" text="VENDEDOR" />
                                         <Label fx:id="lblDetalleVendedor" styleClass="detail-value" text="—" />
                                     </children>
                                 </VBox>
-                                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
                                     <children>
                                         <Label styleClass="field-title" text="TOTAL (Q)" />
-                                        <Label fx:id="lblDetalleTotal" styleClass="detail-value" text="—" />
+                                        <Label fx:id="lblDetalleTotal" styleClass="detail-value detail-total" text="—" />
                                     </children>
                                 </VBox>
                             </children>
                         </HBox>
-                        <Label styleClass="field-title" text="Artículos incluidos en la venta" />
-                        <TableView fx:id="tablaDetalleVenta" prefHeight="167.0" styleClass="history-table">
+                        <Label styleClass="field-title" text="ARTÍCULOS INCLUIDOS EN LA VENTA" />
+                        <TableView fx:id="tablaDetalleVenta" prefHeight="180.0" styleClass="history-table">
                             <columns>
                                 <TableColumn fx:id="colConcierto" prefWidth="232.0" text="CONCIERTO" />
                                 <TableColumn fx:id="colLocalidad" prefWidth="156.0" text="LOCALIDAD" />
@@ -152,9 +164,9 @@
                             <placeholder>
                                 <Label styleClass="empty-label" text="Selecciona una venta para ver sus artículos." />
                             </placeholder>
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
                         </TableView>
                     </children>
                 </VBox>

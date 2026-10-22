@@ -1,341 +1,226 @@
+/* =============================================================
+   SVB-GUA | PASO 76.3 - NUEVA VENTA PREMIUM
+   Visual exclusivamente. Compatibilidad: JavaFX 26 / 27.
+   Identidad compartida: obsidiana, violeta y gris perla.
+   No modifica el canvas, los colores de las localidades ni los eventos.
+   ============================================================= */
 
-/* FONDO PRINCIPAL */
-
+/* BASE */
+.venta-scroll {
+    -fx-background: #F6F5F9;
+    -fx-background-color: #F6F5F9;
+    -fx-border-color: transparent;
+}
+.venta-scroll > .viewport {
+    -fx-background-color: #F6F5F9;
+}
+.venta-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+.venta-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: #CCC5E6;
+    -fx-background-radius: 10px;
+}
 .nueva-venta-root {
-    -fx-background-color: #F3F4F6;
+    -fx-background-color: #F6F5F9;
+    -fx-font-family: "Segoe UI";
+    -fx-padding: 0 18px 22px 18px;
 }
 
-/* ENCABEZADO */
-
+/* CABECERA Y SELECTOR DE CONCIERTOS */
 .venta-header {
     -fx-background-color: #FFFFFF;
-    -fx-border-color: transparent transparent #E5E7EB transparent;
-    -fx-border-width: 0 0 1 0;
+    -fx-background-radius: 17px;
+    -fx-border-color: #EAE6F3;
+    -fx-border-width: 1px;
+    -fx-border-radius: 17px;
+    -fx-padding: 20px 24px 22px 24px;
+    -fx-effect: dropshadow(gaussian, rgba(29, 24, 61, 0.07), 15, 0.08, 0, 4);
 }
-
-.venta-titulo {
-    -fx-text-fill: #111827;
-    -fx-font-size: 28px;
+.venta-kicker {
+    -fx-text-fill: #715DC4;
+    -fx-font-size: 10px;
     -fx-font-weight: bold;
 }
-
+.venta-titulo {
+    -fx-text-fill: #171425;
+    -fx-font-size: 27px;
+    -fx-font-weight: bold;
+}
 .venta-subtitulo {
-    -fx-text-fill: #6B7280;
-    -fx-font-size: 14px;
+    -fx-text-fill: #777285;
+    -fx-font-size: 12.5px;
+}
+.venta-selector-label {
+    -fx-text-fill: #6A607D;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+.venta-selector-fila {
+    -fx-alignment: CENTER_LEFT;
+}
+.venta-combo {
+    -fx-background-color: #FAF9FD;
+    -fx-background-radius: 10px;
+    -fx-border-color: #DED8ED;
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+    -fx-font-size: 13px;
+    -fx-text-fill: #211B35;
+    -fx-padding: 1px 6px 1px 6px;
+    -fx-cursor: hand;
+}
+.venta-combo:hover {
+    -fx-border-color: #AC9DE8;
+}
+.venta-combo:focused {
+    -fx-border-color: #6C55D9;
+    -fx-border-width: 1.5px;
+}
+.venta-combo .list-cell {
+    -fx-text-fill: #211B35;
+    -fx-font-size: 12px;
+}
+.venta-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+.venta-combo .arrow {
+    -fx-background-color: #7666C2;
 }
 
-/* MAPA DE LOCALIDADES */
-
+/* MAPA - conserva AnchorPane 590x650 y el comportamiento de zoom */
 .venta-mapa {
     -fx-background-color: #FFFFFF;
-    -fx-background-radius: 12px;
+    -fx-background-radius: 17px;
+    -fx-border-color: #EAE6F3;
+    -fx-border-width: 1px;
+    -fx-border-radius: 17px;
+    -fx-padding: 19px 19px 20px 19px;
+    -fx-effect: dropshadow(gaussian, rgba(29, 24, 61, 0.06), 15, 0.08, 0, 4);
 }
-
+.venta-etapa {
+    -fx-text-fill: #7663C4;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
 .venta-seccion-titulo {
-    -fx-text-fill: #111827;
+    -fx-text-fill: #171425;
     -fx-font-size: 18px;
     -fx-font-weight: bold;
+}
+.venta-descripcion-mapa {
+    -fx-text-fill: #797487;
+    -fx-font-size: 11px;
+    -fx-padding: 0 0 6px 0;
+}
+.venta-mapa-lienzo {
+    -fx-background-color: #F9F8FC;
+    -fx-background-radius: 11px;
+    -fx-border-color: #E2DDF0;
+    -fx-border-radius: 11px;
+    -fx-border-width: 1px;
 }
 
 /* RESUMEN DE COMPRA */
-
 .venta-resumen {
     -fx-background-color: #FFFFFF;
-    -fx-background-radius: 12px;
+    -fx-background-radius: 17px;
+    -fx-border-color: #DED7F3;
+    -fx-border-width: 1px;
+    -fx-border-radius: 17px;
+    -fx-padding: 19px 20px 20px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(29, 24, 61, 0.07), 16, 0.07, 0, 4);
 }
-
+.venta-resumen-titulo {
+    -fx-text-fill: #171425;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+.venta-resumen-ayuda {
+    -fx-text-fill: #827B92;
+    -fx-font-size: 11px;
+}
+.venta-campo-etiqueta {
+    -fx-text-fill: #817A91;
+    -fx-font-size: 11px;
+}
+.venta-campo-valor {
+    -fx-text-fill: #28233A;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
 .venta-valor {
-    -fx-text-fill: #111827;
+    -fx-text-fill: #28233A;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
 }
-
-.venta-total {
-    -fx-text-fill: #2563EB;
-    -fx-font-size: 18px;
+.venta-separador .line {
+    -fx-border-color: #EBE7F1;
+    -fx-border-width: 1px 0 0 0;
+}
+.venta-total-texto {
+    -fx-text-fill: #242038;
+    -fx-font-size: 14px;
     -fx-font-weight: bold;
+}
+.venta-total {
+    -fx-text-fill: #5B42C2;
+    -fx-font-size: 21px;
+    -fx-font-weight: bold;
+}
+.venta-pie-ayuda {
+    -fx-text-fill: #9690A3;
+    -fx-font-size: 10px;
+    -fx-padding: 2px 0 0 0;
+}
+
+/* SPINNER DE AFORO */
+.venta-spinner {
+    -fx-background-color: #FAF9FD;
+    -fx-background-radius: 10px;
+    -fx-border-color: #DED8ED;
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+}
+.venta-spinner:focused {
+    -fx-border-color: #6C55D9;
+}
+.venta-spinner .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: #28233A;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+.venta-spinner .increment-arrow-button,
+.venta-spinner .decrement-arrow-button {
+    -fx-background-color: #EEEAF8;
+    -fx-cursor: hand;
+}
+.venta-spinner .increment-arrow,
+.venta-spinner .decrement-arrow {
+    -fx-background-color: #6551B7;
 }
 
 /* BOTONES */
-
 .venta-boton {
-    -fx-background-color: #2563EB;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-background-radius: 8px;
-    -fx-cursor: hand;
-}
-
-.venta-boton:hover {
-    -fx-background-color: #1D4ED8;
-}
-
-
-/* =========================================
-   SVB-GUA - NUEVA VENTA
-   ========================================= */
-
-/* FONDO GENERAL */
-
-.nueva-venta-root {
-    -fx-background-color: #F3F4F6;
-}
-
-/* =========================================
-   ENCABEZADO
-   ========================================= */
-
-.venta-header {
-    -fx-background-color: white;
-    -fx-padding: 20px 25px;
-    -fx-spacing: 12px;
-    -fx-background-radius: 12px;
-}
-
-.venta-titulo {
-    -fx-text-fill: #111827;
-    -fx-font-size: 26px;
-    -fx-font-weight: bold;
-}
-
-.venta-subtitulo {
-    -fx-text-fill: #64748B;
-    -fx-font-size: 13px;
-}
-
-/* COMBOBOX */
-
-.venta-combo {
-    -fx-background-color: #F8FAFC;
-    -fx-border-color: #CBD5E1;
-    -fx-border-radius: 7px;
-    -fx-background-radius: 7px;
-    -fx-font-size: 13px;
-}
-
-.venta-combo:focused {
-    -fx-border-color: #2563EB;
-}
-
-/* =========================================
-   MAPA DE LOCALIDADES
-   ========================================= */
-
-.venta-mapa {
-    -fx-background-color: white;
-    -fx-background-radius: 12px;
-    -fx-padding: 20px;
-    -fx-spacing: 12px;
-}
-
-.venta-seccion-titulo {
-    -fx-text-fill: #111827;
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-}
-
-/* =========================================
-   PANEL RESUMEN DE COMPRA
-   ========================================= */
-
-.venta-resumen {
-    -fx-background-color: white;
-    -fx-background-radius: 12px;
-    -fx-padding: 20px;
-    -fx-spacing: 12px;
-    -fx-effect: dropshadow(
-        gaussian,
-        rgba(0, 0, 0, 0.06),
-        12,
-        0.1,
-        0,
-        3
-    );
-}
-
-/* TITULO RESUMEN */
-
-.venta-resumen-titulo {
-    -fx-text-fill: #111827;
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-}
-
-/* ETIQUETAS PEQUEÑAS */
-
-.venta-campo-etiqueta {
-    -fx-text-fill: #64748B;
-    -fx-font-size: 12px;
-    -fx-font-weight: normal;
-}
-
-/* VALORES DE CADA CAMPO */
-
-.venta-campo-valor {
-    -fx-text-fill: #111827;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-}
-
-/* PRECIO UNITARIO */
-
-.venta-valor {
-    -fx-text-fill: #111827;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-}
-
-/* =========================================
-   CANTIDAD DE BOLETOS
-   ========================================= */
-
-.venta-spinner {
-    -fx-background-color: white;
-    -fx-border-color: #CBD5E1;
-    -fx-border-radius: 7px;
-    -fx-background-radius: 7px;
-}
-
-.venta-spinner .text-field {
-    -fx-background-color: white;
-    -fx-text-fill: #111827;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-}
-
-.venta-spinner .increment-arrow-button,
-.venta-spinner .decrement-arrow-button {
-    -fx-background-color: #F1F5F9;
-}
-
-/* =========================================
-   SEPARADORES
-   ========================================= */
-
-.venta-separador .line {
-    -fx-border-color: #E2E8F0;
-    -fx-border-width: 1px 0 0 0;
-}
-
-/* =========================================
-   TOTAL DE COMPRA
-   ========================================= */
-
-.venta-total-texto {
-    -fx-text-fill: #111827;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-}
-
-.venta-total {
-    -fx-text-fill: #111827;
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-}
-
-/* =========================================
-   BOTONES
-   ========================================= */
-
-.venta-boton {
-    -fx-background-color: #2563EB;
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 7px;
-    -fx-padding: 12px 16px;
-    -fx-cursor: hand;
-}
-
-.venta-boton:hover {
-    -fx-background-color: #1D4ED8;
-}
-
-.venta-boton:pressed {
-    -fx-background-color: #1E40AF;
-}
-
-.venta-boton:disabled {
-    -fx-background-color: #94A3B8;
-    -fx-opacity: 0.7;
-}
-
-
-.venta-header {
-    -fx-background-color: #FFFFFF;
-    -fx-background-radius: 14px;
-    -fx-border-radius: 14px;
-    -fx-border-color: #E2E8F0;
-    -fx-border-width: 1px;
-    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 14, 0, 0, 4);
-}
-
-.venta-mapa {
-    -fx-background-color: #FFFFFF;
-    -fx-background-radius: 14px;
-    -fx-border-radius: 14px;
-    -fx-border-color: #E2E8F0;
-    -fx-border-width: 1px;
-    -fx-padding: 25px;
-    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 14, 0, 0, 4);
-}
-
-.venta-mapa-lienzo {
-    -fx-background-color: #F8FAFC;
+    -fx-background-color: #6C55D9;
     -fx-background-radius: 10px;
-    -fx-border-color: #CBD5E1;
-    -fx-border-radius: 10px;
-    -fx-border-width: 1px;
-}
-
-.venta-resumen {
-    -fx-background-color: #FFFFFF;
-    -fx-background-radius: 14px;
-    -fx-border-radius: 14px;
-    -fx-border-color: #E2E8F0;
-    -fx-border-width: 1px;
-    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.07), 16, 0, 0, 4);
-}
-
-.venta-seccion-titulo,
-.venta-resumen-titulo {
-    -fx-text-fill: #0F172A;
-    -fx-font-size: 19px;
-    -fx-font-weight: bold;
-}
-
-.venta-combo {
-    -fx-background-color: #FFFFFF;
-    -fx-border-color: #CBD5E1;
-    -fx-border-width: 1px;
-    -fx-border-radius: 9px;
-    -fx-background-radius: 9px;
-}
-
-.venta-combo:hover {
-    -fx-border-color: #93C5FD;
-}
-
-.venta-combo:focused {
-    -fx-border-color: #2563EB;
-    -fx-border-width: 1.5px;
-}
-
-.venta-boton {
-    -fx-background-color: #2563EB;
-    -fx-background-radius: 9px;
     -fx-text-fill: #FFFFFF;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
+    -fx-padding: 11px 16px 11px 16px;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(37, 99, 235, 0.15), 9, 0, 0, 3);
+    -fx-effect: dropshadow(gaussian, rgba(90, 66, 190, 0.19), 9, 0, 0, 3);
 }
-
 .venta-boton:hover {
-    -fx-background-color: #1D4ED8;
+    -fx-background-color: #5842BF;
 }
-
 .venta-boton:pressed {
-    -fx-background-color: #1E40AF;
+    -fx-background-color: #46319F;
 }
-
-
+.venta-boton:disabled {
+    -fx-background-color: #B5A9DD;
+    -fx-effect: none;
+    -fx-opacity: 0.82;
+    -fx-cursor: default;
+}

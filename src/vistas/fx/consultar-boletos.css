@@ -1,124 +1,297 @@
+/* SVB-GUA | Consultar boletos | Premium violeta / obsidiana
+ * Compatible con ConsultarBoletosFXController: conserva las clases usadas
+ * por los botones Vista / Descargar generados desde las celdas.
+ */
+
 .consultar-root {
-    -fx-background-color: #f4f7fb;
-    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-background-color: #F7F6FB;
+    -fx-font-family: "Segoe UI";
+}
+
+/* Encabezado de página */
+.page-header,
+.search-card,
+.table-card,
+.detail-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 18px;
+    -fx-border-color: #EAE7F2;
+    -fx-border-width: 1px;
+    -fx-border-radius: 18px;
+    -fx-effect: dropshadow(gaussian, rgba(25, 20, 52, 0.045), 16, 0.12, 0, 4);
+}
+
+.page-header { -fx-padding: 20px 22px; }
+.search-card { -fx-padding: 17px 20px; }
+.table-card { -fx-padding: 18px 19px; }
+.detail-card { -fx-padding: 16px 20px; }
+
+.eyebrow,
+.field-caption,
+.table-eyebrow {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6C55D9;
 }
 
 .page-title {
-    -fx-font-size: 25px;
+    -fx-font-size: 26px;
     -fx-font-weight: bold;
-    -fx-text-fill: #0f172a;
+    -fx-text-fill: #161327;
 }
 
-.page-subtitle, .helper-label {
-    -fx-text-fill: #64748b;
+.page-subtitle,
+.section-subtitle,
+.helper-label {
     -fx-font-size: 12px;
+    -fx-text-fill: #85809A;
 }
 
-.search-card, .table-card, .detail-card {
-    -fx-background-color: white;
-    -fx-background-radius: 13px;
-    -fx-border-color: #e2e8f0;
-    -fx-border-radius: 13px;
-    -fx-padding: 16px;
-}
-
-.section-title {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #0f172a;
-}
-
-.count-label {
-    -fx-text-fill: #1d4ed8;
-    -fx-font-size: 12px;
+.header-pill {
+    -fx-text-fill: #6852CE;
+    -fx-background-color: #F0ECFC;
+    -fx-background-radius: 20px;
+    -fx-padding: 9px 14px;
+    -fx-font-size: 10px;
     -fx-font-weight: bold;
 }
 
+/* Buscador y acciones */
 .search-input {
-    -fx-background-color: #f8fafc;
-    -fx-background-radius: 8px;
-    -fx-border-color: #cbd5e1;
-    -fx-border-radius: 8px;
-    -fx-padding: 10px 12px;
-    -fx-text-fill: #0f172a;
-    -fx-font-size: 13px;
+    -fx-background-color: #FAF9FE;
+    -fx-background-radius: 10px;
+    -fx-border-color: #E0DAEF;
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+    -fx-padding: 10px 13px;
+    -fx-text-fill: #201B38;
+    -fx-prompt-text-fill: #9690A8;
+    -fx-font-size: 12px;
 }
 
 .search-input:focused {
-    -fx-border-color: #2563eb;
+    -fx-border-color: #7963DE;
+    -fx-background-color: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(108, 85, 217, 0.12), 10, 0.10, 0, 0);
 }
 
-.primary-button, .outline-button, .table-download-button, .table-view-button {
-    -fx-background-radius: 7px;
-    -fx-padding: 8px 12px;
+.primary-button,
+.outline-button,
+.table-download-button,
+.table-view-button {
+    -fx-font-family: "Segoe UI";
     -fx-font-size: 12px;
     -fx-font-weight: bold;
+    -fx-background-radius: 9px;
+    -fx-border-radius: 9px;
+    -fx-padding: 9px 14px;
     -fx-cursor: hand;
 }
 
-.primary-button, .table-download-button {
-    -fx-background-color: #2563eb;
-    -fx-text-fill: white;
+.primary-button,
+.table-download-button {
+    -fx-background-color: #6C55D9;
+    -fx-text-fill: #FFFFFF;
 }
 
-.primary-button:hover, .table-download-button:hover {
-    -fx-background-color: #1d4ed8;
+.primary-button:hover,
+.table-download-button:hover { -fx-background-color: #5941C5; }
+.primary-button:pressed,
+.table-download-button:pressed { -fx-background-color: #4934B0; }
+
+.outline-button,
+.table-view-button {
+    -fx-background-color: #F7F5FD;
+    -fx-text-fill: #5C48BB;
+    -fx-border-color: #DED7F4;
+    -fx-border-width: 1px;
 }
 
-.outline-button, .table-view-button {
-    -fx-background-color: white;
-    -fx-border-color: #cbd5e1;
-    -fx-border-radius: 7px;
-    -fx-text-fill: #334155;
+.outline-button:hover,
+.table-view-button:hover {
+    -fx-background-color: #EDE7FC;
+    -fx-border-color: #BBAEEC;
 }
 
-.outline-button:hover, .table-view-button:hover {
-    -fx-background-color: #f1f5f9;
-}
-
-.table-download-button:disabled, .table-view-button:disabled, .primary-button:disabled {
+.primary-button:disabled,
+.outline-button:disabled,
+.table-download-button:disabled,
+.table-view-button:disabled {
     -fx-opacity: 0.45;
+    -fx-cursor: default;
+}
+
+.count-label {
+    -fx-text-fill: #604ACB;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.status-divider {
+    -fx-background-color: #E5E0EF;
+    -fx-max-height: 16px;
+    -fx-min-width: 1px;
+    -fx-max-width: 1px;
+}
+
+/* Tabla de boletos: conserva estilos de celdas que establece el controlador. */
+.section-title {
+    -fx-text-fill: #171329;
+    -fx-font-weight: bold;
+    -fx-font-size: 17px;
+}
+
+.table-eyebrow {
+    -fx-background-color: #F5F2FC;
+    -fx-background-radius: 20px;
+    -fx-padding: 7px 11px;
 }
 
 .ticket-table {
-    -fx-background-color: white;
-    -fx-border-color: #e2e8f0;
-    -fx-border-radius: 7px;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #ECE8F5;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-table-cell-border-color: transparent;
+    -fx-padding: 0;
 }
 
-.ticket-table .column-header-background {
-    -fx-background-color: #eaf0f8;
+.ticket-table .column-header-background,
+.ticket-table .column-header,
+.ticket-table .filler {
+    -fx-background-color: #F3F0FB;
 }
 
 .ticket-table .column-header {
-    -fx-background-color: #eaf0f8;
-    -fx-border-color: transparent #e2e8f0 transparent transparent;
-    -fx-padding: 10px 7px;
+    -fx-border-color: transparent #E9E4F3 transparent transparent;
+    -fx-padding: 11px 6px;
 }
 
 .ticket-table .column-header .label {
-    -fx-text-fill: #334155;
+    -fx-text-fill: #665A80;
     -fx-font-weight: bold;
     -fx-font-size: 11px;
-}
-
-.ticket-table .table-cell {
-    -fx-padding: 9px 6px;
-    -fx-text-fill: #1e293b;
-    -fx-font-size: 12px;
     -fx-alignment: CENTER_LEFT;
 }
 
-.ticket-table .table-row-cell:filled:selected {
-    -fx-background-color: #dbeafe;
+.ticket-table .table-row-cell {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: transparent transparent #F1EEF7 transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.ticket-table .table-row-cell:odd { -fx-background-color: #FCFBFE; }
+.ticket-table .table-row-cell:filled:hover { -fx-background-color: #F3F0FE; }
+.ticket-table .table-row-cell:filled:selected { -fx-background-color: #E9E3FC; }
+.ticket-table .table-row-cell:filled:selected:hover { -fx-background-color: #E0D8FA; }
+
+.ticket-table .table-cell {
+    -fx-font-size: 12px;
+    -fx-text-fill: #302B45;
+    -fx-padding: 10px 7px;
+    -fx-alignment: CENTER_LEFT;
 }
 
 .ticket-table .table-row-cell:filled:selected .table-cell {
-    -fx-text-fill: #0f172a;
+    -fx-text-fill: #22194B;
 }
 
-.detail-text {
-    -fx-text-fill: #475569;
+.ticket-table .scroll-bar:vertical .thumb,
+.ticket-table .scroll-bar:horizontal .thumb {
+    -fx-background-color: #CFC5ED;
+    -fx-background-radius: 6px;
+}
+
+.ticket-table .scroll-bar:vertical .thumb:hover,
+.ticket-table .scroll-bar:horizontal .thumb:hover { -fx-background-color: #A99ADE; }
+
+.empty-label {
+    -fx-text-fill: #938CA6;
     -fx-font-size: 12px;
-    -fx-line-spacing: 2px;
+}
+
+/* Ficha del boleto seleccionado */
+.detail-text {
+    -fx-text-fill: #615B71;
+    -fx-font-size: 12px;
+    -fx-line-spacing: 3px;
+}
+
+/* Paso 76.5A: tabla amplia, filas visibles y acciones sin recorte. */
+.page-header { -fx-padding: 15px 19px; }
+.search-card { -fx-padding: 13px 17px; }
+.table-card { -fx-padding: 14px 15px; }
+.detail-card { -fx-padding: 13px 17px; }
+
+.ticket-table {
+    -fx-fixed-cell-size: 40px;
+    -fx-border-radius: 9px;
+    -fx-background-radius: 9px;
+}
+.ticket-table .column-header {
+    -fx-padding: 8px 3px;
+}
+.ticket-table .column-header .label {
+    -fx-font-size: 10.5px;
+}
+.ticket-table .table-cell {
+    -fx-font-size: 11px;
+    -fx-padding: 7px 4px;
+}
+/* IMPORTANTE: los botones son creados por el controlador Java.
+ * JavaFX los comprimía hasta ocultar el texto porque min-width era 0.
+ * Sus anchos se reservan de manera fija dentro de la columna Acciones. */
+.ticket-table .table-view-button,
+.ticket-table .table-download-button {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 6px 5px;
+    -fx-background-radius: 7px;
+    -fx-border-radius: 7px;
+    -fx-min-height: 27px;
+    -fx-pref-height: 27px;
+    -fx-alignment: CENTER;
+}
+.ticket-table .table-view-button {
+    -fx-min-width: 82px;
+    -fx-pref-width: 82px;
+    -fx-max-width: 82px;
+    -fx-text-fill: #5C48BB;
+}
+.ticket-table .table-download-button {
+    -fx-min-width: 100px;
+    -fx-pref-width: 100px;
+    -fx-max-width: 100px;
+    -fx-text-fill: white;
+}
+.ticket-table .table-row-cell:empty {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: transparent;
+}
+
+
+/* PASO 76.5C: layout adaptativo. Detalle visible debajo de la tabla.
+   El ScrollPane externo se activa solo si la ventana es demasiado baja. */
+.consultar-scroll {
+    -fx-background-color: #F7F6FB;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+.consultar-scroll > .viewport {
+    -fx-background-color: #F7F6FB;
+}
+.consultar-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: #BEB1E5;
+    -fx-background-radius: 8px;
+}
+.consultar-scroll .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #9684D4;
+}
+.detail-card {
+    -fx-padding: 15px 18px;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #DDD5F6;
+    -fx-border-width: 1px;
+    -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
 }
