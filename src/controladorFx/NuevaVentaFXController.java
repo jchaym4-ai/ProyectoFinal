@@ -30,6 +30,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
+import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
@@ -79,6 +81,9 @@ public class NuevaVentaFXController {
 
     @FXML private ComboBox<Concierto> cmbConciertos;
     @FXML private Button btnConsultarConcierto;
+    @FXML private ScrollPane scrollNuevaVenta;
+    @FXML private BorderPane layoutVenta;
+    @FXML private VBox panelResumen;
     @FXML private StackPane contenedorMapa;
     @FXML private AnchorPane panelMapa;
     @FXML private Label lblLocalidadSeleccionada;
@@ -89,6 +94,11 @@ public class NuevaVentaFXController {
     @FXML private Label lblTotal;
     @FXML private Button btnConfirmarVenta;
     
+    // El dibujo original usa coordenadas constantes; el zoom se adapta al visor.
+    private static final double ANCHO_MAPA_BASE = 590.0;
+    private static final double ALTO_MAPA_BASE = 650.0;
+    private static final double UMBRAL_RESUMEN_ABAJO = 880.0;
+
     private static final double ZOOM_MINIMO = 1.0;
     private static final double ZOOM_MAXIMO = 3.0;
     private static final double PASO_ZOOM = 1.15;
@@ -157,6 +167,7 @@ public class NuevaVentaFXController {
         configurarComboBox();
         limpiarResumen();
         configurarZoomMapa();
+        configurarPresentacionAdaptable();
 
         btnConsultarConcierto.setDisable(true);
         btnConfirmarVenta.setDisable(true);
@@ -926,125 +937,196 @@ public class NuevaVentaFXController {
         restablecerZoom();
     }
 
+    /**
+     * Distribucion responsive: en ventanas estrechas, el resumen de compra
+     * se coloca bajo el mapa. El ScrollPane exterior sigue permitiendo bajar.
+     */
+    private void configurarPresentacionAdaptable() {
+        scrollNuevaVenta.viewportBoundsProperty().addListener(
+                (obs, anterior, actual) -> {
+                    if (actual != null) {
+                        actualizarDistribucion(actual.getWidth());
+                    }
+                });
+        Platform.runLater(() ->
+                actualizarDistribucion(scrollNuevaVenta.getViewportBounds().getWidth()));
+    }
+
+    private void actualizarDistribucion(double anchoVisible) {
+        if (anchoVisible <= 0 || layoutVenta == null || panelResumen == null) {
+            return;
+        }
+        boolean compacta = anchoVisible < UMBRAL_RESUMEN_ABAJO;
+        if (compacta && layoutVenta.getBottom() != panelResumen) {
+            layoutVenta.setRight(null);
+            BorderPane.setAlignment(panelResumen, Pos.TOP_CENTER);
+            BorderPane.setMargin(panelResumen,
+                    new javafx.geometry.Insets(18, 20, 12, 20));
+            layoutVenta.setBottom(panelResumen);
+        } else if (!compacta && layoutVenta.getRight() != panelResumen) {
+            layoutVenta.setBottom(null);
+            BorderPane.setAlignment(panelResumen, Pos.TOP_CENTER);
+            BorderPane.setMargin(panelResumen, null);
+            layoutVenta.setRight(panelResumen);
+        }
+        Platform.runLater(this::ajustarMapaAlViewport);
+    }
+
+    /**
+     * El visor tiene dimensiones flexibles, pero el dibujo conserva sus
+     * coordenadas fijas (590 x 650) para no afectar la seleccion de asientos.
+     */
     private void configurarZoomMapa() {
-        
-        javafx.scene.shape.Rectangle recorte =
-                new javafx.scene.shape.Rectangle();
-
-        recorte.widthProperty().bind(
-                contenedorMapa.widthProperty()
-        );
-
-        recorte.heightProperty().bind(
-                contenedorMapa.heightProperty()
-        );
-
+        Rectangle recorte = new Rectangle();
+        recorte.widthProperty().bind(contenedorMapa.widthProperty());
+        recorte.heightProperty().bind(contenedorMapa.heightProperty());
         contenedorMapa.setClip(recorte);
 
-
+        // El hijo no debe imponer un ancho minimo de 590 a la ventana.
+        // StackPane tampoco debe redistribuirlo despues de un zoom.
+        panelMapa.setManaged(false);
+        panelMapa.setMinSize(ANCHO_MAPA_BASE, ALTO_MAPA_BASE);
+        panelMapa.setPrefSize(ANCHO_MAPA_BASE, ALTO_MAPA_BASE);
+        panelMapa.setMaxSize(ANCHO_MAPA_BASE, ALTO_MAPA_BASE);
+        panelMapa.resize(ANCHO_MAPA_BASE, ALTO_MAPA_BASE);
         panelMapa.getTransforms().add(escalaMapa);
 
-        contenedorMapa.setOnScroll(event -> {
+        contenedorMapa.widthProperty().addListener((obs, anterior, nuevo) ->
+                Platform.runLater(this::ajustarMapaAlViewport));
+        contenedorMapa.heightProperty().addListener((obs, anterior, nuevo) ->
+                Platform.runLater(this::ajustarMapaAlViewport));
+        Platform.runLater(this::ajustarMapaAlViewport);
 
-            if (panelMapa.getChildren().isEmpty()) {
+        contenedorMapa.setOnScroll(event -> {
+            if (panelMapa.getChildren().isEmpty() || event.getDeltaY() == 0) {
                 return;
             }
-
-            double factor = event.getDeltaY() > 0
-                    ? PASO_ZOOM
-                    : 1.0 / PASO_ZOOM;
-
-            aplicarZoom(factor);
-
+            aplicarZoom(event.getDeltaY() > 0
+                    ? PASO_ZOOM : 1.0 / PASO_ZOOM);
             event.consume();
         });
 
-
         contenedorMapa.setOnMousePressed(event -> {
-
-            if (event.getButton() != MouseButton.PRIMARY
-                    && event.getButton() != MouseButton.SECONDARY
-                    && event.getButton() != MouseButton.MIDDLE) {
+            arrastrandoMapa = false;
+            if (panelMapa.getChildren().isEmpty()
+                    || nivelZoom <= 1.0001
+                    || (event.getButton() != MouseButton.PRIMARY
+                    && event.getButton() != MouseButton.MIDDLE)) {
                 return;
             }
-
-            if (event.getButton() == MouseButton.PRIMARY
-                    && event.getTarget() instanceof Rectangle
-                    && nivelZoom <= 1.0) {
-                return;
-            }
-
             arrastrandoMapa = true;
-
             arrastreInicioX = event.getSceneX();
             arrastreInicioY = event.getSceneY();
-
             traslacionInicioX = panelMapa.getTranslateX();
             traslacionInicioY = panelMapa.getTranslateY();
         });
 
         contenedorMapa.setOnMouseDragged(event -> {
-
             if (!arrastrandoMapa) {
                 return;
             }
-
-            double desplazamientoX =
-                    event.getSceneX() - arrastreInicioX;
-
-            double desplazamientoY =
-                    event.getSceneY() - arrastreInicioY;
-
-            panelMapa.setTranslateX(
-                    traslacionInicioX + desplazamientoX
-            );
-
-            panelMapa.setTranslateY(
-                    traslacionInicioY + desplazamientoY
-            );
+            panelMapa.setTranslateX(traslacionInicioX
+                    + event.getSceneX() - arrastreInicioX);
+            panelMapa.setTranslateY(traslacionInicioY
+                    + event.getSceneY() - arrastreInicioY);
+            limitarArrastreMapa();
+            event.consume();
         });
-
-        contenedorMapa.setOnMouseReleased(event -> {
-            arrastrandoMapa = false;
-        });
-
+        contenedorMapa.setOnMouseReleased(event -> arrastrandoMapa = false);
         contenedorMapa.setOnMouseClicked(event -> {
-
             if (event.getButton() == MouseButton.SECONDARY
                     && event.getClickCount() == 2) {
-
                 restablecerZoom();
                 event.consume();
             }
         });
     }
 
+    @FXML
+    private void acercarMapa() {
+        aplicarZoom(PASO_ZOOM);
+    }
+
+    @FXML
+    private void alejarMapa() {
+        aplicarZoom(1.0 / PASO_ZOOM);
+    }
+
+    @FXML
+    private void restablecerMapa() {
+        restablecerZoom();
+    }
+
     private void aplicarZoom(double factor) {
+        if (panelMapa.getChildren().isEmpty()) {
+            return;
+        }
+        nivelZoom = Math.max(ZOOM_MINIMO,
+                Math.min(ZOOM_MAXIMO, nivelZoom * factor));
+        ajustarMapaAlViewport();
+    }
 
-        double nuevoZoom = nivelZoom * factor;
+    /**
+     * Auto-fit: cuando el visor es menor a 590 px el mapa se reduce.
+     * nivelZoom representa solo el zoom manual, por eso se conserva al
+     * redimensionar la ventana y se mantiene el comportamiento de botones.
+     */
+    private void ajustarMapaAlViewport() {
+        double ancho = contenedorMapa.getWidth();
+        double alto = contenedorMapa.getHeight();
+        if (ancho <= 0 || alto <= 0) {
+            return;
+        }
+        double ajusteBase = Math.min(1.0, Math.min(
+                ancho / ANCHO_MAPA_BASE, alto / ALTO_MAPA_BASE));
+        double zoomFinal = ajusteBase * nivelZoom;
+        escalaMapa.setX(zoomFinal);
+        escalaMapa.setY(zoomFinal);
+        limitarArrastreMapa();
+    }
 
-        nuevoZoom = Math.max(
-                ZOOM_MINIMO,
-                Math.min(ZOOM_MAXIMO, nuevoZoom)
-        );
+    /**
+     * Mantiene visible la geometria transformada del plano. Cuando cabe,
+     * centra el estadio; con zoom, limita el arrastre a sus bordes.
+     */
+    private void limitarArrastreMapa() {
+        double ancho = contenedorMapa.getWidth();
+        double alto = contenedorMapa.getHeight();
+        if (ancho <= 0 || alto <= 0) {
+            return;
+        }
 
-        nivelZoom = nuevoZoom;
+        javafx.geometry.Bounds b = panelMapa.getBoundsInParent();
+        double nuevoMinX;
+        double nuevoMinY;
 
-        escalaMapa.setX(nivelZoom);
-        escalaMapa.setY(nivelZoom);
+        if (b.getWidth() <= ancho) {
+            nuevoMinX = (ancho - b.getWidth()) / 2.0;
+        } else {
+            nuevoMinX = Math.max(ancho - b.getWidth(),
+                    Math.min(0, b.getMinX()));
+        }
+        if (b.getHeight() <= alto) {
+            nuevoMinY = (alto - b.getHeight()) / 2.0;
+        } else {
+            nuevoMinY = Math.max(alto - b.getHeight(),
+                    Math.min(0, b.getMinY()));
+        }
+
+        panelMapa.setTranslateX(panelMapa.getTranslateX()
+                + nuevoMinX - b.getMinX());
+        panelMapa.setTranslateY(panelMapa.getTranslateY()
+                + nuevoMinY - b.getMinY());
     }
 
     private void restablecerZoom() {
-
+        arrastrandoMapa = false;
         nivelZoom = 1.0;
-
-        escalaMapa.setX(1.0);
-        escalaMapa.setY(1.0);
-
         panelMapa.setTranslateX(0);
         panelMapa.setTranslateY(0);
+        ajustarMapaAlViewport();
     }
-    
+
 
     private void confirmarVenta() {
 

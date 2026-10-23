@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -106,7 +107,7 @@
                                     <Label styleClass="field-label" text="Imagen" />
                                     <HBox alignment="CENTER_LEFT" maxWidth="Infinity" spacing="8.0">
                                        <children>
-                                          <TextField fx:id="txtImagenEvento" editable="false" maxWidth="Infinity" prefHeight="38.0" promptText="Ruta de imagen (opcional)" styleClass="concierto-field" HBox.hgrow="ALWAYS" />
+                                          <TextField fx:id="txtImagenEvento" editable="false" maxWidth="Infinity" prefHeight="38.0" promptText="Banner del evento (opcional, se guardará en Neon)" styleClass="concierto-field" HBox.hgrow="ALWAYS" />
                                           <Button fx:id="btnSeleccionarImagen" mnemonicParsing="false" onAction="#seleccionarImagen" prefHeight="38.0" prefWidth="150.0" styleClass="image-button" text="Seleccionar imagen" />
                                        </children>
                                     </HBox>
@@ -132,6 +133,22 @@
                               <RowConstraints />
                            </rowConstraints>
                          </GridPane>
+
+                        <!-- Vista previa compartida. No afecta los controles originales del formulario. -->
+                        <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="form-card">
+                            <padding><Insets top="8.0" bottom="8.0" left="10.0" right="10.0" /></padding>
+                            <children>
+                                <ImageView fx:id="imgVistaBanner" fitWidth="280.0" fitHeight="158.0" preserveRatio="true" smooth="true" />
+                                <VBox spacing="8.0" maxWidth="Infinity" HBox.hgrow="ALWAYS">
+                                    <children>
+                                        <Label styleClass="section-title" text="Vista previa del banner" />
+                                        <Label fx:id="lblEstadoBanner" maxWidth="Infinity" wrapText="true" styleClass="module-subtitle" text="Sin imagen. Selecciona una para mostrarla en la cartelera pública." />
+                                        <Button fx:id="btnQuitarBanner" text="Quitar banner" disable="true" onAction="#quitarBanner" styleClass="image-button" />
+                                        <Label maxWidth="Infinity" wrapText="true" styleClass="module-subtitle" text="Formato JPG o PNG. La imagen se ajustará a 16:9 y se guardará comprimida en Neon." />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
 
                         <HBox alignment="CENTER_LEFT" spacing="10.0">
 

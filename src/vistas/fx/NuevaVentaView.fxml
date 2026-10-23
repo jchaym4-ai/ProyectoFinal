@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -15,11 +15,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fitToWidth="true" fitToHeight="false" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" pannable="true" prefHeight="600.0" prefWidth="950.0" fx:controller="controladorFx.NuevaVentaFXController" styleClass="venta-scroll" stylesheets="@nuevaventa.css">
+<ScrollPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fitToWidth="true" fitToHeight="false" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" pannable="false" prefHeight="600.0" prefWidth="950.0" fx:controller="controladorFx.NuevaVentaFXController" styleClass="venta-scroll" stylesheets="@nuevaventa.css" fx:id="scrollNuevaVenta">
 
     <content>
 
-        <BorderPane prefWidth="950.0" styleClass="nueva-venta-root">
+        <BorderPane prefWidth="950.0" styleClass="nueva-venta-root" fx:id="layoutVenta" minWidth="0.0">
 
             <top>
 
@@ -61,35 +61,27 @@
 
             <center>
 
-                <StackPane fx:id="contenedorMapa" BorderPane.alignment="TOP_CENTER">
+                <VBox spacing="8.0" minWidth="0.0" maxWidth="Infinity" styleClass="venta-mapa">
 
-                    <BorderPane.margin>
+                            <BorderPane.margin>
                         <Insets right="20.0"/>
                     </BorderPane.margin>
 
                     <children>
 
-                        <VBox spacing="8.0" minWidth="0.0" maxWidth="Infinity" styleClass="venta-mapa">
-
-                            <children>
-
                                 <Label text="01  /  PLANO DEL EVENTO" styleClass="venta-etapa"/><Label text="Mapa de localidades" styleClass="venta-seccion-titulo"/>
 
-                                <Label text="Selecciona una localidad o los asientos disponibles en el mapa." styleClass="venta-descripcion-mapa" wrapText="true"/><AnchorPane fx:id="panelMapa" minWidth="590.0" minHeight="650.0" prefWidth="590.0" prefHeight="650.0" styleClass="venta-mapa-lienzo"/>
+                                <Label text="Selecciona una localidad o los asientos disponibles en el mapa." styleClass="venta-descripcion-mapa" wrapText="true"/><HBox alignment="CENTER_RIGHT" spacing="8.0" styleClass="venta-mapa-acciones"><children><Label text="Rueda del mouse: zoom · Arrastra para mover" styleClass="venta-mapa-ayuda"/><Region maxWidth="Infinity" HBox.hgrow="ALWAYS"/><Button text="−" onAction="#alejarMapa" styleClass="venta-zoom-boton" prefWidth="38" minWidth="38" prefHeight="34.0" mnemonicParsing="false"/><Button text="+" onAction="#acercarMapa" styleClass="venta-zoom-boton" prefWidth="38" minWidth="38" prefHeight="34.0" mnemonicParsing="false"/><Button text="Restablecer" onAction="#restablecerMapa" styleClass="venta-zoom-reset" prefWidth="102" minWidth="102" prefHeight="34.0" mnemonicParsing="false"/></children></HBox><StackPane fx:id="contenedorMapa" prefWidth="590.0" minWidth="0.0" maxWidth="Infinity" prefHeight="650.0" minHeight="650.0" maxHeight="650.0" alignment="CENTER" styleClass="venta-mapa-lienzo"><children><AnchorPane fx:id="panelMapa" minWidth="0.0" minHeight="650.0" prefWidth="590.0" prefHeight="650.0" styleClass="venta-mapa-superficie" maxWidth="590.0" maxHeight="650.0"/>
 
-                            </children>
+                            </children></StackPane></children>
 
                         </VBox>
 
-                    </children>
-
-                </StackPane>
-
-            </center>
+                    </center>
 
             <right>
 
-                <VBox minWidth="300.0" prefWidth="300.0" maxWidth="300.0" maxHeight="-Infinity" spacing="9.0" styleClass="venta-resumen" BorderPane.alignment="TOP_CENTER">
+                <VBox minWidth="270.0" prefWidth="300.0" maxWidth="320.0" maxHeight="-Infinity" spacing="9.0" styleClass="venta-resumen" BorderPane.alignment="TOP_CENTER" fx:id="panelResumen">
 
                     <children>
 

@@ -52,7 +52,8 @@
                   </Label>
                   <PasswordField fx:id="txtPassword" prefHeight="25.0" prefWidth="42.0" promptText="Ingresa tu contraseña" styleClass="input-field" />
                   <Label fx:id="lblMensaje" styleClass="error-label" />
-                  <Button fx:id="btnIniciarSesion" mnemonicParsing="false" onAction="#iniciarSesion" prefHeight="44.0" prefWidth="370.0" styleClass="login-button" text="Iniciar sesión" />
+                  <Button fx:id="btnIniciarSesion" mnemonicParsing="false" onAction="#iniciarSesion" prefHeight="44.0" prefWidth="370.0" styleClass="login-button" text="Iniciar sesión" />                 
+                  <Button fx:id="btnExplorarConciertos" text="Explorar conciertos →" onAction="#explorarConciertos" prefWidth="370.0" prefHeight="42.0" mnemonicParsing="false" styleClass="explore-button" />
                </children>
             </VBox>
          </children>

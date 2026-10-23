@@ -2,7 +2,12 @@ package controladorFx;
 
 import dao.ArtistaDAO;
 import dao.ConciertoDAO;
+import dao.ConciertoBannerDAO;
+import servicio.ImagenBannerService;
 import java.io.File;
+import java.io.IOException;
+import java.io.ByteArrayInputStream;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -14,6 +19,8 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -22,6 +29,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import modelo.Artista;
 import modelo.Concierto;
 
@@ -50,6 +59,15 @@ public class ConciertosFXController {
 
     @FXML
     private TextField txtImagenEvento;
+
+    @FXML
+    private ImageView imgVistaBanner;
+
+    @FXML
+    private Label lblEstadoBanner;
+
+    @FXML
+    private Button btnQuitarBanner;
 
     @FXML
     private TextArea txtDescripcion;
@@ -82,6 +100,9 @@ public class ConciertosFXController {
     private TableColumn<Concierto, String> colEstado;
 
     private final ConciertoDAO conciertoDAO = new ConciertoDAO();
+    private final ConciertoBannerDAO bannerDAO = new ConciertoBannerDAO();
+    private File archivoBannerPendiente;
+    private boolean quitarBannerPendiente;
     private final ArtistaDAO artistaDAO = new ArtistaDAO();
 
     private List<Artista> artistas = new ArrayList<>();
@@ -171,6 +192,8 @@ public class ConciertosFXController {
                         }
                 );
 
+        mostrarVistaPrevia(null,
+                "Sin imagen. Selecciona una para mostrarla en EVENTOS.");
         cargarArtistas();
         cargarTabla();
     }
@@ -194,92 +217,78 @@ public class ConciertosFXController {
 
     @FXML
     private void guardar() {
-
-        if (!validarCampos()) {
-            return;
-        }
-
+        if (!validarCampos()) return;
         try {
-
-            Concierto concierto =
-                    obtenerConciertoFormulario();
-
-            if (conciertoDAO.insertar(concierto)) {
-
-                mostrarAlerta(
-                        Alert.AlertType.INFORMATION,
-                        "Registro exitoso",
-                        "Concierto registrado correctamente."
-                );
-
-                limpiar();
-                cargarTabla();
-
-            } else {
-
-                mostrarAlerta(
-                        Alert.AlertType.ERROR,
-                        "Error",
-                        "No se pudo registrar el concierto."
-                );
+            // Comprimir antes de crear el concierto. Una imagen inválida no genera registros.
+            byte[] banner = prepararBannerPendiente();
+            Concierto concierto = obtenerConciertoFormulario();
+            if (!conciertoDAO.insertar(concierto)) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Error",
+                        "No se pudo registrar el concierto.");
+                return;
             }
-
+            try {
+                if (banner != null) bannerDAO.guardar(concierto.getIdConcierto(), banner);
+            } catch (SQLException e) {
+                // El registro principal ya fue guardado por ConciertoDAO (transacción distinta).
+                idSeleccionado = concierto.getIdConcierto();
+                cargarTabla();
+                mostrarAlerta(Alert.AlertType.ERROR, "Banner pendiente",
+                        "El concierto #" + idSeleccionado
+                        + " se creó, pero NO se guardó su banner en Neon. "
+                        + "Comprueba que ejecutaste el SQL y pulsa Actualizar para reintentar. "
+                        + e.getMessage());
+                return;
+            }
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Registro exitoso",
+                    "Concierto registrado correctamente"
+                    + (banner == null ? "." : " con banner compartido."));
+            limpiar();
+            cargarTabla();
         } catch (DateTimeParseException e) {
-
             mostrarErrorHora();
+        } catch (IOException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Imagen incorrecta", e.getMessage());
         }
     }
 
     @FXML
     private void actualizar() {
-
         if (idSeleccionado == -1) {
-
-            mostrarAlerta(
-                    Alert.AlertType.WARNING,
-                    "Selección requerida",
-                    "Seleccione un concierto de la tabla."
-            );
-
+            mostrarAlerta(Alert.AlertType.WARNING, "Selección requerida",
+                    "Seleccione un concierto de la tabla.");
             return;
         }
-
-        if (!validarCampos()) {
-            return;
-        }
-
+        if (!validarCampos()) return;
         try {
-
-            Concierto concierto =
-                    obtenerConciertoFormulario();
-
-            concierto.setIdConcierto(
-                    idSeleccionado
-            );
-
-            if (conciertoDAO.actualizar(concierto)) {
-
-                mostrarAlerta(
-                        Alert.AlertType.INFORMATION,
-                        "Actualización exitosa",
-                        "Concierto actualizado correctamente."
-                );
-
-                limpiar();
-                cargarTabla();
-
-            } else {
-
-                mostrarAlerta(
-                        Alert.AlertType.ERROR,
-                        "Error",
-                        "No se pudo actualizar el concierto."
-                );
+            byte[] banner = prepararBannerPendiente();
+            Concierto concierto = obtenerConciertoFormulario();
+            concierto.setIdConcierto(idSeleccionado);
+            if (!conciertoDAO.actualizar(concierto)) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Error",
+                        "No se pudo actualizar el concierto.");
+                return;
             }
-
+            try {
+                if (banner != null) {
+                    bannerDAO.guardar(idSeleccionado, banner);
+                } else if (quitarBannerPendiente) {
+                    bannerDAO.quitar(idSeleccionado);
+                }
+            } catch (SQLException e) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Banner pendiente",
+                        "Se actualizaron los datos del concierto, pero NO su imagen. "
+                        + "Revisa Neon y vuelve a pulsar Actualizar. " + e.getMessage());
+                return;
+            }
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Actualización exitosa",
+                    "Concierto y banner actualizados correctamente.");
+            limpiar();
+            cargarTabla();
         } catch (DateTimeParseException e) {
-
             mostrarErrorHora();
+        } catch (IOException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Imagen incorrecta", e.getMessage());
         }
     }
 
@@ -344,34 +353,72 @@ public class ConciertosFXController {
 
     @FXML
     private void seleccionarImagen() {
-
-        FileChooser chooser =
-                new FileChooser();
-
-        chooser.setTitle(
-                "Seleccionar imagen del evento"
-        );
-
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Seleccionar banner del concierto");
         chooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter(
-                        "Imágenes JPG, JPEG y PNG",
-                        "*.jpg",
-                        "*.jpeg",
-                        "*.png"
-                )
-        );
+                new FileChooser.ExtensionFilter("Imágenes JPG y PNG", "*.jpg", "*.jpeg", "*.png"));
+        File archivo = chooser.showOpenDialog(txtImagenEvento.getScene().getWindow());
+        if (archivo == null) return;
+        try {
+            // Validamos y mostramos la versión REAL que se almacenará en Neon.
+            byte[] imagen = ImagenBannerService.preparar(archivo);
+            archivoBannerPendiente = archivo;
+            quitarBannerPendiente = false;
+            txtImagenEvento.setText(archivo.getName() + " (pendiente de guardar)");
+            mostrarVistaPrevia(imagen,
+                    "Lista para guardar en Neon: " + (imagen.length / 1024) + " KB");
+        } catch (IOException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "No se pudo leer la imagen", e.getMessage());
+        }
+    }
 
-        File archivo =
-                chooser.showOpenDialog(
-                        txtImagenEvento
-                                .getScene()
-                                .getWindow()
-                );
+    @FXML
+    private void quitarBanner() {
+        archivoBannerPendiente = null;
+        quitarBannerPendiente = idSeleccionado > 0;
+        txtImagenEvento.clear();
+        mostrarVistaPrevia(null, quitarBannerPendiente
+                ? "La imagen se quitará de Neon cuando pulses Actualizar."
+                : "Sin banner. Selecciona una imagen para este concierto.");
+    }
 
-        if (archivo != null) {
-            txtImagenEvento.setText(
-                    archivo.getAbsolutePath()
-            );
+    private byte[] prepararBannerPendiente() throws IOException {
+        return archivoBannerPendiente == null
+                ? null : ImagenBannerService.preparar(archivoBannerPendiente);
+    }
+
+    private void mostrarVistaPrevia(byte[] imagenJpg, String mensaje) {
+        imgVistaBanner.setImage(imagenJpg == null ? null
+                : new Image(new ByteArrayInputStream(imagenJpg)));
+        boolean visible = imagenJpg != null;
+        imgVistaBanner.setVisible(visible);
+        imgVistaBanner.setManaged(visible);
+        lblEstadoBanner.setText(mensaje);
+        btnQuitarBanner.setDisable(!visible);
+    }
+
+    private void mostrarBannerConcierto(Concierto concierto) {
+        archivoBannerPendiente = null;
+        quitarBannerPendiente = false;
+        try {
+            byte[] imagen = bannerDAO.obtener(concierto.getIdConcierto());
+            if (imagen != null) {
+                txtImagenEvento.setText("Banner almacenado en Neon");
+                mostrarVistaPrevia(imagen, "Banner compartido: " + (imagen.length / 1024) + " KB");
+            } else if (concierto.getImagenEvento() != null
+                    && !concierto.getImagenEvento().isBlank()) {
+                txtImagenEvento.setText(concierto.getImagenEvento());
+                mostrarVistaPrevia(null,
+                        "Este evento solo tiene una ruta de imagen local antigua. "
+                        + "Selecciona otra imagen y pulsa Actualizar para publicarla en Neon.");
+                btnQuitarBanner.setDisable(false);
+            } else {
+                txtImagenEvento.clear();
+                mostrarVistaPrevia(null, "Este concierto todavía no tiene un banner.");
+            }
+        } catch (SQLException e) {
+            txtImagenEvento.clear();
+            mostrarVistaPrevia(null, "No se pudo consultar el banner: " + e.getMessage());
         }
     }
 
@@ -385,7 +432,10 @@ public class ConciertosFXController {
         dpFechaConcierto.setValue(null);
         txtHoraConcierto.clear();
         txtHoraApertura.clear();
+        archivoBannerPendiente = null;
+        quitarBannerPendiente = false;
         txtImagenEvento.clear();
+        mostrarVistaPrevia(null, "Sin imagen. Selecciona una para mostrarla en EVENTOS.");
         txtDescripcion.clear();
         txtInformacionAdicional.clear();
 
@@ -581,11 +631,18 @@ public class ConciertosFXController {
                 )
         );
 
-        concierto.setImagenEvento(
-                convertirNull(
-                        txtImagenEvento.getText()
-                )
-        );
+        // La imagen nueva se guarda como BYTEA en concierto_banners.
+        // Preservar el antiguo campo de ruta solo si no fue reemplazado/eliminado.
+        String imagenAnterior = null;
+        if (idSeleccionado > 0 && archivoBannerPendiente == null && !quitarBannerPendiente) {
+            for (Concierto anterior : conciertos) {
+                if (anterior.getIdConcierto() == idSeleccionado) {
+                    imagenAnterior = anterior.getImagenEvento();
+                    break;
+                }
+            }
+        }
+        concierto.setImagenEvento(imagenAnterior);
 
         concierto.setHoraApertura(
                 horaApertura
@@ -641,11 +698,7 @@ public class ConciertosFXController {
                         : concierto.getInformacionAdicional()
         );
 
-        txtImagenEvento.setText(
-                concierto.getImagenEvento() == null
-                        ? ""
-                        : concierto.getImagenEvento()
-        );
+        mostrarBannerConcierto(concierto);
 
         if (concierto.getFechaConcierto() != null) {
 

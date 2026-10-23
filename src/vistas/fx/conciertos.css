@@ -1,231 +1,338 @@
+/* ============================================================
+   SVB-GUA | ADMINISTRADOR - CONCIERTOS
+   Identidad: obsidiana / violeta / lavanda / gris perla
+   Solo apariencia. Compatible con ConciertosView.fxml enviado.
+   ============================================================ */
+
+/* Fondo de la pantalla y desplazamiento */
 .root-conciertos {
-    -fx-background-color: #F3F4F6;
+    -fx-background-color: #F6F5F9;
+    -fx-font-family: "Segoe UI";
 }
 
+.conciertos-scroll {
+    -fx-background-color: transparent;
+    -fx-background: #F6F5F9;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.conciertos-scroll > .viewport {
+    -fx-background-color: #F6F5F9;
+}
+
+.conciertos-scroll .scroll-bar:vertical,
+.conciertos-scroll .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.conciertos-scroll .scroll-bar .track {
+    -fx-background-color: transparent;
+}
+
+.conciertos-scroll .scroll-bar .thumb {
+    -fx-background-color: #C8BFE3;
+    -fx-background-radius: 12px;
+}
+
+.conciertos-scroll .scroll-bar .thumb:hover {
+    -fx-background-color: #A99BD7;
+}
+
+/* Encabezado */
 .module-title {
-    -fx-text-fill: #111827;
+    -fx-text-fill: #181526;
     -fx-font-size: 28px;
     -fx-font-weight: bold;
 }
 
 .module-subtitle {
-    -fx-text-fill: #6B7280;
-    -fx-font-size: 14px;
+    -fx-text-fill: #777186;
+    -fx-font-size: 13px;
 }
 
+/* Tarjetas */
 .form-card,
 .table-card {
-    -fx-background-color: white;
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 17px;
+    -fx-border-color: #EAE5F2;
+    -fx-border-width: 1px;
+    -fx-border-radius: 17px;
+    -fx-effect: dropshadow(gaussian, rgba(29, 24, 61, 0.07), 16, 0.08, 0, 4);
+}
+
+/* La vista previa es una subtarjeta interna: no necesita otra sombra pesada. */
+.form-card .form-card {
+    -fx-background-color: #FAF9FE;
     -fx-background-radius: 12px;
-    -fx-padding: 20px;
-    -fx-effect: dropshadow(
-        gaussian,
-        rgba(0, 0, 0, 0.08),
-        15,
-        0.1,
-        0,
-        4
-    );
+    -fx-border-color: #E5DEF3;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-effect: none;
 }
 
 .section-title {
-    -fx-text-fill: #111827;
+    -fx-text-fill: #211B36;
     -fx-font-size: 17px;
     -fx-font-weight: bold;
 }
 
 .field-label {
-    -fx-text-fill: #374151;
-    -fx-font-size: 13px;
+    -fx-text-fill: #6A617D;
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
+}
+
+/* Entradas */
+.concierto-field,
+.concierto-combo,
+.concierto-date,
+.concierto-area {
+    -fx-background-color: #FBFAFE;
+    -fx-background-radius: 10px;
+    -fx-border-color: #DED8EA;
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+    -fx-font-size: 13px;
+    -fx-text-fill: #262039;
+    -fx-prompt-text-fill: #A19AAF;
 }
 
 .concierto-field {
-    -fx-background-color: white;
-    -fx-border-color: #D1D5DB;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-border-width: 1px;
-    -fx-font-size: 14px;
-    -fx-text-fill: #111827;
     -fx-padding: 0 12px 0 12px;
 }
 
-.concierto-field:focused {
-    -fx-border-color: #2563EB;
-    -fx-border-width: 1.5px;
+.concierto-field:hover,
+.concierto-combo:hover,
+.concierto-date:hover,
+.concierto-area:hover {
+    -fx-border-color: #BBADE5;
 }
 
+.concierto-field:focused,
+.concierto-combo:focused,
+.concierto-date:focused,
+.concierto-area:focused {
+    -fx-border-color: #6C55D9;
+    -fx-border-width: 1.5px;
+    -fx-background-color: #FFFFFF;
+}
+
+/* ComboBox de artista y estado */
 .concierto-combo {
-    -fx-background-color: white;
-    -fx-border-color: #D1D5DB;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-border-width: 1px;
-    -fx-font-size: 14px;
-}
-
-.concierto-combo:focused {
-    -fx-border-color: #2563EB;
-    -fx-border-width: 1.5px;
+    -fx-padding: 0 3px;
+    -fx-cursor: hand;
 }
 
 .concierto-combo .list-cell {
-    -fx-text-fill: #111827;
-    -fx-padding: 4px 10px;
+    -fx-text-fill: #262039;
+    -fx-background-color: transparent;
+    -fx-font-size: 12.5px;
+    -fx-padding: 5px 10px;
 }
 
-.concierto-date {
-    -fx-background-color: white;
-    -fx-border-color: #D1D5DB;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-border-width: 1px;
+.concierto-combo .arrow-button {
+    -fx-background-color: transparent;
 }
 
-.concierto-date:focused {
-    -fx-border-color: #2563EB;
-    -fx-border-width: 1.5px;
+.concierto-combo .arrow {
+    -fx-background-color: #735BCF;
 }
 
+/* DatePicker */
+.concierto-date > .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: #262039;
+    -fx-prompt-text-fill: #A19AAF;
+    -fx-font-size: 13px;
+}
+
+.concierto-date > .arrow-button {
+    -fx-background-color: #F0ECFB;
+    -fx-background-radius: 0 9px 9px 0;
+    -fx-cursor: hand;
+}
+
+.concierto-date > .arrow-button:hover {
+    -fx-background-color: #E4DDF7;
+}
+
+.concierto-date > .arrow-button > .arrow {
+    -fx-background-color: #6C55D9;
+}
+
+/* TextArea */
 .concierto-area {
-    -fx-background-color: white;
-    -fx-border-color: #D1D5DB;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-border-width: 1px;
-    -fx-font-size: 14px;
-    -fx-text-fill: #111827;
+    -fx-padding: 2px;
 }
 
 .concierto-area .content {
-    -fx-background-color: white;
+    -fx-background-color: #FBFAFE;
     -fx-background-radius: 8px;
 }
 
-.concierto-area:focused {
-    -fx-border-color: #2563EB;
-    -fx-border-width: 1.5px;
+.concierto-area:focused .content {
+    -fx-background-color: #FFFFFF;
 }
 
-.action-button {
-    -fx-font-size: 13px;
+.concierto-area .scroll-pane,
+.concierto-area .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Acciones */
+.action-button,
+.image-button {
+    -fx-font-size: 12.5px;
     -fx-font-weight: bold;
-    -fx-background-radius: 8px;
+    -fx-background-radius: 10px;
     -fx-cursor: hand;
+    -fx-padding: 9px 14px;
 }
 
 .save-button {
-    -fx-background-color: #2563EB;
-    -fx-text-fill: white;
+    -fx-background-color: #6C55D9;
+    -fx-text-fill: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(93, 69, 192, 0.20), 9, 0, 0, 3);
 }
 
 .save-button:hover {
-    -fx-background-color: #1D4ED8;
+    -fx-background-color: #5842BD;
+}
+
+.save-button:pressed {
+    -fx-background-color: #46319F;
 }
 
 .update-button {
-    -fx-background-color: #F59E0B;
-    -fx-text-fill: white;
+    -fx-background-color: #ECE6FC;
+    -fx-text-fill: #6045BB;
 }
 
 .update-button:hover {
-    -fx-background-color: #D97706;
+    -fx-background-color: #DFD4FA;
 }
 
 .delete-button {
-    -fx-background-color: #FEE2E2;
-    -fx-text-fill: #B91C1C;
+    -fx-background-color: #FCE8EC;
+    -fx-text-fill: #B33B55;
 }
 
 .delete-button:hover {
-    -fx-background-color: #FECACA;
+    -fx-background-color: #F8D6DE;
 }
 
 .clear-button {
-    -fx-background-color: #E5E7EB;
-    -fx-text-fill: #374151;
+    -fx-background-color: #F0EEF5;
+    -fx-text-fill: #534B66;
 }
 
 .clear-button:hover {
-    -fx-background-color: #D1D5DB;
+    -fx-background-color: #E5E1EC;
 }
 
+/* Selección, remoción y vista previa del banner */
 .image-button {
-    -fx-background-color: #EDE9FE;
-    -fx-text-fill: #6D28D9;
-    -fx-font-weight: bold;
-    -fx-background-radius: 8px;
-    -fx-cursor: hand;
+    -fx-background-color: #EAE5FC;
+    -fx-text-fill: #644AC4;
 }
 
 .image-button:hover {
-    -fx-background-color: #DDD6FE;
+    -fx-background-color: #DCD3F9;
 }
 
+.image-button:pressed {
+    -fx-background-color: #CDC0F3;
+}
+
+.action-button:disabled,
+.image-button:disabled {
+    -fx-opacity: 0.58;
+    -fx-effect: none;
+    -fx-cursor: default;
+}
+
+/* Tabla de conciertos */
 .conciertos-table {
-    -fx-background-color: white;
-    -fx-border-color: #E5E7EB;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 11px;
+    -fx-border-color: #E7E1F0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 11px;
     -fx-table-cell-border-color: transparent;
+    -fx-selection-bar: #EAE4FC;
+    -fx-selection-bar-non-focused: #F1EDFC;
     -fx-padding: 0;
 }
 
 .conciertos-table .column-header-background {
-    -fx-background-color: #F9FAFB;
-    -fx-background-radius: 8px 8px 0 0;
+    -fx-background-color: #F1EDFA;
+    -fx-background-radius: 10px 10px 0 0;
 }
 
+.conciertos-table .filler,
 .conciertos-table .column-header {
     -fx-background-color: transparent;
-    -fx-border-color: transparent transparent #E5E7EB transparent;
+    -fx-border-color: transparent transparent #E6DFF0 transparent;
+    -fx-border-width: 0 0 1px 0;
 }
 
 .conciertos-table .column-header .label {
-    -fx-text-fill: #374151;
-    -fx-font-size: 13px;
+    -fx-text-fill: #554677;
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-alignment: CENTER_LEFT;
-    -fx-padding: 10px;
-}
-
-.conciertos-table .table-cell {
-    -fx-text-fill: #374151;
-    -fx-font-size: 13px;
-    -fx-padding: 10px;
-    -fx-border-color: transparent transparent #F3F4F6 transparent;
+    -fx-padding: 9px 10px;
 }
 
 .conciertos-table .table-row-cell {
-    -fx-background-color: white;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: transparent;
+    -fx-cell-size: 38px;
+}
+
+.conciertos-table .table-row-cell:odd {
+    -fx-background-color: #FBFAFD;
 }
 
 .conciertos-table .table-row-cell:hover {
-    -fx-background-color: #F9FAFB;
+    -fx-background-color: #F2EEFB;
 }
 
-.conciertos-table .table-row-cell:selected {
-    -fx-background-color: #DBEAFE;
+.conciertos-table .table-row-cell:selected,
+.conciertos-table .table-row-cell:odd:selected {
+    -fx-background-color: #E5DDFC;
+}
+
+.conciertos-table .table-cell {
+    -fx-text-fill: #343047;
+    -fx-font-size: 12px;
+    -fx-padding: 9px 10px;
+    -fx-border-color: transparent transparent #F0EDF5 transparent;
+    -fx-border-width: 0 0 1px 0;
+    -fx-alignment: CENTER_LEFT;
 }
 
 .conciertos-table .table-row-cell:selected .table-cell {
-    -fx-text-fill: #1E3A8A;
+    -fx-text-fill: #4D389D;
 }
 
 .conciertos-table .placeholder .label {
-    -fx-text-fill: #9CA3AF;
-    -fx-font-size: 13px;
+    -fx-text-fill: #9690A4;
+    -fx-font-size: 12px;
 }
 
-
-.conciertos-scroll {
+.conciertos-table .scroll-bar:vertical,
+.conciertos-table .scroll-bar:horizontal {
     -fx-background-color: transparent;
-    -fx-background: #F3F4F6;
-    -fx-border-color: transparent;
 }
 
-.conciertos-scroll > .viewport {
-    -fx-background-color: #F3F4F6;
+.conciertos-table .scroll-bar .thumb {
+    -fx-background-color: #D2C8E8;
+    -fx-background-radius: 10px;
 }
 
+.conciertos-table .scroll-bar .thumb:hover {
+    -fx-background-color: #AF9DDF;
+}

@@ -201,4 +201,38 @@ public class LoginFXController {
         }
         
     }
+
+    @FXML
+    private void explorarConciertos() {
+        try {
+            java.net.URL recurso = getClass().getResource(
+                "/vistas/fx/EventosPublicosView.fxml"
+            );
+
+            if (recurso == null) {
+                throw new IOException(
+                    "No se encontró EventosPublicosView.fxml"
+                );
+            }
+
+            FXMLLoader loader = new FXMLLoader(recurso);
+            Parent vista = loader.load();
+
+            Stage ventana = new Stage();
+            ventana.setTitle("SVB-GUA | EVENTOS");
+            ventana.setScene(new Scene(vista, 1240, 810));
+
+            ventana.setMinWidth(900);
+            ventana.setMinHeight(650);
+            ventana.setMaximized(true);
+            ventana.show();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            lblMensaje.setText(
+                "No se pudo abrir la cartelera de conciertos."
+            );
+        }
+    }
+    
 }

@@ -1,0 +1,56 @@
+.eventos-root { -fx-background-color: #09090f; -fx-font-family: "Segoe UI", "Arial"; }
+.barra-eventos { -fx-background-color: #11111c; -fx-border-color: #29253a; -fx-border-width: 0 0 1 0; }
+.marca-eventos { -fx-text-fill: #ffffff; -fx-font-size: 26px; -fx-font-weight: bold; }
+.submarca-eventos { -fx-text-fill: #b8aecf; -fx-font-size: 11px; }
+.etiqueta-cabecera { -fx-background-color: #241e39; -fx-text-fill: #d5c7ff; -fx-padding: 9 15; -fx-background-radius: 18; -fx-font-size: 11px; -fx-font-weight: bold; }
+.boton-actualizar { -fx-background-color: #7154d9; -fx-text-fill: white; -fx-padding: 11 18; -fx-font-weight: bold; -fx-background-radius: 11; -fx-cursor: hand; }
+.boton-actualizar:hover { -fx-background-color: #896bef; }
+.boton-actualizar:disabled { -fx-opacity: 0.55; }
+.scroll-eventos, .scroll-eventos > .viewport { -fx-background-color: #09090f; -fx-background: #09090f; -fx-border-color: transparent; }
+.contenido-eventos { -fx-background-color: #09090f; }
+.titulo-pagina { -fx-text-fill: #ffffff; -fx-font-size: 31px; -fx-font-weight: bold; }
+.descripcion-pagina { -fx-text-fill: #b4aec7; -fx-font-size: 14px; }
+.explicacion { -fx-text-fill: #a7a0b9; -fx-font-size: 13px; -fx-padding: 7 0 0 0; }
+.titulo-seccion { -fx-text-fill: #f4f1ff; -fx-font-size: 16px; -fx-font-weight: bold; }
+.card-evento { -fx-background-color: #171520; -fx-background-radius: 16; -fx-border-color: #332c46; -fx-border-radius: 16; -fx-border-width: 1; -fx-padding: 9; -fx-cursor: hand; }
+.card-evento:hover { -fx-border-color: #896bef; -fx-effect: dropshadow(gaussian, rgba(125,88,220,0.25), 18, 0.1, 0, 3); }
+.imagen-evento { -fx-background-color: #282039; -fx-background-radius: 11; }
+.marca-sin-imagen { -fx-text-fill: #bca7ee; -fx-font-size: 17px; -fx-font-weight: bold; }
+.titulo-evento { -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold; }
+.dato-evento { -fx-text-fill: #b9b3cb; -fx-font-size: 12px; }
+.boton-evento { -fx-background-color: #7154d9; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 11 17; -fx-background-radius: 10; -fx-cursor: hand; }
+.boton-evento:hover { -fx-background-color: #886cf1; }
+.placeholder-eventos { -fx-background-color: #171520; -fx-background-radius: 15; -fx-text-fill: #c9bfdc; -fx-font-size: 16px; -fx-padding: 30; }
+.boton-volver { -fx-background-color: #241e39; -fx-text-fill: #e6dbff; -fx-background-radius: 10; -fx-padding: 11 17; -fx-cursor: hand; -fx-font-weight: bold; }
+.boton-volver:hover { -fx-background-color: #33264e; }
+.card-localidad { -fx-background-color: #1b1928; -fx-border-color: #38314e; -fx-border-radius: 14; -fx-background-radius: 14; -fx-padding: 19; }
+.nombre-localidad { -fx-text-fill: white; -fx-font-size: 19px; -fx-font-weight: bold; }
+.precio-localidad { -fx-text-fill: #cebafa; -fx-font-size: 25px; -fx-font-weight: bold; }
+.disponibilidad-localidad { -fx-text-fill: #b5accb; -fx-font-size: 12px; }
+.panel-asientos { -fx-background-color: #171520; -fx-background-radius: 15; -fx-border-color: #3e3555; -fx-border-radius: 15; }
+.leyenda-asientos { -fx-text-fill: #aaa1c0; -fx-font-size: 12px; }
+.mensaje-seleccion { -fx-text-fill: #d7c5ff; -fx-font-weight: bold; -fx-font-size: 14px; }
+.fila-texto { -fx-text-fill: #c5bbd9; -fx-font-size: 13px; -fx-font-weight: bold; }
+.asiento { -fx-background-radius: 9; -fx-padding: 8 9; -fx-font-size: 12px; -fx-font-weight: bold; -fx-cursor: default; }
+.asiento-disponible { -fx-background-color: #0e946e; -fx-text-fill: white; -fx-cursor: hand; }
+.asiento-disponible:hover { -fx-background-color: #0ab78b; }
+.asiento-elegido { -fx-background-color: #7154d9; -fx-text-fill: white; -fx-border-color: #e5d7ff; -fx-border-radius: 9; -fx-border-width: 2; }
+.asiento-vendido { -fx-background-color: #66697c; -fx-text-fill: white; }
+.asiento-reservado { -fx-background-color: #bd8332; -fx-text-fill: white; }
+.asiento-bloqueado { -fx-background-color: #95434b; -fx-text-fill: white; }
+.aviso-publico { -fx-text-fill: #b2a8cb; -fx-font-size: 12px; -fx-padding: 10 0 0 0; }
+.pie-eventos { -fx-background-color: #11111c; -fx-border-color: #29253a; -fx-border-width: 1 0 0 0; }
+.texto-estado { -fx-text-fill: #d1c5ec; -fx-font-size: 12px; }
+.texto-pie { -fx-text-fill: #827998; -fx-font-size: 12px; }
+.scroll-bar:vertical .thumb { -fx-background-color: #594a82; -fx-background-radius: 8; }
+
+/* Fase 3: plano visual en modo consulta */
+.tarjeta-mapa { -fx-background-color: #171520; -fx-background-radius: 16; -fx-border-color: #403555; -fx-border-radius: 16; }
+.tarjeta-localidades-panel { -fx-background-color: #171520; -fx-background-radius: 16; -fx-border-color: #403555; -fx-border-radius: 16; }
+.visor-mapa-publico { -fx-background-color: #101018; -fx-background-radius: 13; -fx-border-color: #302941; -fx-border-radius: 13; -fx-border-width: 1; }
+.boton-zoom { -fx-background-color: #302746; -fx-background-radius: 9; -fx-border-color: #51436e; -fx-border-radius: 9; -fx-text-fill: #f4edff; -fx-font-weight: bold; -fx-padding: 9 14; -fx-cursor: hand; }
+.boton-zoom:hover { -fx-background-color: #594584; }
+.mapa-info { -fx-text-fill: #dfd0ff; -fx-font-weight: bold; -fx-font-size: 13px; -fx-padding: 6 3 0 3; }
+/* Las tarjetas del panel derecho deben caber enteras sin columnas cortadas. */
+.tarjeta-localidades-panel .card-localidad { -fx-padding: 15; }
+.tarjeta-localidades-panel .precio-localidad { -fx-font-size: 23px; }

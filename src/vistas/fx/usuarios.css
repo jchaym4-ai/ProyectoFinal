@@ -1,187 +1,248 @@
+/* ============================================================
+   SVB-GUA | Administrador > Usuarios
+   Estilo premium: obsidiana, violeta, lavanda y gris perla
+   Compatible con UsuariosView.fxml original (sin cambiar fx:id)
+   ============================================================ */
+
 .root-usuarios {
-    -fx-background-color: #F3F4F6;
+    -fx-background-color: #F6F5F9;
+    -fx-font-family: "Segoe UI";
+    -fx-focus-color: #6C55D9;
+    -fx-faint-focus-color: rgba(108,85,217,0.15);
+}
+
+/* ENCABEZADO Y TARJETAS */
+.form-card,
+.table-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 16px;
+    -fx-border-color: #EAE6F3;
+    -fx-border-width: 1px;
+    -fx-border-radius: 16px;
+    -fx-padding: 20px 23px;
+    -fx-effect: dropshadow(gaussian, rgba(29,24,61,0.07), 16, 0.08, 0, 4);
 }
 
 .module-title {
-    -fx-text-fill: #111827;
-    -fx-font-size: 28px;
+    -fx-text-fill: #171425;
+    -fx-font-size: 27px;
     -fx-font-weight: bold;
 }
 
 .module-subtitle {
-    -fx-text-fill: #6B7280;
-    -fx-font-size: 14px;
-}
-
-.form-card,
-.table-card {
-    -fx-background-color: white;
-    -fx-background-radius: 12px;
-    -fx-padding: 20px;
-    -fx-effect: dropshadow(
-        gaussian,
-        rgba(0, 0, 0, 0.08),
-        15,
-        0.1,
-        0,
-        4
-    );
+    -fx-text-fill: #817B90;
+    -fx-font-size: 13px;
 }
 
 .section-title {
-    -fx-text-fill: #111827;
+    -fx-text-fill: #29233D;
     -fx-font-size: 17px;
     -fx-font-weight: bold;
 }
 
 .field-label {
-    -fx-text-fill: #374151;
-    -fx-font-size: 13px;
+    -fx-text-fill: #6F687E;
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
 }
 
-.user-field {
-    -fx-background-color: white;
-    -fx-border-color: #D1D5DB;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
+/* ENTRADAS Y CONTRASENA */
+.user-field,
+.role-combo {
+    -fx-background-color: #FBFAFE;
+    -fx-border-color: #DED8ED;
     -fx-border-width: 1px;
-    -fx-font-size: 14px;
-    -fx-text-fill: #111827;
-    -fx-padding: 0 12px 0 12px;
+    -fx-border-radius: 9px;
+    -fx-background-radius: 9px;
+    -fx-text-fill: #282238;
+    -fx-font-size: 13px;
+    -fx-prompt-text-fill: #A39BAD;
+    -fx-padding: 0 12px;
 }
 
-.user-field:focused {
-    -fx-border-color: #2563EB;
+.user-field:hover,
+.role-combo:hover {
+    -fx-border-color: #BBAEE8;
+}
+
+.user-field:focused,
+.role-combo:focused {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #6C55D9;
     -fx-border-width: 1.5px;
+    -fx-effect: dropshadow(gaussian, rgba(108,85,217,0.12), 8, 0.06, 0, 0);
 }
 
 .role-combo {
-    -fx-background-color: white;
-    -fx-border-color: #D1D5DB;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-border-width: 1px;
-    -fx-font-size: 14px;
-}
-
-.role-combo:focused {
-    -fx-border-color: #2563EB;
-    -fx-border-width: 1.5px;
-}
-
-.role-combo .list-cell {
-    -fx-text-fill: #111827;
-    -fx-padding: 8px 12px;
-}
-
-.action-button {
-    -fx-font-size: 13px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 8px;
+    -fx-padding: 0 3px;
     -fx-cursor: hand;
 }
 
-.save-button {
-    -fx-background-color: #2563EB;
-    -fx-text-fill: white;
+.role-combo .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #282238;
+    -fx-font-size: 13px;
+    -fx-padding: 4px 9px;
 }
 
-.save-button:hover {
-    -fx-background-color: #1D4ED8;
+.role-combo .arrow-button {
+    -fx-background-color: transparent;
 }
 
-.update-button {
-    -fx-background-color: #F59E0B;
-    -fx-text-fill: white;
+.role-combo .arrow {
+    -fx-background-color: #715DC4;
 }
 
-.update-button:hover {
-    -fx-background-color: #D97706;
-}
-
-.password-button {
-    -fx-background-color: #7C3AED;
-    -fx-text-fill: white;
-}
-
-.password-button:hover {
-    -fx-background-color: #6D28D9;
-}
-
-.clear-button {
-    -fx-background-color: #E5E7EB;
-    -fx-text-fill: #374151;
-}
-
-.clear-button:hover {
-    -fx-background-color: #D1D5DB;
-}
-
-.usuarios-table {
-    -fx-background-color: white;
-    -fx-border-color: #E5E7EB;
+.role-combo .combo-box-popup .list-view {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E8E2F2;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
+}
+
+.role-combo .combo-box-popup .list-cell:filled:hover,
+.role-combo .combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #EEE9FC;
+    -fx-text-fill: #4933A3;
+}
+
+/* ACCIONES */
+.action-button {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 9px;
+    -fx-border-radius: 9px;
+    -fx-cursor: hand;
+    -fx-padding: 9px 13px;
+}
+
+.action-button:focused {
+    -fx-border-color: #B8A8F6;
+    -fx-border-width: 1px;
+}
+
+.save-button {
+    -fx-background-color: #6C55D9;
+    -fx-text-fill: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(94,69,198,0.17), 10, 0.05, 0, 3);
+}
+.save-button:hover { -fx-background-color: #5842BF; }
+.save-button:pressed { -fx-background-color: #47329F; }
+
+.update-button {
+    -fx-background-color: #E9E3FC;
+    -fx-text-fill: #5238AD;
+}
+.update-button:hover { -fx-background-color: #DBD1F7; }
+.update-button:pressed { -fx-background-color: #CFC1F0; }
+
+.password-button {
+    -fx-background-color: #302849;
+    -fx-text-fill: #FFFFFF;
+}
+.password-button:hover { -fx-background-color: #44355E; }
+.password-button:pressed { -fx-background-color: #221B35; }
+
+.clear-button {
+    -fx-background-color: #EFEFF4;
+    -fx-text-fill: #635D72;
+}
+.clear-button:hover { -fx-background-color: #E4E1EB; }
+.clear-button:pressed { -fx-background-color: #D9D6E2; }
+
+.delete-button {
+    -fx-background-color: #FFF0F0;
+    -fx-text-fill: #BE4C57;
+    -fx-border-color: #F7D9DF;
+    -fx-border-width: 1px;
+}
+.delete-button:hover { -fx-background-color: #FDE4E7; }
+.delete-button:pressed { -fx-background-color: #F9D4DA; }
+
+.action-button:disabled {
+    -fx-opacity: 0.55;
+    -fx-effect: none;
+    -fx-cursor: default;
+}
+
+/* TABLA DE USUARIOS */
+.usuarios-table {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 10px;
+    -fx-border-color: #E5E0EF;
+    -fx-border-radius: 10px;
+    -fx-border-width: 1px;
     -fx-table-cell-border-color: transparent;
     -fx-padding: 0;
+    -fx-selection-bar: #EAE4FF;
+    -fx-selection-bar-non-focused: #F0ECFB;
 }
 
 .usuarios-table .column-header-background {
-    -fx-background-color: #F9FAFB;
-    -fx-background-radius: 8px 8px 0 0;
+    -fx-background-color: #F0EDFA;
+    -fx-background-radius: 9px 9px 0 0;
 }
 
-.usuarios-table .column-header {
+.usuarios-table .column-header,
+.usuarios-table .filler {
     -fx-background-color: transparent;
-    -fx-border-color: transparent transparent #E5E7EB transparent;
+    -fx-border-color: transparent transparent #E4DDF2 transparent;
+    -fx-border-width: 0 0 1px 0;
+    -fx-size: 43px;
 }
 
 .usuarios-table .column-header .label {
-    -fx-text-fill: #374151;
-    -fx-font-size: 13px;
+    -fx-text-fill: #5A4A86;
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-alignment: CENTER_LEFT;
-    -fx-padding: 10px;
-}
-
-.usuarios-table .table-cell {
-    -fx-text-fill: #374151;
-    -fx-font-size: 13px;
-    -fx-padding: 10px;
-    -fx-border-color: transparent transparent #F3F4F6 transparent;
+    -fx-padding: 7px 8px;
 }
 
 .usuarios-table .table-row-cell {
-    -fx-background-color: white;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: transparent;
 }
 
-.usuarios-table .table-row-cell:hover {
-    -fx-background-color: #F9FAFB;
+.usuarios-table .table-row-cell:odd {
+    -fx-background-color: #FCFBFE;
 }
 
-.usuarios-table .table-row-cell:selected {
-    -fx-background-color: #DBEAFE;
+.usuarios-table .table-row-cell:filled:hover {
+    -fx-background-color: #F3F0FC;
 }
 
-.usuarios-table .table-row-cell:selected .table-cell {
-    -fx-text-fill: #1E3A8A;
+.usuarios-table .table-row-cell:filled:selected,
+.usuarios-table .table-row-cell:filled:selected:hover {
+    -fx-background-color: #E8E0FC;
 }
 
-.usuarios-table .filler {
-    -fx-background-color: #F9FAFB;
+.usuarios-table .table-cell {
+    -fx-text-fill: #3F3950;
+    -fx-font-size: 12px;
+    -fx-padding: 10px 12px;
+    -fx-border-color: transparent transparent #F3F1F7 transparent;
+    -fx-border-width: 0 0 1px 0;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.usuarios-table .table-row-cell:filled:selected .table-cell {
+    -fx-text-fill: #4935A5;
 }
 
 .usuarios-table .placeholder .label {
-    -fx-text-fill: #9CA3AF;
-    -fx-font-size: 13px;
+    -fx-text-fill: #A39BAD;
+    -fx-font-size: 12px;
 }
 
-.delete-button {
-    -fx-background-color: #FEE2E2;
-    -fx-text-fill: #B91C1C;
+.usuarios-table .scroll-bar:vertical,
+.usuarios-table .scroll-bar:horizontal {
+    -fx-background-color: transparent;
 }
-
-.delete-button:hover {
-    -fx-background-color: #FECACA;
+.usuarios-table .scroll-bar .thumb {
+    -fx-background-color: #CDC5E6;
+    -fx-background-radius: 10px;
+}
+.usuarios-table .scroll-bar .thumb:hover {
+    -fx-background-color: #AB9ADC;
 }

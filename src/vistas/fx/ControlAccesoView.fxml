@@ -1,74 +1,46 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Priority?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-
-<BorderPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controladorFx.ControlAccesoFXController"
-            style="-fx-background-color: #F4F7FB;">
+<?xml version='1.0' encoding='UTF-8'?>
+<?import javafx.scene.control.Button?><?import javafx.scene.control.ComboBox?><?import javafx.scene.control.Label?><?import javafx.scene.control.TextArea?><?import javafx.scene.image.ImageView?><?import javafx.scene.layout.BorderPane?><?import javafx.scene.layout.HBox?><?import javafx.scene.layout.Priority?><?import javafx.scene.layout.StackPane?><?import javafx.scene.layout.VBox?><BorderPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladorFx.ControlAccesoFXController" styleClass="acceso-root" stylesheets="@control-acceso.css">
     <top>
-        <VBox spacing="9" style="-fx-padding: 14 20 10 20;">
-            <Label text="Control de acceso" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0F172A;"/>
-            <Label text="Selecciona el concierto, escanea el QR y confirma para registrar un ingreso en Neon."
-                   wrapText="true" style="-fx-font-size: 12px; -fx-text-fill: #64748B;"/>
-            <HBox spacing="9" alignment="CENTER_LEFT">
-                <Label text="Concierto:" style="-fx-font-weight: bold; -fx-text-fill: #334155;"/>
-                <ComboBox fx:id="cmbConciertos" prefWidth="375" maxWidth="500" promptText="Selecciona el evento"/>
-                <Button fx:id="btnActualizarConciertos" text="Actualizar conciertos" onAction="#actualizarConciertos"/>
+        <VBox spacing="9" styleClass="acceso-header">
+            <Label text="Control de acceso" styleClass="acceso-page-title"/>
+            <Label text="Selecciona el concierto, escanea el QR y confirma para registrar un ingreso en Neon." wrapText="true" styleClass="acceso-page-subtitle"/>
+            <HBox spacing="9" alignment="CENTER_LEFT" styleClass="acceso-concert-row">
+                <Label text="Concierto:" styleClass="acceso-field-label"/>
+                <ComboBox fx:id="cmbConciertos" prefWidth="375" maxWidth="500" promptText="Selecciona el evento" styleClass="acceso-combo"/>
+                <Button fx:id="btnActualizarConciertos" text="Actualizar conciertos" onAction="#actualizarConciertos" styleClass="acceso-button-secondary"/>
             </HBox>
         </VBox>
     </top>
     <center>
-        <HBox spacing="15" style="-fx-padding: 4 20 14 20;">
-            <VBox spacing="10" HBox.hgrow="ALWAYS" minWidth="350">
-                <HBox spacing="9" alignment="CENTER_LEFT">
-                    <Label text="Cámara:" style="-fx-font-weight: bold; -fx-text-fill: #334155;" />
-                    <ComboBox fx:id="cmbCamaras" prefWidth="270" promptText="Selecciona un dispositivo"/>
-                    <Button fx:id="btnActualizar" text="Actualizar" onAction="#actualizarCamaras"/>
-                    <Button fx:id="btnRotar" text="Rotar 90°" onAction="#rotarCamara"/>
+        <HBox spacing="15" styleClass="acceso-content">
+            <VBox spacing="10" HBox.hgrow="ALWAYS" minWidth="350" styleClass="acceso-camera-card">
+                <HBox spacing="9" alignment="CENTER_LEFT" styleClass="acceso-toolbar">
+                    <Label text="Cámara:" styleClass="acceso-field-label"/>
+                    <ComboBox fx:id="cmbCamaras" prefWidth="270" promptText="Selecciona un dispositivo" styleClass="acceso-combo"/>
+                    <Button fx:id="btnActualizar" text="Actualizar" onAction="#actualizarCamaras" styleClass="acceso-button-secondary"/>
+                    <Button fx:id="btnRotar" text="Rotar 90°" onAction="#rotarCamara" styleClass="acceso-button-secondary"/>
                 </HBox>
-                <StackPane fx:id="panelVideo" minHeight="220" prefHeight="312" maxHeight="390"
-                           VBox.vgrow="ALWAYS"
-                           style="-fx-background-color: #111827; -fx-background-radius: 12;">
-                    <ImageView fx:id="imgCamara" preserveRatio="true" smooth="true" mouseTransparent="true" />
-                    <Label fx:id="lblVistaPrevia" text="La cámara está detenida" mouseTransparent="true"
-                           style="-fx-text-fill: #CBD5E1; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <StackPane fx:id="panelVideo" minHeight="220" prefHeight="312" maxHeight="390" VBox.vgrow="ALWAYS" styleClass="acceso-video-frame">
+                    <ImageView fx:id="imgCamara" preserveRatio="true" smooth="true" mouseTransparent="true"/>
+                    <Label fx:id="lblVistaPrevia" text="La cámara está detenida" mouseTransparent="true" styleClass="acceso-video-placeholder"/>
                 </StackPane>
-                <HBox spacing="9" alignment="CENTER_LEFT">
-                    <Button fx:id="btnIniciar" text="Iniciar cámara" onAction="#iniciarCamara"
-                            style="-fx-background-color: #0D9488; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 9 14;"/>
-                    <Button fx:id="btnDetener" text="Detener" onAction="#detenerCamara"/>
-                    <Button fx:id="btnRearmar" text="Escanear otro QR" onAction="#escanearOtro"/>
+                <HBox spacing="9" alignment="CENTER_LEFT" styleClass="acceso-actions">
+                    <Button fx:id="btnIniciar" text="Iniciar cámara" onAction="#iniciarCamara" styleClass="acceso-button-start"/>
+                    <Button fx:id="btnDetener" text="Detener" onAction="#detenerCamara" styleClass="acceso-button-stop"/>
+                    <Button fx:id="btnRearmar" text="Escanear otro QR" onAction="#escanearOtro" styleClass="acceso-button-secondary"/>
                 </HBox>
-                <Label fx:id="lblEstado" text="Buscando cámaras..." wrapText="true"
-                       style="-fx-text-fill: #334155; -fx-font-size: 12px;"/>
+                <Label fx:id="lblEstado" text="Buscando cámaras..." wrapText="true" styleClass="acceso-state-caption"/>
             </VBox>
-            <VBox spacing="11" minWidth="255" prefWidth="295" maxWidth="335"
-                  style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 15;">
-                <Label text="ÚLTIMO QR LEÍDO" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #64748B;"/>
-                <TextArea fx:id="txtResultadoQR" editable="false" wrapText="true" prefRowCount="3"
-                          text="Aún no se ha leído ningún QR."/>
-                <Label fx:id="lblLectura" text="Esperando lectura..." wrapText="true"
-                       style="-fx-text-fill: #64748B; -fx-font-size: 12px;"/>
-                <Button fx:id="btnValidar" text="Autorizar ingreso" onAction="#validarIngreso"
-                        maxWidth="Infinity"
-                        style="-fx-background-color: #2563EB; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12;"/>
-                <VBox fx:id="panelValidacion" spacing="7" VBox.vgrow="ALWAYS"
-                      style="-fx-background-color: #F1F5F9; -fx-background-radius: 10; -fx-padding: 12;">
-                    <Label fx:id="lblResultadoValidacion" text="Esperando lectura de QR" wrapText="true"
-                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #0F172A;"/>
-                    <Label fx:id="lblDetalleValidacion" text="Selecciona el concierto y escanea un boleto."
-                           wrapText="true" style="-fx-font-size: 12px; -fx-text-fill: #334155;"/>
+            <VBox spacing="11" minWidth="255" prefWidth="295" maxWidth="335" styleClass="acceso-result-card">
+                <Label text="ÚLTIMO QR LEÍDO" styleClass="acceso-eyebrow"/>
+                <TextArea fx:id="txtResultadoQR" editable="false" wrapText="true" prefRowCount="3" text="Aún no se ha leído ningún QR." styleClass="acceso-qr-text"/>
+                <Label fx:id="lblLectura" text="Esperando lectura..." wrapText="true" styleClass="acceso-status-caption"/>
+                <Button fx:id="btnValidar" text="Autorizar ingreso" onAction="#validarIngreso" maxWidth="Infinity" styleClass="acceso-button-primary"/>
+                <VBox fx:id="panelValidacion" spacing="7" VBox.vgrow="ALWAYS" styleClass="acceso-validation-panel">
+                    <Label fx:id="lblResultadoValidacion" text="Esperando lectura de QR" wrapText="true" styleClass="acceso-validation-title"/>
+                    <Label fx:id="lblDetalleValidacion" text="Selecciona el concierto y escanea un boleto." wrapText="true" styleClass="acceso-validation-detail"/>
                 </VBox>
-                <Label text="Ningún boleto cambia de estado hasta que confirmes su ingreso."
-                       wrapText="true" style="-fx-font-size: 11px; -fx-text-fill: #64748B;"/>
+                <Label text="Ningún boleto cambia de estado hasta que confirmes su ingreso." wrapText="true" styleClass="acceso-footer-caption"/>
             </VBox>
         </HBox>
     </center>

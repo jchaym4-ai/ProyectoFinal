@@ -1,0 +1,141 @@
+/* SVB-GUA | Anulaciones — identidad premium. No cambia operaciones de Neon. */
+.anulaciones-root {
+    -fx-background-color: #F6F5F9;
+    -fx-font-family: "Segoe UI";
+}
+.anulaciones-cabecera { -fx-padding: 1px 0 5px 0; }
+.anulaciones-titulo {
+    -fx-font-size: 27px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #171425;
+}
+.anulaciones-subtitulo, .anulaciones-ayuda {
+    -fx-text-fill: #827B92;
+    -fx-font-size: 12px;
+}
+.anulaciones-panel {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 16px;
+    -fx-border-color: #EAE6F3;
+    -fx-border-width: 1px;
+    -fx-border-radius: 16px;
+    -fx-padding: 17px;
+    -fx-effect: dropshadow(gaussian, rgba(30, 24, 58, 0.065), 14, 0.08, 0, 3);
+}
+.anulaciones-seccion-titulo {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #201935;
+}
+.anulaciones-etiqueta {
+    -fx-text-fill: #6A607D;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+.anulaciones-root .combo-box,
+.anulaciones-root .text-field,
+.anulaciones-root .text-area {
+    -fx-background-color: #FAF9FD;
+    -fx-border-color: #DED8ED;
+    -fx-border-width: 1px;
+    -fx-border-radius: 9px;
+    -fx-background-radius: 9px;
+    -fx-font-size: 13px;
+    -fx-text-fill: #27213A;
+}
+.anulaciones-root .combo-box,
+.anulaciones-root .text-field { -fx-pref-height: 38px; }
+.anulaciones-root .combo-box:hover,
+.anulaciones-root .text-field:hover,
+.anulaciones-root .text-area:hover { -fx-border-color: #AFA2E8; }
+.anulaciones-root .combo-box:focused,
+.anulaciones-root .text-field:focused,
+.anulaciones-root .text-area:focused {
+    -fx-border-color: #6C55D9;
+    -fx-border-width: 1.5px;
+}
+.anulaciones-root .combo-box .list-cell {
+    -fx-text-fill: #27213A;
+    -fx-font-size: 12px;
+}
+.anulaciones-root .combo-box .arrow-button { -fx-background-color: transparent; }
+.anulaciones-root .combo-box .arrow { -fx-background-color: #715DC4; }
+.anulaciones-root .text-area .content { -fx-background-color: #FAF9FD; }
+.anulaciones-root .text-area .scroll-pane { -fx-background-color: transparent; }
+.anulaciones-root .text-area .scroll-pane .viewport { -fx-background-color: transparent; }
+.anulaciones-resumen,
+.anulaciones-seleccionado,
+.anulaciones-estado { -fx-text-fill: #6B6381; -fx-font-size: 12px; }
+.anulaciones-boton {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 9px;
+    -fx-padding: 10px 15px;
+    -fx-cursor: hand;
+}
+.anulaciones-actualizar {
+    -fx-background-color: #6C55D9;
+    -fx-text-fill: #FFFFFF;
+}
+.anulaciones-actualizar:hover { -fx-background-color: #5842BF; }
+.anulaciones-limpiar {
+    -fx-background-color: #EEEAF8;
+    -fx-text-fill: #4F3C9C;
+}
+.anulaciones-limpiar:hover { -fx-background-color: #E0D9F5; }
+/* Acciones destructivas conservan una señal de riesgo claramente diferenciada. */
+.anulaciones-anular {
+    -fx-background-color: #C43D58;
+    -fx-text-fill: white;
+}
+.anulaciones-anular:hover { -fx-background-color: #AD3049; }
+.anulaciones-anular-venta {
+    -fx-background-color: #91304B;
+    -fx-text-fill: white;
+}
+.anulaciones-anular-venta:hover { -fx-background-color: #75243D; }
+.anulaciones-boton:disabled {
+    -fx-opacity: 0.52;
+    -fx-cursor: default;
+}
+.anulaciones-root .table-view {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E9E4F1;
+    -fx-border-width: 1px;
+    -fx-border-radius: 9px;
+    -fx-background-radius: 9px;
+    -fx-table-cell-border-color: transparent;
+}
+.anulaciones-root .table-view .column-header-background {
+    -fx-background-color: #F1EDFA;
+    -fx-background-radius: 9px 9px 0px 0px;
+}
+.anulaciones-root .table-view .column-header,
+.anulaciones-root .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #E8E1F5 transparent;
+}
+.anulaciones-root .table-view .column-header .label {
+    -fx-text-fill: #55427F;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+}
+.anulaciones-root .table-row-cell {
+    -fx-background-color: #FFFFFF;
+    -fx-cell-size: 35px;
+}
+.anulaciones-root .table-row-cell:odd { -fx-background-color: #FAF9FD; }
+.anulaciones-root .table-row-cell:filled:hover { -fx-background-color: #F0ECFB; }
+.anulaciones-root .table-row-cell:filled:selected { -fx-background-color: #DDD5FA; }
+.anulaciones-root .table-row-cell:filled:selected .text { -fx-fill: #24173E; }
+.anulaciones-root .table-cell {
+    -fx-text-fill: #302A42;
+    -fx-font-size: 12px;
+    -fx-border-color: transparent;
+    -fx-padding: 6px 8px;
+}
+.anulaciones-root .table-view .placeholder .label {
+    -fx-text-fill: #8A8299;
+    -fx-font-size: 12px;
+}

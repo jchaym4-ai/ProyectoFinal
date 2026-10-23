@@ -224,3 +224,45 @@
     -fx-opacity: 0.82;
     -fx-cursor: default;
 }
+
+
+/* PASO 76.7 - CONTENEDOR DEL MAPA CON ZOOM CONTROLADO */
+.venta-mapa-lienzo {
+    -fx-background-color: #F9F8FC;
+    -fx-background-radius: 11px;
+    -fx-border-color: #E2DDF0;
+    -fx-border-radius: 11px;
+    -fx-border-width: 1px;
+}
+.venta-mapa-superficie {
+    -fx-background-color: transparent;
+}
+.venta-mapa-acciones {
+    -fx-padding: 1px 0 3px 0;
+}
+.venta-mapa-ayuda {
+    -fx-font-size: 11px;
+    -fx-text-fill: #777187;
+}
+.venta-zoom-boton, .venta-zoom-reset {
+    -fx-background-color: #F0EDFA;
+    -fx-border-color: #DCD5F0;
+    -fx-border-radius: 9px;
+    -fx-background-radius: 9px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5E46C5;
+    -fx-cursor: hand;
+}
+.venta-zoom-boton:hover, .venta-zoom-reset:hover {
+    -fx-background-color: #E5DFF8;
+    -fx-border-color: #B7A9EB;
+}
+
+/* PASO 76.8 - VISOR DE MAPA RESPONSIVE */
+.venta-mapa-lienzo {
+    -fx-padding: 0;
+}
+/* El recorte y la escala del dibujo se controlan desde Java. */
+.venta-mapa-superficie {
+    -fx-background-color: transparent;
+}

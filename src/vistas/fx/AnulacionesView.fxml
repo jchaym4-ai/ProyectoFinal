@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -10,40 +10,33 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.VBox?>
-
-<VBox xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controladorFx.AnulacionesFXController"
-      spacing="13" prefWidth="900" style="-fx-background-color: #F4F7FB;">
+<VBox xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controladorFx.AnulacionesFXController" spacing="13" prefWidth="900" stylesheets="@anulaciones.css" styleClass="anulaciones-root">
     <padding><Insets top="22" right="24" bottom="24" left="24"/></padding>
-    <VBox spacing="5">
-        <Label text="Gestión de anulaciones" style="-fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: #0F172A;"/>
-        <Label text="Consulta todos los boletos, filtra por concierto y anula únicamente entradas sin utilizar."
-               wrapText="true" style="-fx-font-size: 12px; -fx-text-fill: #64748B;"/>
+    <VBox spacing="5" styleClass="anulaciones-cabecera">
+        <Label text="Gestión de anulaciones" styleClass="anulaciones-titulo"/>
+        <Label text="Consulta todos los boletos, filtra por concierto y anula únicamente entradas sin utilizar." wrapText="true" styleClass="anulaciones-subtitulo"/>
     </VBox>
 
-    <VBox spacing="12" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 17;">
+    <VBox spacing="12" styleClass="anulaciones-panel">
         <HBox alignment="CENTER_LEFT" spacing="10">
             <VBox spacing="5" HBox.hgrow="ALWAYS">
-                <Label text="Concierto" style="-fx-font-weight: bold; -fx-text-fill: #334155;"/>
+                <Label text="Concierto" styleClass="anulaciones-etiqueta"/>
                 <ComboBox fx:id="cmbConciertos" maxWidth="Infinity" prefWidth="340"/>
             </VBox>
             <VBox spacing="5" HBox.hgrow="ALWAYS">
-                <Label text="Buscar boleto o venta" style="-fx-font-weight: bold; -fx-text-fill: #334155;"/>
+                <Label text="Buscar boleto o venta" styleClass="anulaciones-etiqueta"/>
                 <TextField fx:id="txtBuscar" promptText="N° boleto, venta, QR, localidad..."/>
             </VBox>
         </HBox>
         <HBox alignment="CENTER_LEFT" spacing="9">
-            <Button fx:id="btnActualizar" text="Actualizar lista" onAction="#actualizarTabla"
-                    style="-fx-background-color: #0D9488; -fx-text-fill: white; -fx-background-radius: 7; -fx-padding: 9 13;"/>
-            <Button fx:id="btnLimpiar" text="Limpiar filtros" onAction="#limpiarFiltros"
-                    style="-fx-background-color: #E2E8F0; -fx-text-fill: #0F172A; -fx-background-radius: 7; -fx-padding: 9 13;"/>
-            <Label fx:id="lblResumen" text="Cargando boletos..." HBox.hgrow="ALWAYS"
-                   style="-fx-font-size: 12px; -fx-text-fill: #64748B;"/>
+            <Button fx:id="btnActualizar" text="Actualizar lista" onAction="#actualizarTabla" styleClass="anulaciones-boton anulaciones-actualizar"/>
+            <Button fx:id="btnLimpiar" text="Limpiar filtros" onAction="#limpiarFiltros" styleClass="anulaciones-boton anulaciones-limpiar"/>
+            <Label fx:id="lblResumen" text="Cargando boletos..." HBox.hgrow="ALWAYS" styleClass="anulaciones-resumen"/>
         </HBox>
     </VBox>
 
-    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 15;">
-        <Label text="Todos los boletos registrados" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #0F172A;"/>
+    <VBox spacing="10" styleClass="anulaciones-panel">
+        <Label text="Todos los boletos registrados" styleClass="anulaciones-seccion-titulo"/>
         <TableView fx:id="tablaBoletos" prefHeight="280" minHeight="195" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="colBoleto" text="Boleto" prefWidth="70"/>
@@ -56,23 +49,17 @@
             </columns>
             <placeholder><Label text="No hay boletos que coincidan con el filtro."/></placeholder>
         </TableView>
-        <Label fx:id="lblSeleccionado" wrapText="true"
-               text="Selecciona un boleto para revisar su estado."
-               style="-fx-font-size: 12px; -fx-text-fill: #475569;"/>
+        <Label fx:id="lblSeleccionado" wrapText="true" text="Selecciona un boleto para revisar su estado." styleClass="anulaciones-seleccionado"/>
     </VBox>
 
-    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 16;">
-        <Label text="Anular boleto o venta completa" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #0F172A;"/>
-        <TextArea fx:id="txtMotivo" prefRowCount="2" wrapText="true"
-                  promptText="Motivo obligatorio (5 a 500 caracteres): ejemplo, compra duplicada."/>
+    <VBox spacing="10" styleClass="anulaciones-panel">
+        <Label text="Anular boleto o venta completa" styleClass="anulaciones-seccion-titulo"/>
+        <TextArea fx:id="txtMotivo" prefRowCount="2" wrapText="true" promptText="Motivo obligatorio (5 a 500 caracteres): ejemplo, compra duplicada."/>
         <HBox alignment="CENTER_LEFT" spacing="10">
-            <Button fx:id="btnAnularBoleto" text="Anular boleto seleccionado" onAction="#anularBoleto"
-                    style="-fx-background-color: #B91C1C; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 7; -fx-padding: 10 14;"/>
-            <Button fx:id="btnAnularVenta" text="Anular venta completa" onAction="#anularVenta"
-                    style="-fx-background-color: #7F1D1D; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 7; -fx-padding: 10 14;"/>
+            <Button fx:id="btnAnularBoleto" text="Anular boleto seleccionado" onAction="#anularBoleto" styleClass="anulaciones-boton anulaciones-anular"/>
+            <Button fx:id="btnAnularVenta" text="Anular venta completa" onAction="#anularVenta" styleClass="anulaciones-boton anulaciones-anular-venta"/>
         </HBox>
-        <Label text="Los boletos que ya ingresaron o están cancelados no se pueden anular. Una venta completa solo se anula si TODOS sus boletos siguen válidos."
-               wrapText="true" style="-fx-font-size: 12px; -fx-text-fill: #64748B;"/>
+        <Label text="Los boletos que ya ingresaron o están cancelados no se pueden anular. Una venta completa solo se anula si TODOS sus boletos siguen válidos." wrapText="true" styleClass="anulaciones-ayuda"/>
     </VBox>
-    <Label fx:id="lblEstado" wrapText="true" text="Esperando sesión..." style="-fx-text-fill: #334155; -fx-font-size: 12px;"/>
+    <Label fx:id="lblEstado" wrapText="true" text="Esperando sesión..." styleClass="anulaciones-estado"/>
 </VBox>
