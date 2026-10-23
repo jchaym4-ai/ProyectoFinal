@@ -5,3 +5,14 @@
 *.war
 /nbproject/private/
 /cloudflare.properties
+
+# Archivos generados
+/salida/
+/salida-instalador/
+/runtime-svb/
+/build/
+/dist/
+
+# Credenciales
+**/db_config.properties
+**/cloudflare.properties
