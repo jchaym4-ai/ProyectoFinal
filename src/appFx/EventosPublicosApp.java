@@ -1,4 +1,4 @@
-package appFX;
+package appFx;
 
 import java.net.URL;
 import javafx.application.Application;
