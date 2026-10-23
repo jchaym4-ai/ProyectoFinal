@@ -35,12 +35,26 @@ public class CloudflareBoletoService {
 
         Properties config = new Properties();
 
-        Path archivoConfig =
-                Path.of("cloudflare.properties");
+        // Primero usar la configuración privada del usuario.
+        // Funciona igual desde NetBeans, jpackage o Inno Setup.
+        Path rutaUsuario = Path.of(
+                System.getProperty("user.home"),
+                "SVB-GUA",
+                "cloudflare.properties"
+        );
+
+        // Compatibilidad con el entorno de desarrollo anterior.
+        Path rutaDesarrollo = Path.of("cloudflare.properties");
+
+        Path archivoConfig = Files.isRegularFile(rutaUsuario)
+                ? rutaUsuario
+                : rutaDesarrollo;
 
         if (!Files.isRegularFile(archivoConfig)) {
             throw new IOException(
-                    "No se encontró cloudflare.properties."
+                    "No se encontró cloudflare.properties. "
+                    + "Copia el archivo a: "
+                    + rutaUsuario.toAbsolutePath()
             );
         }
 
