@@ -1,11 +1,4 @@
-/* =============================================================
-   SVB-GUA | PASO 76.3 - NUEVA VENTA PREMIUM
-   Visual exclusivamente. Compatibilidad: JavaFX 26 / 27.
-   Identidad compartida: obsidiana, violeta y gris perla.
-   No modifica el canvas, los colores de las localidades ni los eventos.
-   ============================================================= */
 
-/* BASE */
 .venta-scroll {
     -fx-background: #F6F5F9;
     -fx-background-color: #F6F5F9;
@@ -121,7 +114,6 @@
     -fx-border-width: 1px;
 }
 
-/* RESUMEN DE COMPRA */
 .venta-resumen {
     -fx-background-color: #FFFFFF;
     -fx-background-radius: 17px;
@@ -174,7 +166,6 @@
     -fx-padding: 2px 0 0 0;
 }
 
-/* SPINNER DE AFORO */
 .venta-spinner {
     -fx-background-color: #FAF9FD;
     -fx-background-radius: 10px;
@@ -201,7 +192,6 @@
     -fx-background-color: #6551B7;
 }
 
-/* BOTONES */
 .venta-boton {
     -fx-background-color: #6C55D9;
     -fx-background-radius: 10px;
@@ -226,7 +216,6 @@
 }
 
 
-/* PASO 76.7 - CONTENEDOR DEL MAPA CON ZOOM CONTROLADO */
 .venta-mapa-lienzo {
     -fx-background-color: #F9F8FC;
     -fx-background-radius: 11px;
@@ -258,11 +247,9 @@
     -fx-border-color: #B7A9EB;
 }
 
-/* PASO 76.8 - VISOR DE MAPA RESPONSIVE */
 .venta-mapa-lienzo {
     -fx-padding: 0;
 }
-/* El recorte y la escala del dibujo se controlan desde Java. */
 .venta-mapa-superficie {
     -fx-background-color: transparent;
 }

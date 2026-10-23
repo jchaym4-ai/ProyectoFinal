@@ -123,3 +123,14 @@
     -fx-text-fill: #168369;
     -fx-font-size: 12px;
 }
+
+
+/* ===== Identidad SVB-GUA - Logo oficial ===== */
+.brand-logo {
+    -fx-opacity: 1.0;
+}
+.brand-panel .brand-subtitle {
+    -fx-text-fill: #D5CEE9;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}

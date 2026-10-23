@@ -8,8 +8,11 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane prefHeight="700.0" prefWidth="1200.0" styleClass="root-admin" stylesheets="@menu-admin.css"
@@ -55,6 +58,14 @@
          <children>
             <Label styleClass="topbar-eyebrow" text="SVB-GUA   /   PANEL DE CONTROL" />
             <Region HBox.hgrow="ALWAYS" />
+            <!-- Identidad SVB-GUA junto a la sesion activa -->
+            <StackPane styleClass="topbar-logo-frame" prefWidth="76.0" minWidth="76.0" maxWidth="76.0" prefHeight="48.0" minHeight="48.0" maxHeight="48.0">
+               <children>
+                  <ImageView fitWidth="68.0" fitHeight="44.0" preserveRatio="true" smooth="true" mouseTransparent="true" styleClass="topbar-brand-logo">
+                     <image><Image url="@../../imagenes/logo-svb-gua.png" /></image>
+                  </ImageView>
+               </children>
+            </StackPane>
             <Label fx:id="lblNombreUsuario" styleClass="user-label" text="Administrador" />
             <Button fx:id="btnCerrarSesion" mnemonicParsing="false" onAction="#cerrarSesion"
                     styleClass="logout-button" text="Cerrar sesión" />

@@ -142,3 +142,16 @@
     -fx-font-size: 34px;
     -fx-font-weight: bold;
 }
+
+
+/* ===== Identidad SVB-GUA en topbar (Administrador / Vendedor) ===== */
+.topbar-logo-frame {
+    -fx-background-color: #151422;
+    -fx-background-radius: 11px;
+    -fx-border-color: #E5DEFB;
+    -fx-border-width: 1px;
+    -fx-border-radius: 11px;
+}
+.topbar-brand-logo {
+    -fx-opacity: 1.0;
+}

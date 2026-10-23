@@ -5,6 +5,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -14,13 +16,14 @@
    <children>
       <HBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="480.0" prefWidth="820.0" styleClass="login-card">
          <children>
-            <VBox alignment="CENTER" maxWidth="-Infinity" prefHeight="200.0" prefWidth="330.0" spacing="12.0" styleClass="brand-panel">
+            <VBox alignment="CENTER" maxWidth="-Infinity" prefHeight="200.0" prefWidth="330.0" spacing="6.0" styleClass="brand-panel">
                <children>
-                  <Label styleClass="brand-title" text="SVB-GUA" textFill="WHITE">
-                     <font>
-                        <Font name="System Bold" size="32.0" />
-                     </font>
-                  </Label>
+                  <!-- Logo de marca compartido con Administrador y Vendedor -->
+                  <ImageView fitWidth="270.0" fitHeight="216.0" preserveRatio="true" smooth="true" mouseTransparent="true" styleClass="brand-logo">
+                     <image>
+                        <Image url="@../../imagenes/logo-svb-gua.png" />
+                     </image>
+                  </ImageView>
                   <Label styleClass="brand-subtitle" text="Sistema de Venta de Boletos" textFill="#d1d5db">
                      <font>
                         <Font size="18.0" />

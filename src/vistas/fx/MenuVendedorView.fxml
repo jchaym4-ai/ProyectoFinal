@@ -6,6 +6,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
@@ -48,6 +50,14 @@
             <children>
                 <Label styleClass="topbar-eyebrow" text="SVB-GUA   /   PUNTO DE VENTA" />
                 <Region HBox.hgrow="ALWAYS" />
+            <!-- Identidad SVB-GUA junto a la sesion activa -->
+            <StackPane styleClass="topbar-logo-frame" prefWidth="76.0" minWidth="76.0" maxWidth="76.0" prefHeight="48.0" minHeight="48.0" maxHeight="48.0">
+               <children>
+                  <ImageView fitWidth="68.0" fitHeight="44.0" preserveRatio="true" smooth="true" mouseTransparent="true" styleClass="topbar-brand-logo">
+                     <image><Image url="@../../imagenes/logo-svb-gua.png" /></image>
+                  </ImageView>
+               </children>
+            </StackPane>
                 <Label fx:id="lblNombreUsuario" styleClass="user-label" text="Vendedor" />
                 <Button fx:id="btnCerrarSesion" mnemonicParsing="false" styleClass="logout-button" text="Cerrar sesión" />
             </children>
