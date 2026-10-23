@@ -19,7 +19,11 @@ public class CreateConnection {
     
     
     public CreateConnection (){
-        String path = "C:\\Users\\Abdias M\\Documents\\NetBeansProjects\\ProyectoFInalUMG\\src\\coneccion\\db_config.properties";
+        String path = Paths.get(
+            System.getProperty("user.home"),
+            "SVB-GUA",
+            "db_config.properties"
+        ).toString();
         InputStream in = null;
         
             try {
